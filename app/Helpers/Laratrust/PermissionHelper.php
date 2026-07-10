@@ -1,12 +1,9 @@
 <?php
 
-namespace App\Helpers;
+namespace App\Helpers\Laratrust;
 
-class Helper
+class PermissionHelper
 {
-    /**
-     * Generate all permissions from config/modules.
-     */
     public static function generate(): array
     {
         $modules = config('laratrust_seeder.modules', []);
@@ -37,9 +34,6 @@ class Helper
         return array_values($permissions);
     }
 
-    /**
-     * Get all permissions for a specific role.
-     */
     public static function getRolePermissions(string $role): array
     {
         $roles = config('laratrust_seeder.roles', []);
@@ -64,21 +58,5 @@ class Helper
         }
 
         return array_values(array_unique($permissions));
-    }
-
-    /**
-     * Get all available roles.
-     */
-    public static function getRoles(): array
-    {
-        return array_keys(config('laratrust_seeder.roles', []));
-    }
-
-    /**
-     * Get all available modules.
-     */
-    public static function getModules(): array
-    {
-        return array_keys(config('laratrust_seeder.modules', []));
     }
 }

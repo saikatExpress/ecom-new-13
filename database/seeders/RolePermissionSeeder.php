@@ -2,16 +2,13 @@
 
 namespace Database\Seeders;
 
-use App\Helpers\Helper;
+use App\Helpers\Laratrust\PermissionHelper;
 use App\Models\Permission;
 use App\Models\Role;
 use Illuminate\Database\Seeder;
 
 class RolePermissionSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         foreach (config('laratrust_seeder.roles', []) as $roleName => $modules) {
@@ -23,7 +20,10 @@ class RolePermissionSeeder extends Seeder
             }
 
             $permissionIds = Permission::query()
-                ->whereIn('name', Helper::getRolePermissions($roleName))
+                ->whereIn(
+                    'name',
+                    PermissionHelper::getRolePermissions($roleName)
+                )
                 ->pluck('id')
                 ->toArray();
 
