@@ -2,8 +2,9 @@
 
 namespace App\Services\Auth;
 
-use App\Enums\StatusEnum;
 use App\Models\User;
+use App\Enums\StatusEnum;
+use App\Exceptions\CustomException;
 use Illuminate\Support\Facades\Hash;
 
 class AuthService
@@ -21,5 +22,19 @@ class AuthService
         $user->save();
 
         return $user;
+    }
+
+    public function login($request)
+    {
+        $user = User::query()
+        ->with([
+            'roles.permissions'
+        ])
+        ->where('phone_number', $request->phone_number)
+        ->first();
+
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            throw new CustomException('Phone number or password is incorrect.');
+        }
     }
 }
