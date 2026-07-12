@@ -5,6 +5,7 @@ namespace App\Services\Auth;
 use App\Enums\OtpPurposeEnum;
 use App\Enums\StatusEnum;
 use App\Exceptions\CustomException;
+use App\Helpers\Setting\SettingHelper;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
@@ -49,10 +50,7 @@ class AuthService
 
             RateLimiter::hit($key, 300);
 
-            $this->loginHistoryService->userNotFound(
-                $request->phone_number,
-                $request
-            );
+            $this->loginHistoryService->userNotFound($request->phone_number,$request);
 
             throw new CustomException('Phone number or password is incorrect.');
         }
@@ -61,53 +59,32 @@ class AuthService
 
             RateLimiter::hit($key, 300);
 
-            $this->loginHistoryService->wrongPassword(
-                $user,
-                $request
-            );
+            $this->loginHistoryService->wrongPassword($user,$request);
 
             throw new CustomException('Phone number or password is incorrect.');
         }
 
         if ($user->trashed()) {
 
-            $this->loginHistoryService->deletedAccount(
-                $user,
-                $request
-            );
+            $this->loginHistoryService->deletedAccount($user,$request);
 
-            throw new CustomException(
-                'Your account has been deleted.',
-                403
-            );
+            throw new CustomException('Your account has been deleted.',403);
         }
 
         if ($user->status !== StatusEnum::ACTIVE->value) {
 
-            $this->loginHistoryService->inactiveAccount(
-                $user,
-                $request
-            );
+            $this->loginHistoryService->inactiveAccount($user,$request);
 
-            throw new CustomException(
-                'Your account has been disabled.',
-                403
-            );
+            throw new CustomException('Your account has been disabled.',403);
         }
 
         $excludedRoleIds = [1, 2, 3];
 
-        $requiresOtp = true;
-        // $requiresOtp = $user->otp_required
-        //     && $user->roles->pluck('id')->intersect($excludedRoleIds)->isEmpty();
+        $requiresOtp = SettingHelper::setting('login_otp_enabled', false) && $user->roles->pluck('id')->intersect($excludedRoleIds)->isEmpty();
 
         if ($requiresOtp) {
 
-            $this->otpService->send(
-                user: $user,
-                purpose: OtpPurposeEnum::LOGIN,
-                request: $request
-            );
+            $this->otpService->send(user: $user,purpose: OtpPurposeEnum::LOGIN,request: $request);
 
             return [
                 'otp_required' => true,
@@ -136,6 +113,8 @@ class AuthService
 
         $this->loginHistoryService->success($user, $request);
 
+        $user->load('roles.permissions');
+
         return $user;
     }
 
@@ -159,6 +138,15 @@ class AuthService
             $request,
             $key
         );
+    }
+
+    public function me(): User
+    {
+        return auth()
+            ->user()
+            ->load([
+                'roles.permissions'
+            ]);
     }
 
     public function resendOtp($request): void

@@ -34,6 +34,15 @@ class AuthController extends BaseController
         );
     }
 
+    public function me()
+    {
+        $me = $this->authService->me();
+
+        $me = new AuthResource($me);
+
+        return $this->sendResponse($me, 'Login User Data', 200);
+    }
+
     public function logout(Request $request)
     {
         $this->authService->logout($request);

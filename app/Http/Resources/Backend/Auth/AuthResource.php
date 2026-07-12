@@ -9,8 +9,6 @@ class AuthResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
-        $role = $this->roles->first();
-
         return [
 
             'id' => $this->id,
@@ -27,26 +25,15 @@ class AuthResource extends JsonResource
 
             'token' => $this->access_token,
 
-            'role' => [
-                'id' => optional($role)->id,
-                'name' => optional($role)->name,
-                'display_name' => optional($role)->display_name,
-            ],
+            'roles' => $this->roles->map(function ($role) {
+                return [
+                    'id' => $role->id,
+                    'name' => $role->name,
+                    'display_name' => $role->display_name,
+                ];
+            })->values(),
 
-            'permissions' => $this->roles
-                ->flatMap(fn ($role) => $role->permissions)
-                ->unique('id')
-                ->values()
-                ->map(function ($permission) {
-
-                    return [
-                        'id' => $permission->id,
-                        'name' => $permission->name,
-                        'module' => $permission->module,
-                        'action' => $permission->action,
-                    ];
-                }),
-
+            'permissions' => $this->allPermissions()->pluck('name')->values(),
         ];
     }
 }
