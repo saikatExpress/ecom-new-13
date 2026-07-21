@@ -22,16 +22,10 @@ class AuthController extends BaseController
 
         if ($result['otp_required']) {
 
-            return $this->sendResponse(
-                $result,
-                'OTP sent successfully.'
-            );
+            return $this->sendResponse($result,'OTP sent successfully.');
         }
 
-        return $this->sendResponse(
-            new AuthResource($result['user']),
-            'Login Successfully'
-        );
+        return $this->sendResponse(new AuthResource($result['user']),'Login Successfully');
     }
 
     public function me()
@@ -40,7 +34,7 @@ class AuthController extends BaseController
 
         $me = new AuthResource($me);
 
-        return $this->sendResponse($me, 'Login User Data', 200);
+        return $this->sendResponse($me, 'Login User Data');
     }
 
     public function logout(Request $request)
@@ -80,11 +74,7 @@ class AuthController extends BaseController
     {
         $this->authService->resendOtp($request);
 
-        return $this->sendResponse(
-            [],
-            'OTP sent successfully.',
-            200
-        );
+        return $this->sendResponse([],'OTP sent successfully.',200);
     }
 
     public function forgotPassword(ForgotPasswordRequest $request)

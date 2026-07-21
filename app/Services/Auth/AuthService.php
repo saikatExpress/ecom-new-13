@@ -120,16 +120,9 @@ class AuthService
 
     public function verifyOtp($request): User
     {
-        $user = $this->model
-            ->with('roles.permissions')
-            ->where('phone_number', $request->phone_number)
-            ->firstOrFail();
+        $user = $this->model->with('roles.permissions')->where('phone_number', $request->phone_number)->firstOrFail();
 
-        $this->otpService->verify(
-            user: $user,
-            purpose: OtpPurposeEnum::from($request->purpose),
-            otp: $request->otp
-        );
+        $this->otpService->verify(user: $user,purpose: OtpPurposeEnum::from($request->purpose),otp: $request->otp);
 
         $key = strtolower($request->phone_number) . '|' . $request->ip();
 
@@ -153,11 +146,7 @@ class AuthService
     {
         $user = $this->model->where('phone_number', $request->phone_number)->firstOrFail();
 
-        $this->otpService->send(
-            user: $user,
-            purpose: OtpPurposeEnum::from($request->purpose),
-            request: $request
-        );
+        $this->otpService->send(user: $user,purpose: OtpPurposeEnum::from($request->purpose),request: $request);
     }
 
     public function forgotPassword($request): void
@@ -180,45 +169,30 @@ class AuthService
             );
         }
 
-        $this->otpService->send(
-            user: $user,
-            purpose: OtpPurposeEnum::FORGOT_PASSWORD,
-            request: $request
-        );
+        $this->otpService->send(user: $user,purpose: OtpPurposeEnum::FORGOT_PASSWORD,request: $request);
     }
 
     public function resetPassword($request): void
     {
         $user = $this->model
-            ->where(
-                'password_reset_token',
-                hash('sha256', $request->reset_token)
-            )
+            ->where('phone_number', $request->phone_number)
             ->first();
 
         if (! $user) {
-            throw new CustomException(
-                'Invalid reset token.',
-                422
-            );
+            throw new CustomException('User not found.', 404);
         }
 
-        if (
-            ! $user->password_reset_token_expires_at ||
-            $user->password_reset_token_expires_at->isPast()
-        ) {
-            throw new CustomException(
-                'Reset token has expired.',
-                422
-            );
-        }
+        $this->otpService->verify(
+            user: $user,
+            purpose: OtpPurposeEnum::FORGOT_PASSWORD,
+            otp: $request->otp
+        );
 
         $user->update([
             'password' => Hash::make($request->password),
-            'password_reset_token' => null,
-            'password_reset_token_expires_at' => null,
         ]);
 
+        // সব device থেকে logout
         $user->tokens()->delete();
     }
 

@@ -25,10 +25,7 @@ class OtpService
             ->first();
 
         if ($lastOtp && $lastOtp->sent_at && $lastOtp->sent_at->gt(now()->subSeconds(60))) {
-            throw new CustomException(
-                'Please wait before requesting another OTP.',
-                429
-            );
+            throw new CustomException('Please wait before requesting another OTP.',429);
         }
 
         Otp::query()
@@ -58,11 +55,7 @@ class OtpService
         logger()->info("OTP: {$otp}");
     }
 
-    public function verify(
-        User $user,
-        OtpPurposeEnum $purpose,
-        string $otp
-    ): void {
+    public function verify(User $user,OtpPurposeEnum $purpose,string $otp): void {
 
         $record = Otp::query()
             ->where('phone_number', $user->phone_number)
