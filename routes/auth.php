@@ -1,11 +1,11 @@
 <?php
 
-use App\Http\Controllers\Backend\Auth\AuthController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Backend\Auth\AuthController;
 
 Route::prefix('auth')->group(function(){
     Route::controller(AuthController::class)->group(function(){
-        Route::post('/login',           'login');
+        Route::post('/login',           'login')->middleware('throttle:login');
         Route::post('/verify-otp',      'verifyOtp');
         Route::post('/resend-otp',      'resendOtp');
         Route::post('/forgot-password',  'forgotPassword');
