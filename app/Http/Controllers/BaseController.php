@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Exceptions\HttpResponseException;
+
 class BaseController extends Controller
 {
     public function sendResponse($data = null, string $message = 'Success', int $status = 200)
@@ -25,5 +27,17 @@ class BaseController extends Controller
         }
 
         return response()->json($response, $status);
+    }
+
+    protected function authorizePermission($user, string $permission, string $message = 'You do not have permission to perform this action.'): void
+    {
+        if (! $user || ! $user->hasPermission($permission)) {
+            throw new HttpResponseException(
+                response()->json([
+                    'success' => false,
+                    'message' => $message,
+                ], 403)
+            );
+        }
     }
 }

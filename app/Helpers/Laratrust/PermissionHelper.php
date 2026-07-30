@@ -19,7 +19,7 @@ class PermissionHelper
 
                 $actionName = $permissionsMap[$action] ?? $action;
 
-                $permissionName = "{$actionName}.{$module}";
+                $permissionName = "{$module}_{$actionName}";
 
                 $permissions[$permissionName] = [
                     'name'         => $permissionName,
@@ -53,7 +53,7 @@ class PermissionHelper
 
                 $actionName = $permissionsMap[$action] ?? $action;
 
-                $permissions[] = "{$actionName}.{$module}";
+                $permissions[] = "{$module}_{$actionName}";
             }
         }
 

@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Http\Request;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\RateLimiter;
 
 class AppServiceProvider extends ServiceProvider
@@ -31,6 +32,23 @@ class AppServiceProvider extends ServiceProvider
 
                 });
 
+        });
+
+        Blueprint::macro('userstamps', function () {
+            $this->foreignId('created_by')
+                ->nullable()
+                ->constrained('users')
+                ->nullOnDelete();
+
+            $this->foreignId('updated_by')
+                ->nullable()
+                ->constrained('users')
+                ->nullOnDelete();
+
+            $this->foreignId('deleted_by')
+                ->nullable()
+                ->constrained('users')
+                ->nullOnDelete();
         });
     }
 }
