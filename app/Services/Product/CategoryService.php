@@ -4,32 +4,32 @@ namespace App\Services\Product;
 
 use Exception;
 use Illuminate\Support\Str;
-use App\Models\Product\Brand;
+use App\Models\Product\Category;
 use Illuminate\Support\Facades\DB;
 use App\Exceptions\CustomException;
 use App\Helpers\File\FileUploadHelper;
 
-class BrandService
+class CategoryService
 {
-    public function __construct(protected Brand $model){}
+    public function __construct(protected Category $model){}
 
     public function index($request)
     {
         $paginateSize = $request->input('paginate_size', 25);
         $searchKey = $request->input('search_key');
 
-        $brands = $this->model
+        $categories = $this->model
         ->with(
             'createdBy:id,username',
             'updatedBy:id,username',
         )
-        ->when($searchKey, function ($query, $searchKey) {
+        ->when($searchKey, function($query, $searchKey){
             $query->where('name', 'like', "%{$searchKey}%");
         })
         ->orderByDesc('created_at')
         ->paginate($paginateSize);
 
-        return $brands;
+        return $categories;
     }
 
     public function trashList($request)
@@ -51,17 +51,21 @@ class BrandService
     {
         try {
             return DB::transaction(function () use ($request) {
-                $brand = new $this->model();
 
-                $brand->name = Str::title($request->name);
+                $category = new $this->model();
+
+                $category->name = Str::title($request->name);
 
                 if ($request->hasFile('image') && $request->file('image')->isValid()) {
-                    $brand->img_path = FileUploadHelper::upload($request->file('image'),'brands');
+                    $category->img_path = FileUploadHelper::upload(
+                        $request->file('image'),
+                        'categories'
+                    );
                 }
 
-                $brand->save();
+                $category->save();
 
-                return $brand;
+                return $category->fresh();
             });
         } catch (\Throwable $e) {
             report($e);
@@ -73,13 +77,13 @@ class BrandService
     public function show($id)
     {
         try {
-            $brand = $this->model::find($id);
+            $category = $this->model::find($id);
 
-            if(!$brand){
+            if(!$category){
                 throw new CustomException("Brand Not Found");
             }
 
-            return $brand;
+            return $category;
         } catch (Exception $e) {
             info($e);
             throw $e;
@@ -91,21 +95,21 @@ class BrandService
         try {
             return DB::transaction(function () use ($request, $id) {
 
-                $brand = $this->model::find($id);
+                $category = $this->model::find($id);
 
-                if(!$brand){
-                    throw new CustomException("Brand not found");
+                if(!$category){
+                    throw new CustomException("Category not found");
                 }
 
-                $brand->name = Str::title($request->name);
+                $category->name = Str::title($request->name);
 
                 if ($request->hasFile('image')) {
-                    $brand->img_path = FileUploadHelper::replace($request->file('image'),$brand->img_path,'brands');
+                    $category->img_path = FileUploadHelper::replace($request->file('image'),$category->img_path,'brands');
                 }
 
-                $brand->save();
+                $category->save();
 
-                return $brand->fresh();
+                return $category->fresh();
             });
 
         } catch (\Throwable $e) {
@@ -117,29 +121,29 @@ class BrandService
 
     public function restore($id)
     {
-        $brand = $this->model::onlyTrashed()->find($id);
+        $category = $this->model::onlyTrashed()->find($id);
 
-        if (!$brand) {
-            throw new CustomException("Brand Not Found");
+        if (!$category) {
+            throw new CustomException("Category Not Found");
         }
 
-        $brand->restore();
+        $category->restore();
 
-        return $brand;
+        return $category;
     }
 
     public function destroy($id)
     {
         try {
-            $brand = $this->model::find($id);
+            $category = $this->model::find($id);
 
-            if(!$brand){
-                throw new CustomException("Brand Not Found");
+            if(!$category){
+                throw new CustomException("Category Not Found");
             }
 
-            FileUploadHelper::delete($brand->img_path);
+            FileUploadHelper::delete($category->img_path);
 
-            return $brand->delete();
+            return $category->delete();
         } catch (Exception $e) {
             info($e);
             throw $e;
@@ -148,15 +152,15 @@ class BrandService
 
     public function forceDelete($id)
     {
-        $brand = $this->model::onlyTrashed()->find($id);
+        $category = $this->model::onlyTrashed()->find($id);
 
-        if (!$brand) {
-            throw new CustomException("Brand Not Found");
+        if (!$category) {
+            throw new CustomException("Category Not Found");
         }
 
-        FileUploadHelper::delete($brand->img_path);
+        FileUploadHelper::delete($category->img_path);
 
-        $brand->forceDelete();
+        $category->forceDelete();
 
         return true;
     }

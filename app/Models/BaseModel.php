@@ -41,10 +41,7 @@ class BaseModel extends Model
         });
 
         static::deleting(function ($model) {
-            if (
-                auth()->check() &&
-                in_array(\Illuminate\Database\Eloquent\SoftDeletes::class, class_uses_recursive($model))
-            ) {
+            if (auth()->check() && in_array(\Illuminate\Database\Eloquent\SoftDeletes::class, class_uses_recursive($model))) {
                 $model->deleted_by = auth()->id();
                 $model->saveQuietly();
             }

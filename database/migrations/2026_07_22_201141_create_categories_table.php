@@ -15,7 +15,6 @@ return new class extends Migration
             $table->string('slug');
             $table->string('img_path')->nullable();
             $table->string('status')->default(StatusEnum::ACTIVE);
-            $table->unsignedInteger('parent_id')->nullable();
             $table->userstamps();
             $table->softDeletes();
             $table->timestamps();
