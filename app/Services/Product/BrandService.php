@@ -37,6 +37,7 @@ class BrandService
         $paginateSize = $request->input('paginate_size', 25);
 
         $results = $this->model
+        ->with('deletedBy:id,username')
         ->onlyTrashed()
         ->when($request->filled('search_key'), function ($query) use ($request) {
             $query->where('name', 'like', "%{$request->search_key}%");
@@ -73,7 +74,12 @@ class BrandService
     public function show($id)
     {
         try {
-            $brand = $this->model::find($id);
+            $brand = $this->model
+            ->with(
+                'createdBy:id,username',
+                'updatedBy:id,username',
+            )
+            ->find($id);
 
             if(!$brand){
                 throw new CustomException("Brand Not Found");
@@ -98,6 +104,7 @@ class BrandService
                 }
 
                 $brand->name = Str::title($request->name);
+                $brand->status = $request->status;
 
                 if ($request->hasFile('image')) {
                     $brand->img_path = FileUploadHelper::replace($request->file('image'),$brand->img_path,'brands');

@@ -37,6 +37,9 @@ class CategoryService
         $paginateSize = $request->input('paginate_size', 25);
 
         $results = $this->model
+        ->with(
+            'deletedBy:id,username',
+        )
         ->onlyTrashed()
         ->when($request->filled('search_key'), function ($query) use ($request) {
             $query->where('name', 'like', "%{$request->search_key}%");
@@ -57,10 +60,7 @@ class CategoryService
                 $category->name = Str::title($request->name);
 
                 if ($request->hasFile('image') && $request->file('image')->isValid()) {
-                    $category->img_path = FileUploadHelper::upload(
-                        $request->file('image'),
-                        'categories'
-                    );
+                    $category->img_path = FileUploadHelper::upload($request->file('image'),'categories');
                 }
 
                 $category->save();
@@ -77,7 +77,12 @@ class CategoryService
     public function show($id)
     {
         try {
-            $category = $this->model::find($id);
+            $category = $this->model
+            ->with(
+                'createdBy:id,username',
+                'updatedBy:id,username',
+            )
+            ->find($id);
 
             if(!$category){
                 throw new CustomException("Brand Not Found");
@@ -102,6 +107,7 @@ class CategoryService
                 }
 
                 $category->name = Str::title($request->name);
+                $category->status = $request->status;
 
                 if ($request->hasFile('image')) {
                     $category->img_path = FileUploadHelper::replace($request->file('image'),$category->img_path,'brands');

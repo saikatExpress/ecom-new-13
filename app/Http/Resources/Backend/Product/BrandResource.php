@@ -31,8 +31,16 @@ class BrandResource extends JsonResource
                 ];
             }),
 
+            'deleted_by' => $this->whenLoaded('deletedBy', function () {
+                return [
+                    'id'       => $this->deletedBy->id,
+                    'username' => $this->deletedBy->username,
+                ];
+            }),
+
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'deleted_at' => $this->deleted_at,
         ];
     }
 }

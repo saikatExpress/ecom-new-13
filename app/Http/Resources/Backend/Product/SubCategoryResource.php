@@ -2,11 +2,11 @@
 
 namespace App\Http\Resources\Backend\Product;
 
-use Illuminate\Http\Request;
 use App\Helpers\File\FileUrlHelper;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CategoryResource extends JsonResource
+class SubCategoryResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
@@ -16,6 +16,13 @@ class CategoryResource extends JsonResource
             'slug'       => $this->slug,
             'image'      => FileUrlHelper::url($this->img_path),
             'status'     => $this->status,
+
+            'category' => $this->whenLoaded('category', function () {
+                return [
+                    'id'       => $this->category->id,
+                    'name' => $this->category->name,
+                ];
+            }),
 
             'created_by' => $this->whenLoaded('createdBy', function () {
                 return [
