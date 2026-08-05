@@ -32,7 +32,7 @@ class SubCategoryController extends BaseController
 
         $subCategories = new SubCategoryCollection($subCategories);
 
-        return $this->sendResponse($subCategories, "Category List");
+        return $this->sendResponse($subCategories, "Category Trash List");
     }
 
     public function store(SubCategoryRequest $request)
@@ -48,7 +48,7 @@ class SubCategoryController extends BaseController
 
     public function show(Request $request, $id)
     {
-        $this->authorizePermission($request->user(),'sub_category_show','You do not have permission to view categories.');
+        $this->authorizePermission($request->user(),'sub_category_read','You do not have permission to view categories.');
 
         $subCategory = $this->service->show($id);
 

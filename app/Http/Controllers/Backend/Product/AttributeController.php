@@ -32,7 +32,7 @@ class AttributeController extends BaseController
 
         $attributes = new AttributeCollection($attributes);
 
-        return $this->sendResponse($attributes, "Atrribute List");
+        return $this->sendResponse($attributes, "Atrribute Trash List");
     }
 
     public function store(AttributeRequest $request)
@@ -48,7 +48,7 @@ class AttributeController extends BaseController
 
     public function show(Request $request, $id)
     {
-        $this->authorizePermission($request->user(),'attribute_show','You do not have permission to view attribute.');
+        $this->authorizePermission($request->user(),'attribute_read','You do not have permission to view attribute.');
 
         $attribute = $this->service->show($id);
 

@@ -31,7 +31,7 @@ class BrandController extends BaseController
 
         $brands = new BrandCollection($brands);
 
-        return $this->sendResponse($brands, "Brand List");
+        return $this->sendResponse($brands, "Brand Trash List");
     }
 
     public function store(BrandRequest $request)
@@ -47,7 +47,7 @@ class BrandController extends BaseController
 
     public function show(Request $request, $id)
     {
-        $this->authorizePermission($request->user(),'brand_show','You do not have permission to view brands.');
+        $this->authorizePermission($request->user(),'brand_read','You do not have permission to view brands.');
 
         $brand = $this->service->show($id);
 

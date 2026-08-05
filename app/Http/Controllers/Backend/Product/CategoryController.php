@@ -32,7 +32,7 @@ class CategoryController extends BaseController
 
         $categories = new CategoryCollection($categories);
 
-        return $this->sendResponse($categories, "Category List");
+        return $this->sendResponse($categories, "Category Trash List");
     }
 
     public function store(CategoryRequest $request)
@@ -48,7 +48,7 @@ class CategoryController extends BaseController
 
     public function show(Request $request, $id)
     {
-        $this->authorizePermission($request->user(),'category_show','You do not have permission to view categories.');
+        $this->authorizePermission($request->user(),'category_read','You do not have permission to view categories.');
 
         $category = $this->service->show($id);
 
