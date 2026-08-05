@@ -19,7 +19,7 @@ return new class extends Migration
             $table->decimal('mrp', 10, 2);
             $table->decimal('sell_price', 10, 2);
 
-            $table->string('discount_type')->default(DiscountTypeEnum::FIXED);
+            $table->string('discount_type')->default(DiscountTypeEnum::FIXED->value);
             $table->decimal('discount_amount', 10, 2)->default(0);
             $table->decimal('offer_price', 10, 2)->nullable();
 

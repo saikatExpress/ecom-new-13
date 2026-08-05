@@ -2,12 +2,13 @@
 
 namespace Database\Seeders;
 
-use Database\Seeders\Product\AttributeSeeder;
-use Database\Seeders\Product\AttributeValueSeeder;
-use Database\Seeders\Product\BrandSeeder;
-use Database\Seeders\Product\CategorySeeder;
-use Database\Seeders\Product\SubCategorySeeder;
 use Illuminate\Database\Seeder;
+use Database\Seeders\Product\BrandSeeder;
+use Database\Seeders\Product\ProductSeeder;
+use Database\Seeders\Product\CategorySeeder;
+use Database\Seeders\Product\AttributeSeeder;
+use Database\Seeders\Product\SubCategorySeeder;
+use Database\Seeders\Product\AttributeValueSeeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class DatabaseSeeder extends Seeder
@@ -26,6 +27,7 @@ class DatabaseSeeder extends Seeder
             BrandSeeder::class,
             AttributeSeeder::class,
             AttributeValueSeeder::class,
+            ProductSeeder::class,
             SettingSeeder::class,
         ]);
     }

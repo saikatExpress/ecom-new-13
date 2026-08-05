@@ -14,6 +14,10 @@ class AttributeResource extends JsonResource
             'name'       => $this->name,
             'slug'       => $this->slug,
 
+            'attributeValues' => AttributeValueResource::collection(
+                $this->whenLoaded('attributeValues')
+            ),
+
             'created_by' => $this->whenLoaded('createdBy', function () {
                 return [
                     'id'       => $this->createdBy->id,

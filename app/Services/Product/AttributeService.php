@@ -19,6 +19,7 @@ class AttributeService
 
         $attributes = $this->model
         ->with(
+            'attributeValues',
             'createdBy:id,username',
             'updatedBy:id,username',
         )
