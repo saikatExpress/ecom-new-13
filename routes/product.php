@@ -6,6 +6,7 @@ use App\Http\Controllers\Backend\Product\AttributeController;
 use App\Http\Controllers\Backend\Product\CategoryController;
 use App\Http\Controllers\Backend\Product\SubCategoryController;
 use App\Http\Controllers\Backend\Product\AttributeValueController;
+use App\Http\Controllers\Backend\Product\ProductController;
 
 Route::middleware('auth:sanctum')->group(function(){
     Route::prefix('admin/category')->group(function(){
@@ -67,6 +68,12 @@ Route::middleware('auth:sanctum')->group(function(){
             Route::get('/{id}',                     'show');
             Route::put('/{id}',                     'update');
             Route::delete('/{id}',                  'destroy');
+        });
+    });
+
+    Route::prefix('admin/product')->group(function(){
+        Route::controller(ProductController::class)->group(function(){
+            Route::get('/', 'index');
         });
     });
 });
