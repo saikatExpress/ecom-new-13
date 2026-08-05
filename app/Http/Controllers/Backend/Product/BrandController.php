@@ -47,7 +47,7 @@ class BrandController extends BaseController
 
     public function show(Request $request, $id)
     {
-        $this->authorizePermission($request->user(),'brand_read','You do not have permission to view brands.');
+        $this->authorizePermission($request->user(),'brand_show','You do not have permission to view brands.');
 
         $brand = $this->service->show($id);
 

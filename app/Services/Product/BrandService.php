@@ -112,7 +112,7 @@ class BrandService
 
                 $brand->save();
 
-                return $brand->fresh();
+                return $brand;
             });
 
         } catch (\Throwable $e) {
