@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use Database\Seeders\Product\AttributeSeeder;
+use Database\Seeders\Product\AttributeValueSeeder;
 use Database\Seeders\Product\BrandSeeder;
 use Database\Seeders\Product\CategorySeeder;
 use Database\Seeders\Product\SubCategorySeeder;
@@ -22,6 +24,8 @@ class DatabaseSeeder extends Seeder
             CategorySeeder::class,
             SubCategorySeeder::class,
             BrandSeeder::class,
+            AttributeSeeder::class,
+            AttributeValueSeeder::class,
             SettingSeeder::class,
         ]);
     }
