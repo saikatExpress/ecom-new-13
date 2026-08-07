@@ -16,7 +16,6 @@ class ProductSeeder extends Seeder
 {
     public function run(): void
     {
-        // Fetch existing IDs to avoid foreign key errors
         $categoryIds       = Category::pluck('id')->toArray();
         $subCategoryIds    = SubCategory::pluck('id')->toArray();
         $brandIds          = Brand::pluck('id')->toArray();
@@ -37,7 +36,6 @@ class ProductSeeder extends Seeder
             $mrp = rand(1000, 5000);
             $sellPrice = $mrp - rand(100, 500);
 
-            // 1. Create Base Product
             $product = Product::create([
                 'name'                => $name,
                 'slug'                => Str::slug($name) . '-' . time() . '-' . $i,
@@ -48,10 +46,10 @@ class ProductSeeder extends Seeder
                 'buy_price'           => $sellPrice - rand(200, 600),
                 'mrp'                 => $mrp,
                 'sell_price'          => $sellPrice,
-                'discount_type'       => 'fixed',
+                'offer_percentage'    => 10,
                 'discount_amount'     => 100.00,
                 'offer_price'         => $sellPrice - 100,
-                'current_stock'       => rand(10, 100),                                                                                      // Simple product stock (or base stock)
+                'current_stock'       => rand(10, 100),
                 'total_sell_quantity' => rand(0, 50),
                 'short_description'   => 'This is a short description for ' . $name,
                 'description'         => 'Detailed product specifications and features for ' . $name . ' designed for Bangladesh market.',
@@ -78,16 +76,15 @@ class ProductSeeder extends Seeder
                         'buy_price'           => $variantPrice - 300,
                         'mrp'                 => $variantPrice + 500,
                         'sell_price'          => $variantPrice,
-                        'discount_type'       => 'fixed',
                         'discount_amount'     => 50.00,
                         'offer_price'         => $variantPrice - 50,
+                        'offer_percentage'    => 10,
                         'current_stock'       => rand(5, 25),
                         'total_sell_quantity' => rand(0, 10),
                         'img_path'            => 'uploads/variants/variant-' . $v . '.jpg',
                         'status'              => 'active',
                     ]);
 
-                    // Attach 1 to 2 random attribute values to the variant
                     if (count($attributeValueIds) >= 2) {
                         $randomValues = array_rand(array_flip($attributeValueIds), min(2, count($attributeValueIds)));
                         $variant->attributeValues()->attach(is_array($randomValues) ? $randomValues : [$randomValues]);

@@ -36,4 +36,24 @@ class Product extends BaseModel
     {
         return $this->hasMany(ProductGallery::class);
     }
+
+    // Helper Method
+    public function calculateOffer(float $mrp, float $sellPrice): array
+    {
+        if ($mrp > 0 && $sellPrice > 0 && $sellPrice < $mrp) {
+            $discountAmount = $mrp - $sellPrice;
+
+            return [
+                'offer_price' => $sellPrice,
+                'discount_amount' => $discountAmount,
+                'offer_percentage' => round(($discountAmount / $mrp) * 100,2),
+            ];
+        }
+
+        return [
+            'offer_price' => 0,
+            'discount_amount' => 0,
+            'offer_percentage' => 0,
+        ];
+    }
 }

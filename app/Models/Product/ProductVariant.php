@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class ProductVariant extends BaseModel
 {
+    protected $guarded = ['id'];
     // Relations
     public function product(): BelongsTo
     {
