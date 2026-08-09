@@ -23,6 +23,13 @@ class BrandController extends BaseController
         return $this->sendResponse($brands, "Brand List");
     }
 
+    public function list()
+    {
+        $brands = $this->service->list();
+
+        return $this->sendResponse($brands, "Brand List");
+    }
+
     public function trashList(Request $request)
     {
         $this->authorizePermission($request->user(),'brand_read','You do not have permission to view brands.');

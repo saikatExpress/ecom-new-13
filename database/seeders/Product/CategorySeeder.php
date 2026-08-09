@@ -24,11 +24,12 @@ class CategorySeeder extends Seeder
             'Groceries',
         ];
 
-        foreach ($categories as $category) {
+        foreach ($categories as $index => $category) {
             Category::create([
-                'name'   => $category,
-                'slug'   => Str::slug($category),
-                'status' => StatusEnum::ACTIVE,
+                'name'     => $category,
+                'slug'     => Str::slug($category),
+                'position' => $index + 1,
+                'status'   => StatusEnum::ACTIVE,
             ]);
         }
     }

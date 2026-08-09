@@ -12,6 +12,7 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::prefix('admin/category')->group(function(){
         Route::controller(CategoryController::class)->group(function(){
             Route::get('/',                         'index');
+            Route::get('/list',                     'list');
             Route::get('/trash',                    'trashList');
             Route::post('/',                        'store');
             Route::get('/{id}',                     'show');
@@ -25,6 +26,7 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::prefix('admin/subcategory')->group(function(){
         Route::controller(SubCategoryController::class)->group(function(){
             Route::get('/',                         'index');
+            Route::get('/list',                     'list');
             Route::get('/trash',                    'trashList');
             Route::post('/',                        'store');
             Route::get('/{id}',                     'show');
@@ -38,6 +40,7 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::prefix('admin/brand')->group(function(){
         Route::controller(BrandController::class)->group(function(){
             Route::get('/',                         'index');
+            Route::get('/list',                      'list');
             Route::get('/trash',                    'trashList');
             Route::post('/',                        'store');
             Route::get('/{id}',                     'show');

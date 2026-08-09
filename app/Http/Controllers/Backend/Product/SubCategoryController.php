@@ -24,6 +24,13 @@ class SubCategoryController extends BaseController
         return $this->sendResponse($subCategories, "Sub Categories List");
     }
 
+    public function list(Request $request)
+    {
+        $subCategories = $this->service->list($request);
+
+        return $this->sendResponse($subCategories, "Sub Category List");
+    }
+
     public function trashList(Request $request)
     {
         $this->authorizePermission($request->user(),'sub_category_read','You do not have permission to view sub categories.');

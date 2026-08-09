@@ -15,6 +15,7 @@ class ProductResource extends JsonResource
             'name'                => $this->name,
             'slug'                => $this->slug,
             'sku'                 => $this->sku,
+            'free_shipping'       => $this->free_shipping,
             'image'               => FileUrlHelper::url($this->img_path),
             'buy_price'           => $this->buy_price,
             'mrp'                 => $this->mrp,

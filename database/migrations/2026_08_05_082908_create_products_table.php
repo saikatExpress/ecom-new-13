@@ -21,6 +21,8 @@ return new class extends Migration
             $table->string('sku')->unique()->nullable();
             $table->string('img_path');
 
+            $table->boolean('free_shipping')->default(0);
+
             $table->decimal('buy_price', 10,2)->nullable();
             $table->decimal('mrp', 10,2);
             $table->decimal('sell_price', 10,2);

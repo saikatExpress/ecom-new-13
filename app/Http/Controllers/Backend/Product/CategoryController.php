@@ -24,6 +24,13 @@ class CategoryController extends BaseController
         return $this->sendResponse($categories, "Categories List");
     }
 
+    public function list()
+    {
+        $categories = $this->service->list();
+
+        return $this->sendResponse($categories, "Category List");
+    }
+
     public function trashList(Request $request)
     {
         $this->authorizePermission($request->user(),'category_read','You do not have permission to view categories.');

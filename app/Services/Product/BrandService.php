@@ -32,6 +32,16 @@ class BrandService
         return $brands;
     }
 
+    public function list()
+    {
+        $brands = $this->model
+        ->select('id', 'name', 'slug')
+        ->where('status', 'active')
+        ->get();
+
+        return $brands;
+    }
+
     public function trashList($request)
     {
         $paginateSize = $request->input('paginate_size', 25);

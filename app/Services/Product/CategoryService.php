@@ -32,6 +32,13 @@ class CategoryService
         return $categories;
     }
 
+    public function list()
+    {
+        $categories = $this->model->select('id', 'name', 'slug')->where('status', 'active')->get();
+
+        return $categories;
+    }
+
     public function trashList($request)
     {
         $paginateSize = $request->input('paginate_size', 25);

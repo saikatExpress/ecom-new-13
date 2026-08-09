@@ -17,7 +17,7 @@ class SubCategoryService
     {
         $paginateSize = $request->input('paginate_size', 25);
         $searchKey = $request->input('search_key');
-        $categoryId = $request->input('category_id');
+        $categoryIds = $request->input('category_ids', []);
 
         $subCategories = $this->model
         ->with(
@@ -28,11 +28,26 @@ class SubCategoryService
         ->when($searchKey, function($query, $searchKey){
             $query->where('name', 'like', "%{$searchKey}%");
         })
-        ->when($categoryId, function($query,$categoryId){
-            $query->where('category_id', $categoryId);
+        ->when($categoryIds, function($query,$categoryIds){
+            $query->whereIn('category_id', $categoryIds);
         })
         ->orderByDesc('created_at')
         ->paginate($paginateSize);
+
+        return $subCategories;
+    }
+
+    public function list($request)
+    {
+        $categoryId = $request->input('category_id');
+
+        $subCategories = $this->model
+        ->select('id', 'name', 'slug')
+        ->when($categoryId, function($query, $categoryId){
+            $query->where('category_id', $categoryId);
+        })
+        ->where('status', 'active')
+        ->get();
 
         return $subCategories;
     }
