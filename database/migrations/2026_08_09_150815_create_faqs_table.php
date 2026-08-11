@@ -13,7 +13,7 @@ return new class extends Migration
             $table->id();
             $table->text('question');
             $table->longText('answer');
-            $table->integer('order')->default(0);
+            $table->integer('position')->default(0);
             $table->string('status')->default(StatusEnum::ACTIVE);
             $table->timestamps();
         });
