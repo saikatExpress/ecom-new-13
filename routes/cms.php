@@ -14,10 +14,10 @@ Route::middleware('auth:sanctum')->group(function(){
 
     Route::prefix('admin/faq')->group(function(){
         Route::controller(FaqController::class)->group(function(){
-            Route::get('/', 'index');
-            Route::post('/', 'store');
-            Route::get('/{id}', 'show');
-            Route::put('/{id}', 'update');
+            Route::get('/',        'index');
+            Route::post('/',       'store');
+            Route::get('/{id}',    'show');
+            Route::put('/{id}',    'update');
             Route::delete('/{id}', 'destroy');
         });
     });
