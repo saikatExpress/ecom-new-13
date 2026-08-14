@@ -2,9 +2,20 @@
 
 namespace App\Models\Blog;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\BaseModel;
 
-class BlogPost extends Model
+class BlogPost extends BaseModel
 {
-    //
+    protected $guarded = ['id'];
+
+    // Relations
+    public function category()
+    {
+        return $this->belongsTo(BlogCategory::class, 'category_id');
+    }
+
+    public function tags()
+    {
+        return $this->belongsToMany(BlogTag::class);
+    }
 }
