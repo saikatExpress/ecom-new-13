@@ -72,6 +72,7 @@ class BlogService
             $blog = new $this->model();
 
             $blog->title            = Str::title($request->title);
+            $blog->slug             = Str::slug($request->title, '-');
             $blog->category_id      = $request->category_id;
             $blog->excerpt          = $request->excerpt;
             $blog->content          = $request->content;
@@ -98,7 +99,7 @@ class BlogService
     {
         $blog = $this->model
         ->with([
-            'category',
+            'category:id,name',
             'tags',
             'createdBy:id,username'
         ])
@@ -121,6 +122,7 @@ class BlogService
             }
 
             $blog->title            = Str::title($request->title);
+            $blog->slug             = Str::slug($request->title, '-');
             $blog->category_id      = $request->category_id;
             $blog->excerpt          = $request->excerpt;
             $blog->content          = $request->content;

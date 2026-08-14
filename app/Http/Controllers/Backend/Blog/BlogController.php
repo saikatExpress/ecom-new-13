@@ -52,7 +52,7 @@ class BlogController extends BaseController
 
         $blog = $this->service->show($id);
 
-        $blog = new BlogResource($id);
+        $blog = new BlogResource($blog);
 
         return $this->sendResponse($blog, "Blog Show Successfully");
     }

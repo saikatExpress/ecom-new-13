@@ -16,7 +16,7 @@ class BlogRequest extends FormRequest
         return [
             'title'       => ["required", "min:2"],
             'category_id' => ["required", 'exists:blog_categories,id'],
-            'img_path'    => ['required', 'image', 'mimes:png,jpg,jpeg,webp'],
+            'image'       => ['required', 'image', 'mimes:png,jpg,jpeg,webp'],
             'status'      => ['required', 'in:active,inactive']
         ];
     }
