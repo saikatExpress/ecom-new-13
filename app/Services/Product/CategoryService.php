@@ -154,8 +154,6 @@ class CategoryService
                 throw new CustomException("Category Not Found");
             }
 
-            FileUploadHelper::delete($category->img_path);
-
             return $category->delete();
         } catch (Exception $e) {
             info($e);

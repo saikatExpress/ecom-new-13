@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\CMS\CmsController;
 use App\Http\Controllers\Backend\CMS\FaqController;
+use App\Http\Controllers\Backend\CMS\SectionController;
 use App\Http\Controllers\Backend\CMS\SliderController;
 
 Route::middleware('auth:sanctum')->group(function(){
@@ -26,7 +27,20 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::prefix('admin/slider')->group(function(){
         Route::controller(SliderController::class)->group(function(){
             Route::get('/',                         'index');
-            Route::get('/trashlist',                'trashList');
+            Route::get('/trash',                'trashList');
+            Route::post('/',                        'store');
+            Route::get('/{id}',                     'show');
+            Route::put('/{id}',                     'update');
+            Route::delete('/{id}',                  'destroy');
+            Route::patch('/{id}/restore',           'restore');
+            Route::delete('/permanent-delete/{id}', 'permanentDelete');
+        });
+    });
+
+    Route::prefix('admin/section')->group(function(){
+        Route::controller(SectionController::class)->group(function(){
+            Route::get('/',                         'index');
+            Route::get('/trash',                'trashList');
             Route::post('/',                        'store');
             Route::get('/{id}',                     'show');
             Route::put('/{id}',                     'update');

@@ -3,6 +3,7 @@
 namespace App\Models\Product;
 
 use App\Models\BaseModel;
+use App\Models\CMS\Section;
 use App\Traits\HasSlug;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -35,6 +36,11 @@ class Product extends BaseModel
     public function galleries(): HasMany
     {
         return $this->hasMany(ProductGallery::class);
+    }
+
+    public function sections()
+    {
+        return $this->belongsToMany(Section::class,'section_products','product_id','section_id');
     }
 
     // Helper Method

@@ -171,8 +171,6 @@ class SubCategoryService
                 throw new CustomException("Sub Category Not Found");
             }
 
-            FileUploadHelper::delete($subCategory->img_path);
-
             return $subCategory->delete();
         } catch (Exception $e) {
             info($e);

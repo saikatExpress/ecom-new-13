@@ -34,10 +34,7 @@ class BrandService
 
     public function list()
     {
-        $brands = $this->model
-        ->select('id', 'name', 'slug')
-        ->where('status', 'active')
-        ->get();
+        $brands = $this->model->select('id', 'name', 'slug')->where('status', 'active')->get();
 
         return $brands;
     }
@@ -153,8 +150,6 @@ class BrandService
             if(!$brand){
                 throw new CustomException("Brand Not Found");
             }
-
-            FileUploadHelper::delete($brand->img_path);
 
             return $brand->delete();
         } catch (Exception $e) {
