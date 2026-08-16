@@ -41,6 +41,23 @@ class BrandSeeder extends Seeder
             'Baseus',
             'Remax',
             'Adata',
+            'Aarong',
+            'PRAN',
+            'Radhuni',
+            'Square',
+            'ACI',
+            'Apex',
+            'RFL',
+            'Yellow',
+            'Richman',
+            'Cats Eye',
+            'Vision Electronics',
+            'Singer Bangladesh',
+            'Ispahani',
+            'Fresh',
+            'Beximco',
+            'Otobi',
+            'TeeTulia',
         ];
 
         foreach ($brands as $brand) {

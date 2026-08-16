@@ -8,4 +8,10 @@ use App\Models\BaseModel;
 class Category extends BaseModel
 {
     use HasSlug;
+
+    // Relation
+    public function subCategories()
+    {
+        return $this->hasMany(SubCategory::class);
+    }
 }

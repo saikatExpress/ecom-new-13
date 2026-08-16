@@ -37,10 +37,10 @@ class ProductService
 
         ->select('id', 'name', 'slug', 'category_id', 'sub_category_id', 'brand_id', 'sku', 'img_path', 'free_shipping', 'buy_price', 'mrp', 'sell_price', 'offer_price', 'discount_amount', 'offer_percentage', 'current_stock', 'total_sell_quantity', 'status')
 
-        ->when($searchKey, function ($query) {
-            $query->where(function ($q, $searchKey) {
+        ->when($searchKey, function ($query) use ($searchKey) {
+            $query->where(function ($q) use ($searchKey) {
                 $q->where('name', 'like', "%{$searchKey}%")
-                    ->orWhere('sku', 'like', "%{$searchKey}%");
+                ->orWhere('sku', 'like', "%{$searchKey}%");
             });
         })
 
