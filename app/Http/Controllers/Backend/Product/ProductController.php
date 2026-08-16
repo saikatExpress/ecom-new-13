@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Backend\Product;
 
-use App\Http\Controllers\BaseController;
-use App\Http\Requests\Backend\Product\ProductRequest;
-use App\Http\Resources\Backend\Product\ProductCollection;
-use App\Http\Resources\Backend\Product\ProductResource;
-use App\Services\Product\ProductService;
 use Illuminate\Http\Request;
+use App\Http\Controllers\BaseController;
+use App\Services\Product\ProductService;
+use App\Http\Requests\Backend\Product\ProductRequest;
+use App\Http\Resources\Backend\Product\ProductResource;
+use App\Http\Resources\Backend\Product\ProductCollection;
 
 class ProductController extends BaseController
 {
@@ -22,6 +22,17 @@ class ProductController extends BaseController
         $products = new ProductCollection($products);
 
         return $this->sendResponse($products, "Product List");
+    }
+
+    public function trashList(Request $request)
+    {
+        $this->authorizePermission($request->user(), 'product_read', 'You have no permission for view products');
+
+        $products = $this->service->trashList($request);
+
+        $products = new ProductCollection($products);
+
+        return $this->sendResponse($products, "Product Trash List");
     }
 
     public function store(ProductRequest $request)
@@ -55,5 +66,34 @@ class ProductController extends BaseController
         $product = new ProductResource($product);
 
         return $this->sendResponse($product, "Product Update Successfully");
+    }
+
+    public function destroy(Request $request, $id)
+    {
+        $this->authorizePermission($request->user(), 'product_delete', 'You have no permission for delete product');
+
+        $this->service->destroy($id);
+
+        return $this->sendResponse("Product delete Successfully");
+    }
+
+    public function restore(Request $request, $id)
+    {
+        $this->authorizePermission($request->user(), 'product_read', 'You have no permission for show product');
+
+        $product = $this->service->restore($id);
+
+        $product = new ProductResource($product);
+
+        return $this->sendResponse($product, "Product Restore Successfully");
+    }
+
+    public function permanentDelete(Request $request, $id)
+    {
+        $this->authorizePermission($request->user(), 'product_delete', 'You have no permission for delete product');
+
+        $this->service->permanentDelete($id);
+
+        return $this->sendResponse("Product Delete Permanently");
     }
 }

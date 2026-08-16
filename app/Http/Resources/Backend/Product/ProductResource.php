@@ -2,8 +2,8 @@
 
 namespace App\Http\Resources\Backend\Product;
 
-use App\Helpers\File\FileUrlHelper;
 use Illuminate\Http\Request;
+use App\Helpers\File\FileUrlHelper;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ProductResource extends JsonResource
@@ -29,6 +29,15 @@ class ProductResource extends JsonResource
             'description'         => $this->description,
             'video_url'           => $this->video_url,
             'status'              => $this->status,
+            'variation_price_range' => $this->when(
+                $this->relationLoaded('variants') && $this->variants->isNotEmpty(),
+                function () {
+                    return [
+                        'min_price' => $this->variants->min('sell_price'),
+                        'max_price' => $this->variants->max('sell_price'),
+                    ];
+                }
+            ),
             'category'            => [
                 'id'   => $this->whenLoaded('category', fn() => $this->category->id),
                 'name' => $this->whenLoaded('category', fn() => $this->category->name),
@@ -41,9 +50,29 @@ class ProductResource extends JsonResource
                 'id'   => $this->whenLoaded('brand', fn() => $this->brand?->id),
                 'name' => $this->whenLoaded('brand', fn() => $this->brand?->name),
             ],
+            'created_by' => $this->whenLoaded('createdBy', function(){
+                return [
+                    'id'       => $this->createdBy->id,
+                    'username' => $this->createdBy->username,
+                ];
+            }),
+            'updated_by' => $this->whenLoaded('updatedBy', function(){
+                return [
+                    'id'       => $this->updatedBy->id,
+                    'username' => $this->updatedBy->username,
+                ];
+            }),
+            'deleted_by' => $this->whenLoaded('deletedBy', function(){
+                return [
+                    'id'       => $this->deletedBy->id,
+                    'username' => $this->deletedBy->username,
+                ];
+            }),
             'gallery_images' => GalleryResource::collection($this->whenLoaded('galleries')),
             'variants'       => ProductVariantResource::collection($this->whenLoaded('variants')),
-            'created_at'     => $this->created_at?->format('Y-m-d H:i:s'),
+            'created_at'     => $this->created_at,
+            'updated_at'     => $this->updated_at,
+            'deleted_at'     => $this->deleted_at,
         ];
     }
 }

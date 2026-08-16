@@ -2,12 +2,12 @@
 
 namespace App\Services\Product;
 
+use Exception;
+use Illuminate\Support\Str;
+use App\Models\Product\Product;
+use Illuminate\Support\Facades\DB;
 use App\Exceptions\CustomException;
 use App\Helpers\File\FileUploadHelper;
-use App\Models\Product\Product;
-use Exception;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 
 class ProductService
 {
@@ -15,29 +15,118 @@ class ProductService
 
     public function index($request)
     {
-        $paginateSize = $request->input('paginate_size', 25);
+        $paginateSize   = $request->input('paginate_size', 25);
+        $searchKey      = $request->input('search_key');
+        $categoryIds    = $request->input('category_ids', []);
+        $subCategoryIds = $request->input('sub_category_ids', []);
+        $brandIds       = $request->input('brand_ids', []);
+        $minPrice       = $request->input('min_price');
+        $maxPrice       = $request->input('max_price');
+        $status         = $request->input('status');
 
         $products = $this->model->query()
-        ->with(['category', 'brand'])
+        ->with([
+            'category:id,name',
+            'subCategory:id,name',
+            'brand:id,name',
+            'galleries',
+            'variants.attributeValues.attribute',
+            'createdBy:id,username',
+            'updatedBy:id,username'
+        ])
 
-        ->when($request->filled('search'), function ($query) use ($request) {
-            $search = $request->input('search');
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                    ->orWhere('sku', 'like', "%{$search}%");
+        ->select('id', 'name', 'slug', 'category_id', 'sub_category_id', 'brand_id', 'sku', 'img_path', 'free_shipping', 'buy_price', 'mrp', 'sell_price', 'offer_price', 'discount_amount', 'offer_percentage', 'current_stock', 'total_sell_quantity', 'status')
+
+        ->when($searchKey, function ($query) {
+            $query->where(function ($q, $searchKey) {
+                $q->where('name', 'like', "%{$searchKey}%")
+                    ->orWhere('sku', 'like', "%{$searchKey}%");
             });
         })
 
-        ->when($request->filled('category_id'), function ($query) use ($request) {
-            $query->where('category_id', $request->input('category_id'));
+        ->when($categoryIds, function($query, $categoryIds){
+            $query->whereIn('category_id', $categoryIds);
         })
 
-        ->when($request->filled('brand_id'), function ($query) use ($request) {
-            $query->where('brand_id', $request->input('brand_id'));
+        ->when($subCategoryIds, function($query, $subCategoryIds){
+            $query->whereIn('sub_category_id', $subCategoryIds);
         })
 
-        ->when($request->filled('status'), function ($query) use ($request) {
-            $query->where('status', $request->input('status'));
+        ->when($brandIds, function($query, $brandIds){
+            $query->whereIn('brand_id', $brandIds);
+        })
+
+        ->when($status, function($query, $status){
+            $query->where('status', $status);
+        })
+
+        ->when($minPrice !== null, function ($query) use ($minPrice) {
+            $query->where('sell_price', '>=', $minPrice);
+        })
+
+        ->when($maxPrice !== null, function ($query) use ($maxPrice) {
+            $query->where('sell_price', '<=', $maxPrice);
+        })
+
+        ->latest()
+
+        ->paginate($paginateSize);
+
+        return $products;
+    }
+
+    public function trashList($request)
+    {
+        $paginateSize   = $request->input('paginate_size', 25);
+        $searchKey      = $request->input('search_key');
+        $categoryIds    = $request->input('category_ids', []);
+        $subCategoryIds = $request->input('sub_category_ids', []);
+        $brandIds       = $request->input('brand_ids', []);
+        $minPrice       = $request->input('min_price');
+        $maxPrice       = $request->input('max_price');
+        $status         = $request->input('status');
+
+        $products = $this->model->query()
+        ->with([
+            'category:id,name',
+            'subCategory:id,name',
+            'brand:id,name',
+            'galleries',
+            'variants.attributeValues.attribute',
+            'deletedBy:id,username',
+        ])
+
+        ->select('id', 'name', 'slug', 'category_id', 'sub_category_id', 'brand_id', 'sku', 'img_path', 'free_shipping', 'buy_price', 'mrp', 'sell_price', 'offer_price', 'discount_amount', 'offer_percentage', 'current_stock', 'total_sell_quantity', 'status')
+
+        ->when($searchKey, function ($query) {
+            $query->where(function ($q, $searchKey) {
+                $q->where('name', 'like', "%{$searchKey}%")
+                    ->orWhere('sku', 'like', "%{$searchKey}%");
+            });
+        })
+
+        ->when($categoryIds, function($query, $categoryIds){
+            $query->whereIn('category_id', $categoryIds);
+        })
+
+        ->when($subCategoryIds, function($query, $subCategoryIds){
+            $query->whereIn('sub_category_id', $subCategoryIds);
+        })
+
+        ->when($brandIds, function($query, $brandIds){
+            $query->whereIn('brand_id', $brandIds);
+        })
+
+        ->when($status, function($query, $status){
+            $query->where('status', $status);
+        })
+
+        ->when($minPrice !== null, function ($query) use ($minPrice) {
+            $query->where('sell_price', '>=', $minPrice);
+        })
+
+        ->when($maxPrice !== null, function ($query) use ($maxPrice) {
+            $query->where('sell_price', '<=', $maxPrice);
         })
 
         ->latest()
@@ -303,5 +392,87 @@ class ProductService
             report($e);
             throw $e;
         }
+    }
+
+    public function destroy($id)
+    {
+        return DB::transaction(function () use ($id) {
+
+            $product = $this->model::find($id);
+
+            if (!$product) {
+                throw new CustomException('Product not found');
+            }
+
+            $variants = $product->variants()->get();
+
+            foreach ($variants as $variant) {
+                $variant->delete();
+            }
+
+            $product->delete();
+
+            return true;
+        });
+    }
+
+    public function restore($id)
+    {
+        return DB::transaction(function () use ($id) {
+
+            $product = $this->model::onlyTrashed()->find($id);
+
+            if (!$product) {
+                throw new CustomException('Deleted product not found');
+            }
+
+            $product->restore();
+
+            $variants = $product->variants()->onlyTrashed()->get();
+
+            foreach ($variants as $variant) {
+                $variant->restore();
+            }
+
+            return $product->fresh()->load('category:id,name','subCategory:id,name','brand:id,name','galleries','variants.attributeValues.attribute');
+        });
+    }
+
+    public function permanentDelete($id)
+    {
+        return DB::transaction(function () use ($id) {
+
+            $product = $this->model::onlyTrashed()->find($id);
+
+            if (!$product) {
+                throw new CustomException('Deleted product not found');
+            }
+
+            $galleries = $product->galleries()->get();
+
+            foreach ($galleries as $gallery) {
+                if ($gallery->img_path) {
+                    FileUploadHelper::delete($gallery->img_path);
+                }
+
+                $gallery->delete();
+            }
+
+            $variants = $product->variants()->withTrashed()->get();
+
+            foreach ($variants as $variant) {
+                $variant->attributeValues()->detach();
+
+                if ($variant->img_path) {
+                    FileUploadHelper::delete($variant->img_path);
+                }
+
+                $variant->forceDelete();
+            }
+
+            $product->forceDelete();
+
+            return true;
+        });
     }
 }

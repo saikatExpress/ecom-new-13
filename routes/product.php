@@ -76,10 +76,14 @@ Route::middleware('auth:sanctum')->group(function(){
 
     Route::prefix('admin/product')->group(function(){
         Route::controller(ProductController::class)->group(function(){
-            Route::get('/', 'index');
-            Route::post('/', 'store');
-            Route::get('/{id}', 'show');
-            Route::put('/{id}', 'update');
+            Route::get('/',                         'index');
+            Route::get('/trash',                    'trashList');
+            Route::post('/',                        'store');
+            Route::get('/{id}',                     'show');
+            Route::put('/{id}',                     'update');
+            Route::delete('/{id}',                  'destroy');
+            Route::patch('/{id}/restore',           'restore');
+            Route::delete('/permanent-delete/{id}', 'permanentDelete');
         });
     });
 });
