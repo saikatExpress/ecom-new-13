@@ -28,6 +28,13 @@ class SectionService
         return $sections;
     }
 
+    public function list()
+    {
+        $sections = $this->model::where('status', 'active')->get();
+
+        return $sections;
+    }
+
     public function trashList($request)
     {
         $paginateSize = $request->input('paginate_size', 25);

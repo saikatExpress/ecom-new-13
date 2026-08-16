@@ -24,6 +24,13 @@ class SectionController extends BaseController
         return $this->sendResponse($sections, "Section List");
     }
 
+    public function list()
+    {
+        $sections = $this->service->list();
+
+        return $this->sendResponse($sections, "Section List");
+    }
+
     public function trashList(Request $request)
     {
         $this->authorizePermission($request->user(), 'section_read', 'You have no permission for read this');
