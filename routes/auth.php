@@ -16,7 +16,7 @@ Route::prefix('auth')->group(function(){
 Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('auth')->group(function(){
         Route::controller(AuthController::class)->group(function(){
-            Route::get('/me', 'me');
+            Route::get('/me',                  'me');
             Route::post('/logout',             'logout');
             Route::post('/logout-all-devices', 'logoutAllDevices');
         });

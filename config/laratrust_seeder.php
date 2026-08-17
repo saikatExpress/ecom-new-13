@@ -61,6 +61,8 @@ return [
 
         'superadmin' => [
             'dashboard'       => 'r',
+            'user'            => 'c,r,u,d',
+            'user_category'   => 'c,r,u,d',
             'product'         => 'c,r,u,d',
             'category'        => 'c,r,u,d',
             'sub_category'    => 'c,r,u,d',
@@ -81,6 +83,8 @@ return [
 
         'admin' => [
             'dashboard'       => 'r',
+            'user'            => 'c,r,u,d',
+            'user_category'   => 'c,r,u,d',
             'product'         => 'c,r,u,d',
             'category'        => 'c,r,u,d',
             'sub_category'    => 'c,r,u,d',
@@ -99,18 +103,20 @@ return [
         ],
 
         'teamlead' => [
-            'dashboard' => 'r',
-            'product'   => 'c,r,u,d',
-            'category'  => 'c,r,u,d',
-            'brand'     => 'c,r,u,d',
-            'order'     => 'r,u,assign',
-            'cms'       => 'r,u',
-            'section'   => 'r,u',
-            'slider'    => 'r,u',
-            'banner'    => 'r,u',
-            'tag'       => 'r',
-            'blog'      => 'r',
-            'report'    => 'r',
+            'dashboard'     => 'r',
+            'user'          => 'c,r,u,d',
+            'user_category' => 'c,r,u,d',
+            'product'       => 'c,r,u,d',
+            'category'      => 'c,r,u,d',
+            'brand'         => 'c,r,u,d',
+            'order'         => 'r,u,assign',
+            'cms'           => 'r,u',
+            'section'       => 'r,u',
+            'slider'        => 'r,u',
+            'banner'        => 'r,u',
+            'tag'           => 'r',
+            'blog'          => 'r',
+            'report'        => 'r',
         ],
 
         'staff' => [

@@ -150,6 +150,13 @@ class UserSeeder extends Seeder
             ],
         ];
 
+        $userCategoryMap = [
+            'superadmin' => 2,
+            'admin'      => 2,
+            'teamlead'   => 2,
+            'staff'      => 3,
+        ];
+
         foreach ($users as $item) {
 
             $role = Role::where('name', $item['role'])->first();
@@ -159,10 +166,11 @@ class UserSeeder extends Seeder
                     'phone_number' => $item['phone_number'],
                 ],
                 [
-                    'username' => $item['username'],
-                    'email' => $item['email'],
-                    'password' => Hash::make('12345678'),
-                    'status' => 'active',
+                    'username'         => $item['username'],
+                    'email'            => $item['email'],
+                    'password'         => Hash::make('12345678'),
+                    'user_category_id' => $userCategoryMap[$item['role']] ?? null,
+                    'status'           => 'active',
                 ]
             );
 
