@@ -11,23 +11,28 @@ class PermissionHelper
 
         $permissions = [];
 
-        foreach ($modules as $module => $actions) {
+        foreach ($modules as $module => $resources) {
 
-            $actions = array_filter(array_map('trim', explode(',', $actions)));
+            foreach ($resources as $resource => $actions) {
 
-            foreach ($actions as $action) {
+                $actions = array_filter(
+                    array_map('trim', explode(',', $actions))
+                );
 
-                $actionName = $permissionsMap[$action] ?? $action;
+                foreach ($actions as $action) {
 
-                $permissionName = "{$module}_{$actionName}";
+                    $actionName = $permissionsMap[$action] ?? $action;
 
-                $permissions[$permissionName] = [
-                    'name'         => $permissionName,
-                    'module'       => $module,
-                    'action'       => $actionName,
-                    'display_name' => ucwords(str_replace(['.', '-'], ' ', $permissionName)),
-                    'description'  => ucfirst($actionName) . ' permission for ' . ucwords(str_replace('_', ' ', $module)),
-                ];
+                    $permissionName = "{$resource}_{$actionName}";
+
+                    $permissions[$permissionName] = [
+                        'name'         => $permissionName,
+                        'module'       => $module,
+                        'action'       => $actionName,
+                        'display_name' => ucwords(str_replace(['.', '-', '_'],' ',$permissionName)),
+                        'description'  => ucfirst($actionName). ' permission for '. ucwords(str_replace('_',' ',$resource)),
+                    ];
+                }
             }
         }
 
@@ -39,21 +44,24 @@ class PermissionHelper
         $roles = config('laratrust_seeder.roles', []);
         $permissionsMap = config('laratrust_seeder.permissions_map', []);
 
-        if (! isset($roles[$role])) {
+        if (!isset($roles[$role])) {
             return [];
         }
 
         $permissions = [];
 
-        foreach ($roles[$role] as $module => $actions) {
+        foreach ($roles[$role] as $module => $resources) {
 
-            $actions = array_filter(array_map('trim', explode(',', $actions)));
+            foreach ($resources as $resource => $actions) {
 
-            foreach ($actions as $action) {
+                $actions = array_filter(array_map('trim', explode(',', $actions)));
 
-                $actionName = $permissionsMap[$action] ?? $action;
+                foreach ($actions as $action) {
 
-                $permissions[] = "{$module}_{$actionName}";
+                    $actionName = $permissionsMap[$action] ?? $action;
+
+                    $permissions[] = "{$resource}_{$actionName}";
+                }
             }
         }
 

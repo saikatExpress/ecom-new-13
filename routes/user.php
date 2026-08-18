@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Backend\User\PermissionController;
 use App\Http\Controllers\Backend\User\RoleController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\User\UserController;
@@ -24,6 +25,12 @@ Route::middleware('auth:sanctum')->group(function(){
             Route::get('/{id}',    'show');
             Route::put('/{id}',    'update');
             Route::delete('/{id}', 'destroy');
+        });
+    });
+
+    Route::prefix('admin/permission')->group(function(){
+        Route::controller(PermissionController::class)->group(function(){
+            Route::get('/',        'index');
         });
     });
 
