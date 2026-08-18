@@ -30,6 +30,9 @@ return [
 
     'modules' => [
         'dashboard'       => 'r',
+        'user'            => 'c,r,u,d',
+        'user_category'   => 'c,r,u,d',
+        'role'            => 'c,r,u,d',
         'product'         => 'c,r,u,d',
         'category'        => 'c,r,u,d',
         'sub_category'    => 'c,r,u,d',
@@ -63,6 +66,7 @@ return [
             'dashboard'       => 'r',
             'user'            => 'c,r,u,d',
             'user_category'   => 'c,r,u,d',
+            'role'            => 'c,r,u,d',
             'product'         => 'c,r,u,d',
             'category'        => 'c,r,u,d',
             'sub_category'    => 'c,r,u,d',
@@ -85,6 +89,7 @@ return [
             'dashboard'       => 'r',
             'user'            => 'c,r,u,d',
             'user_category'   => 'c,r,u,d',
+            'role'            => 'c,r,u,d',
             'product'         => 'c,r,u,d',
             'category'        => 'c,r,u,d',
             'sub_category'    => 'c,r,u,d',
@@ -106,6 +111,7 @@ return [
             'dashboard'     => 'r',
             'user'          => 'c,r,u,d',
             'user_category' => 'c,r,u,d',
+            'role'          => 'c,r,u,d',
             'product'       => 'c,r,u,d',
             'category'      => 'c,r,u,d',
             'brand'         => 'c,r,u,d',

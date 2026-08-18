@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Backend\User;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\BaseController;
 use App\Services\User\UserCategoryService;
 use App\Http\Requests\Backend\User\UserCategoryRequest;
 
