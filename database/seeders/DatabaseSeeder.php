@@ -9,6 +9,8 @@ use Database\Seeders\Product\BrandSeeder;
 use Database\Seeders\Product\ProductSeeder;
 use Database\Seeders\Product\CategorySeeder;
 use Database\Seeders\Blog\BlogCategorySeeder;
+use Database\Seeders\Order\CustomerTypeSeeder;
+use Database\Seeders\Order\OrderSourceSeeder;
 use Database\Seeders\Product\AttributeSeeder;
 use Database\Seeders\Product\SubCategorySeeder;
 use Database\Seeders\Product\AttributeValueSeeder;
@@ -26,12 +28,17 @@ class DatabaseSeeder extends Seeder
             RolePermissionSeeder::class,
             UserCategorySeeder::class,
             UserSeeder::class,
+
             CategorySeeder::class,
             SubCategorySeeder::class,
             BrandSeeder::class,
             AttributeSeeder::class,
             AttributeValueSeeder::class,
             ProductSeeder::class,
+
+            OrderSourceSeeder::class,
+            CustomerTypeSeeder::class,
+
             BlogCategorySeeder::class,
             BlogTagSeeder::class,
             BlogPostSeeder::class,
