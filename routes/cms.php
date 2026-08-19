@@ -1,11 +1,11 @@
 <?php
 
-use App\Http\Controllers\Backend\CMS\BannerController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\CMS\CmsController;
 use App\Http\Controllers\Backend\CMS\FaqController;
-use App\Http\Controllers\Backend\CMS\SectionController;
+use App\Http\Controllers\Backend\CMS\BannerController;
 use App\Http\Controllers\Backend\CMS\SliderController;
+use App\Http\Controllers\Backend\CMS\SectionController;
 
 Route::middleware('auth:sanctum')->group(function(){
     Route::prefix('admin/pages')->group(function(){

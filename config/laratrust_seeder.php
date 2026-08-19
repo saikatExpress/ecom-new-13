@@ -28,7 +28,8 @@ return [
         ],
 
         'order' => [
-            'order' => 'c,r,u,d,assign,invoice,change-status,cancel,return',
+            'order_source' => 'c,r,u,d',
+            'order'        => 'c,r,u,d,assign,invoice,change-status,cancel,return',
         ],
 
         'cms' => [
@@ -77,7 +78,8 @@ return [
             ],
 
             'order' => [
-                'order' => 'c,r,u,d,assign,invoice,change-status,cancel,return',
+                'order_source' => 'c,r,u,d',
+                'order'        => 'c,r,u,d,assign,invoice,change-status,cancel,return',
             ],
 
             'cms' => [
@@ -125,7 +127,8 @@ return [
             ],
 
             'order' => [
-                'order' => 'c,r,u,d,assign,invoice',
+                'order_source' => 'c,r,u,d',
+                'order'        => 'c,r,u,d,assign,invoice',
             ],
 
             'cms' => [
@@ -171,7 +174,8 @@ return [
             ],
 
             'order' => [
-                'order' => 'r,u,assign',
+                'order_source' => 'r',
+                'order'        => 'r,u,assign',
             ],
 
             'cms' => [
