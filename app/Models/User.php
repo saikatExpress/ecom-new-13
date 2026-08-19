@@ -34,6 +34,27 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable,SoftDeletes,HasApiTokens,HasRolesAndPermissions;
 
+    // Relations
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function updatedBy()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function deletedBy()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function userCategory()
+    {
+        return $this->belongsTo(UserCategory::class, 'user_category_id', 'id');
+    }
+
     public function loginHistories()
     {
         return $this->hasMany(LoginHistory::class);

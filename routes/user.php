@@ -1,9 +1,9 @@
 <?php
 
-use App\Http\Controllers\Backend\User\PermissionController;
-use App\Http\Controllers\Backend\User\RoleController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Backend\User\RoleController;
 use App\Http\Controllers\Backend\User\UserController;
+use App\Http\Controllers\Backend\User\PermissionController;
 use App\Http\Controllers\Backend\User\UserCategoryController;
 
 Route::middleware('auth:sanctum')->group(function(){
@@ -36,7 +36,14 @@ Route::middleware('auth:sanctum')->group(function(){
 
     Route::prefix('admin/user')->group(function(){
         Route::controller(UserController::class)->group(function(){
-            Route::get('/', 'index');
+            Route::get('/',                         'index');
+            Route::get('/trash',                    'trashList');
+            Route::post('/',                        'store');
+            Route::get('/{id}',                     'show');
+            Route::put('/{id}',                     'update');
+            Route::delete('/{id}',                  'destroy');
+            Route::patch('/{id}/restore',           'restore');
+            Route::delete('/permanent-delete/{id}', 'permanentDelete');
         });
     });
 });
