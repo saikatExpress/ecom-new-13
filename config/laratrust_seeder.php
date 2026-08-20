@@ -32,6 +32,7 @@ return [
             'customer_type'    => 'c,r,u,d',
             'payment_gateway'  => 'c,r,u,d',
             'delivery_gateway' => 'c,r,u,d',
+            'cancel_reason'    => 'c,r,u,d',
             'order'            => 'c,r,u,d,assign,invoice,change-status,cancel,return',
         ],
 
@@ -85,6 +86,7 @@ return [
                 'customer_type'    => 'c,r,u,d',
                 'payment_gateway'  => 'c,r,u,d',
                 'delivery_gateway' => 'c,r,u,d',
+                'cancel_reason'    => 'c,r,u,d',
                 'order'            => 'c,r,u,d,assign,invoice,change-status,cancel,return',
             ],
 
@@ -137,6 +139,7 @@ return [
                 'customer_type'    => 'c,r,u,d',
                 'payment_gateway'  => 'c,r,u,d',
                 'delivery_gateway' => 'c,r,u,d',
+                'cancel_reason'    => 'c,r,u,d',
                 'order'            => 'c,r,u,d,assign,invoice,change-status,cancel,return',
             ],
 

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Backend\Order\CancelReasonController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\Order\OrderSourceController;
 use App\Http\Controllers\Backend\Order\CustomerTypeController;
@@ -45,6 +46,17 @@ Route::middleware('auth:sanctum')->group(function(){
 
     Route::prefix('admin/delivery-gateway')->group(function(){
         Route::controller(DeliveryGatewayController::class)->group(function(){
+            Route::get('/',        'index');
+            Route::get('/list',    'list');
+            Route::post('/',       'store');
+            Route::get('/{id}',    'show');
+            Route::put('/{id}',    'update');
+            Route::delete('/{id}', 'destroy');
+        });
+    });
+
+    Route::prefix('admin/cancel-reason')->group(function(){
+        Route::controller(CancelReasonController::class)->group(function(){
             Route::get('/',        'index');
             Route::get('/list',    'list');
             Route::post('/',       'store');
