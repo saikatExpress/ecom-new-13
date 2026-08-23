@@ -41,7 +41,7 @@ class PaymentGatewayService
 
     public function list()
     {
-        $results = $this->model::select('id', 'name', 'slug', 'phone_number')->where('status', 'active')->orderBy('position', 'ASC')->get();
+        $results = $this->model::select('id', 'name', 'slug', 'account_number')->where('status', 'active')->orderBy('position', 'ASC')->get();
 
         return $results;
     }
@@ -116,7 +116,7 @@ class PaymentGatewayService
 
     public function restore($id)
     {
-        $paymentGateway = $this->model::find($id);
+        $paymentGateway = $this->model::onlyTrashed()->find($id);
 
         if(!$paymentGateway){
             throw new CustomException("Payment Gateway not found");
@@ -129,7 +129,7 @@ class PaymentGatewayService
 
     public function permanentDelete($id)
     {
-        $paymentGateway = $this->model::find($id);
+        $paymentGateway = $this->model::onlyTrashed()->find($id);
 
         if(!$paymentGateway){
             throw new CustomException("Payment Gateway not found");

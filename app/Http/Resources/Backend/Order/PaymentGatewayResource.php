@@ -11,14 +11,14 @@ class PaymentGatewayResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id'           => $this->id,
-            'name'         => $this->name,
-            'slug'         => $this->slug,
-            'phone_number' => $this->phone_number,
-            'image'        => FileUrlHelper::url($this->img_path),
-            'position'     => $this->position,
-            'status'       => $this->status,
-            'created_by'   => $this->whenLoaded('createdBy', function(){
+            'id'             => $this->id,
+            'name'           => $this->name,
+            'slug'           => $this->slug,
+            'account_number' => $this->account_number,
+            'image'          => FileUrlHelper::url($this->img_path),
+            'position'       => $this->position,
+            'status'         => $this->status,
+            'created_by'     => $this->whenLoaded('createdBy', function(){
                 return [
                     'id'       => $this->createdBy->id,
                     'username' => $this->createdBy->username,

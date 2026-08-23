@@ -1,11 +1,11 @@
 <?php
 
-use App\Http\Controllers\Backend\Order\CancelReasonController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\Order\OrderSourceController;
 use App\Http\Controllers\Backend\Order\CustomerTypeController;
-use App\Http\Controllers\Backend\Order\DeliveryGatewayController;
+use App\Http\Controllers\Backend\Order\CancelReasonController;
 use App\Http\Controllers\Backend\Order\PaymentGatewayController;
+use App\Http\Controllers\Backend\Order\DeliveryGatewayController;
 
 Route::middleware('auth:sanctum')->group(function(){
     Route::prefix('admin/order-source')->group(function(){
@@ -32,15 +32,15 @@ Route::middleware('auth:sanctum')->group(function(){
 
     Route::prefix('admin/payment-gateway')->group(function(){
         Route::controller(PaymentGatewayController::class)->group(function(){
-            Route::get('/',                        'index');
-            Route::get('/trash',                   'trashList');
-            Route::get('/list',                    'list');
-            Route::post('/',                       'store');
-            Route::get('/{id}',                    'show');
-            Route::put('/{id}',                    'update');
-            Route::delete('/{id}',                 'destroy');
-            Route::patch('/{id}/restore',          'restore');
-            Route::delete('/permanentDelete/{id}', 'restore');
+            Route::get('/',                         'index');
+            Route::get('/trash',                    'trashList');
+            Route::get('/list',                     'list');
+            Route::post('/',                        'store');
+            Route::get('/{id}',                     'show');
+            Route::put('/{id}',                     'update');
+            Route::delete('/{id}',                  'destroy');
+            Route::patch('/{id}/restore',           'restore');
+            Route::delete('/permanent-delete/{id}', 'restore');
         });
     });
 
