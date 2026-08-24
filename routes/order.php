@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\Order\OrderSourceController;
 use App\Http\Controllers\Backend\Order\CustomerTypeController;
 use App\Http\Controllers\Backend\Order\CancelReasonController;
+use App\Http\Controllers\Backend\Order\CourierController;
+use App\Http\Controllers\Backend\Order\CourierSettingController;
 use App\Http\Controllers\Backend\Order\PaymentGatewayController;
 use App\Http\Controllers\Backend\Order\DeliveryGatewayController;
 
@@ -41,6 +43,27 @@ Route::middleware('auth:sanctum')->group(function(){
             Route::delete('/{id}',                  'destroy');
             Route::patch('/{id}/restore',           'restore');
             Route::delete('/permanent-delete/{id}', 'restore');
+        });
+    });
+
+    Route::prefix('admin/courier')->group(function(){
+        Route::controller(CourierController::class)->group(function(){
+            Route::get('/',                         'index');
+            Route::get('/trash',                    'trashList');
+            Route::get('/list',                     'list');
+            Route::post('/',                        'store');
+            Route::get('/{id}',                     'show');
+            Route::put('/{id}',                     'update');
+            Route::delete('/{id}',                  'destroy');
+            Route::patch('/{id}/restore',           'restore');
+            Route::delete('/permanent-delete/{id}', 'restore');
+        });
+    });
+
+    Route::prefix('admin/courier-setting')->group(function(){
+        Route::controller(CourierSettingController::class)->group(function(){
+            Route::get('/{slug}', 'show');
+            Route::put('/{slug}', 'update');
         });
     });
 

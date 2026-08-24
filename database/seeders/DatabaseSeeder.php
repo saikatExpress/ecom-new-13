@@ -12,6 +12,7 @@ use Database\Seeders\Order\OrderSourceSeeder;
 use Database\Seeders\Product\AttributeSeeder;
 use Database\Seeders\Blog\BlogCategorySeeder;
 use Database\Seeders\Order\CancelReasonSeeder;
+use Database\Seeders\Order\CourierSeeder;
 use Database\Seeders\Order\CustomerTypeSeeder;
 use Database\Seeders\Product\SubCategorySeeder;
 use Database\Seeders\Order\PaymentGatewaySeeder;
@@ -32,18 +33,23 @@ class DatabaseSeeder extends Seeder
             UserCategorySeeder::class,
             UserSeeder::class,
 
+            // Product Seeders
             CategorySeeder::class,
             SubCategorySeeder::class,
             BrandSeeder::class,
             AttributeSeeder::class,
             AttributeValueSeeder::class,
             ProductSeeder::class,
+            // Product Seeders
 
+            // Order Seeders
             OrderSourceSeeder::class,
             CustomerTypeSeeder::class,
             PaymentGatewaySeeder::class,
             DeliveryGatewaySeeder::class,
             CancelReasonSeeder::class,
+            CourierSeeder::class,
+            // Order Seeders
 
             BlogCategorySeeder::class,
             BlogTagSeeder::class,
