@@ -20,7 +20,7 @@ class RoleService
 
     public function list()
     {
-        $roles = $this->model::select('id', 'display_name')->where('status', 'active')->get();
+        $roles = $this->model::select('id', 'display_name')->get();
 
         return $roles;
     }

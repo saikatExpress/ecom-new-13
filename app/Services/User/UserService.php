@@ -154,7 +154,7 @@ class UserService
                 $user->syncRoles($request->role_ids ?? []);
             }
 
-            return $user->fresh()->load(['userCategory','roles']);
+            return $user;
         });
     }
 

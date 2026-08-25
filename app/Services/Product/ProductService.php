@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use App\Models\Product\Product;
 use Illuminate\Support\Facades\DB;
 use App\Exceptions\CustomException;
+use App\Helpers\File\FileUrlHelper;
 use App\Helpers\File\FileUploadHelper;
 
 class ProductService
@@ -74,7 +75,6 @@ class ProductService
 
         return $products;
     }
-
     public function trashList($request)
     {
         $paginateSize   = $request->input('paginate_size', 25);
@@ -132,6 +132,85 @@ class ProductService
         ->latest()
 
         ->paginate($paginateSize);
+
+        return $products;
+    }
+
+    public function search($request)
+    {
+        $searchKey = $request->input('search_key');
+
+        $products = $this->model
+        ->select('id', 'name', 'slug', 'category_id', 'sub_category_id', 'brand_id', 'sku', 'img_path', 'sell_price', 'offer_price', 'discount_amount', 'offer_percentage', 'current_stock', 'total_sell_quantity')
+        ->with([
+            'category:id,name',
+            'subCategory:id,name',
+            'brand:id,name',
+            'variants:id,product_id,sku,sell_price,offer_price,offer_percentage,discount_amount,current_stock,img_path',
+            'variants.attributeValues' => function ($query) {
+                $query->select(
+                    'attribute_values.id',
+                    'attribute_values.attribute_id',
+                    'attribute_values.value'
+                );
+            },
+
+            'variants.attributeValues.attribute:id,name',
+        ])
+        ->when($searchKey, function ($query) use ($searchKey) {
+            $query->where(function ($q) use ($searchKey) {
+                $q->where('name', 'like', "%{$searchKey}%")
+                ->orWhere('sku', 'like', "%{$searchKey}%");
+            });
+        })
+        ->where('status', 'active')
+        ->orderBy('created_at', 'desc')
+        ->limit(25)
+        ->get();
+
+        $products = $products->map(function ($product) {
+            return [
+                'id'                  => $product->id,
+                'name'                => $product->name,
+                'slug'                => $product->slug,
+                'category_id'         => $product->category_id,
+                'sub_category_id'     => $product->sub_category_id,
+                'brand_id'            => $product->brand_id,
+                'sku'                 => $product->sku,
+                'image'               => FileUrlHelper::url($product->img_path),
+                'sell_price'          => $product->sell_price,
+                'offer_price'         => $product->offer_price,
+                'discount_amount'     => $product->discount_amount,
+                'offer_percentage'    => $product->offer_percentage,
+                'current_stock'       => $product->current_stock,
+                'total_sell_quantity' => $product->total_sell_quantity,
+                'category'            => $product->category,
+                'sub_category'        => $product->subCategory,
+                'brand'               => $product->brand,
+                'variants' => $product->variants->map(function ($variant) {
+                    return [
+                        'id'               => $variant->id,
+                        'product_id'       => $variant->product_id,
+                        'sku'              => $variant->sku,
+                        'sell_price'       => $variant->sell_price,
+                        'offer_price'      => $variant->offer_price,
+                        'offer_percentage' => $variant->offer_percentage,
+                        'discount_amount'  => $variant->discount_amount,
+                        'current_stock'    => $variant->current_stock,
+                        'image'            => FileUrlHelper::url($variant->img_path),
+                        'attributes'       => $variant->attributeValues->map(function ($attributeValue) use ($variant) {
+                            return [
+                                'product_variation_id' => $variant->id,
+                                'attribute_id'         => $attributeValue->attribute_id,
+                                'attribute_name'       => $attributeValue->attribute?->name,
+                                'attribute_value_id'   => $attributeValue->id,
+                                'attribute_value_name' => $attributeValue->value,
+                            ];
+                        })->values(),
+                    ];
+                })->values(),
+            ];
+        });
 
         return $products;
     }

@@ -20,6 +20,13 @@ class UserCategoryController extends BaseController
         return $this->sendResponse($categories, 'User Category List');
     }
 
+    public function list()
+    {
+        $categories = $this->service->list();
+
+        return $this->sendResponse($categories, 'User Category List');
+    }
+
     public function store(UserCategoryRequest $request)
     {
         $this->authorizePermission($request->user(), 'user_category_create', 'You have no permission for create this');

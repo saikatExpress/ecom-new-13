@@ -10,6 +10,7 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::prefix('admin/user-category')->group(function(){
         Route::controller(UserCategoryController::class)->group(function(){
             Route::get('/',        'index');
+            Route::get('/list',     'list');
             Route::post('/',       'store');
             Route::get('/{id}',    'show');
             Route::put('/{id}',    'update');

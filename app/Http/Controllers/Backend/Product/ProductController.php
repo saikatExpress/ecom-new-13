@@ -35,6 +35,13 @@ class ProductController extends BaseController
         return $this->sendResponse($products, "Product Trash List");
     }
 
+    public function search(Request $request)
+    {
+        $products = $this->service->search($request);
+
+        return $this->sendResponse($products, "Product Results");
+    }
+
     public function store(ProductRequest $request)
     {
         $this->authorizePermission($request->user(), 'product_create', 'You have no permission for create product');

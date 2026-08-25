@@ -17,6 +17,13 @@ class UserCategoryService
         return $categories;
     }
 
+    public function list()
+    {
+        $categories = $this->model::select('id', 'name')->where('status','active')->get();
+
+        return $categories;
+    }
+
     public function store($request)
     {
         $category = new $this->model();

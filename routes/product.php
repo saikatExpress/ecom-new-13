@@ -78,6 +78,7 @@ Route::middleware('auth:sanctum')->group(function(){
         Route::controller(ProductController::class)->group(function(){
             Route::get('/',                         'index');
             Route::get('/trash',                    'trashList');
+            Route::get('/search',                   'search');
             Route::post('/',                        'store');
             Route::get('/{id}',                     'show');
             Route::put('/{id}',                     'update');
