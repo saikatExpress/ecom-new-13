@@ -8,6 +8,7 @@ use App\Http\Controllers\Backend\Order\CourierController;
 use App\Http\Controllers\Backend\Order\CourierSettingController;
 use App\Http\Controllers\Backend\Order\PaymentGatewayController;
 use App\Http\Controllers\Backend\Order\DeliveryGatewayController;
+use App\Http\Controllers\Backend\Order\OrderGuardSettingController;
 
 Route::middleware('auth:sanctum')->group(function(){
     Route::prefix('admin/order-source')->group(function(){
@@ -57,6 +58,13 @@ Route::middleware('auth:sanctum')->group(function(){
             Route::delete('/{id}',                  'destroy');
             Route::patch('/{id}/restore',           'restore');
             Route::delete('/permanent-delete/{id}', 'restore');
+        });
+    });
+
+    Route::prefix('admin/order-guard-setting')->group(function(){
+        Route::controller(OrderGuardSettingController::class)->group(function(){
+            Route::get('/', 'show');
+            Route::put('/', 'update');
         });
     });
 

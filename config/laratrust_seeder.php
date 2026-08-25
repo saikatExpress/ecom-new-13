@@ -28,14 +28,15 @@ return [
         ],
 
         'order' => [
-            'order_source'     => 'c,r,u,d',
-            'customer_type'    => 'c,r,u,d',
-            'payment_gateway'  => 'c,r,u,d',
-            'delivery_gateway' => 'c,r,u,d',
-            'cancel_reason'    => 'c,r,u,d',
-            'courier'          => 'c,r,u,d',
-            'courier_settings' => 'r,u',
-            'order'            => 'c,r,u,d,assign,invoice,change-status,cancel,return',
+            'order_source'         => 'c,r,u,d',
+            'customer_type'        => 'c,r,u,d',
+            'payment_gateway'      => 'c,r,u,d',
+            'delivery_gateway'     => 'c,r,u,d',
+            'cancel_reason'        => 'c,r,u,d',
+            'courier'              => 'c,r,u,d',
+            'order_guard_settings' => 'r,u',
+            'courier_settings'     => 'r,u',
+            'order'                => 'c,r,u,d,assign,invoice,change-status,cancel,return',
         ],
 
         'cms' => [
@@ -84,14 +85,15 @@ return [
             ],
 
             'order' => [
-                'order_source'     => 'c,r,u,d',
-                'customer_type'    => 'c,r,u,d',
-                'payment_gateway'  => 'c,r,u,d',
-                'delivery_gateway' => 'c,r,u,d',
-                'cancel_reason'    => 'c,r,u,d',
-                'courier'          => 'c,r,u,d',
-                'courier_settings' => 'r,u',
-                'order'            => 'c,r,u,d,assign,invoice,change-status,cancel,return',
+                'order_source'         => 'c,r,u,d',
+                'customer_type'        => 'c,r,u,d',
+                'payment_gateway'      => 'c,r,u,d',
+                'delivery_gateway'     => 'c,r,u,d',
+                'cancel_reason'        => 'c,r,u,d',
+                'courier'              => 'c,r,u,d',
+                'order_guard_settings' => 'r,u',
+                'courier_settings'     => 'r,u',
+                'order'                => 'c,r,u,d,assign,invoice,change-status,cancel,return',
             ],
 
             'cms' => [
@@ -139,14 +141,15 @@ return [
             ],
 
             'order' => [
-                'order_source'     => 'c,r,u,d',
-                'customer_type'    => 'c,r,u,d',
-                'payment_gateway'  => 'c,r,u,d',
-                'delivery_gateway' => 'c,r,u,d',
-                'cancel_reason'    => 'c,r,u,d',
-                'courier'          => 'c,r,u,d',
-                'courier_settings' => 'r,u',
-                'order'            => 'c,r,u,d,assign,invoice,change-status,cancel,return',
+                'order_source'         => 'c,r,u,d',
+                'customer_type'        => 'c,r,u,d',
+                'payment_gateway'      => 'c,r,u,d',
+                'delivery_gateway'     => 'c,r,u,d',
+                'cancel_reason'        => 'c,r,u,d',
+                'courier'              => 'c,r,u,d',
+                'order_guard_settings' => 'r,u',
+                'courier_settings'     => 'r,u',
+                'order'                => 'c,r,u,d,assign,invoice,change-status,cancel,return',
             ],
 
             'cms' => [
