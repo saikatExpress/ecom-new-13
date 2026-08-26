@@ -19,7 +19,7 @@ class UserSeeder extends Seeder
             [
                 'username'     => 'Saikat Dev',
                 'email'        => 'superadmin1@example.com',
-                'phone_number' => '01710000001',
+                'phone_number' => '01713617913',
                 'role'         => 'superadmin',
             ],
             [

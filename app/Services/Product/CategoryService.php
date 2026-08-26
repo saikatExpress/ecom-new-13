@@ -64,7 +64,9 @@ class CategoryService
 
                 $category = new $this->model();
 
-                $category->name = Str::title($request->name);
+                $category->name     = Str::title($request->name);
+                $category->position = $request->position;
+                $category->status   = $request->status;
 
                 if ($request->hasFile('image') && $request->file('image')->isValid()) {
                     $category->img_path = FileUploadHelper::upload($request->file('image'),'categories');
@@ -113,8 +115,9 @@ class CategoryService
                     throw new CustomException("Category not found");
                 }
 
-                $category->name = Str::title($request->name);
-                $category->status = $request->status;
+                $category->name     = Str::title($request->name);
+                $category->position = $request->position;
+                $category->status   = $request->status;
 
                 if ($request->hasFile('image')) {
                     $category->img_path = FileUploadHelper::replace($request->file('image'),$category->img_path,'brands');
@@ -130,6 +133,18 @@ class CategoryService
 
             throw $e;
         }
+    }
+
+    public function reorder($request)
+    {
+        return DB::transaction(function () use ($request) {
+
+            foreach ($request->categories as $category) {
+                $this->model::where('id', $category['id'])->update(['position' => $category['position']]);
+            }
+
+            return true;
+        });
     }
 
     public function restore($id)

@@ -14,12 +14,25 @@ class PermissionController extends BaseController
     {
         $this->authorizePermission($request->user(), 'permission_read', 'You have no permission for read this');
 
-        $permissions = $this->model::all()
+        $permissions = $this->model::query()
+        ->orderBy('module')
+        ->orderBy('resource')
+        ->orderBy('name')
+        ->get()
         ->groupBy('module')
         ->map(function ($permissions, $module) {
             return [
                 'module' => $module,
-                'permissions' => $permissions,
+
+                'resources' => $permissions
+                    ->groupBy('resource')
+                    ->map(function ($permissions, $resource) {
+                        return [
+                            'resource' => $resource,
+                            'permissions' => $permissions->values(),
+                        ];
+                    })
+                    ->values(),
             ];
         })
         ->values();

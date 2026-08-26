@@ -13,7 +13,7 @@ class RoleService
 
     public function index()
     {
-        $roles = $this->model::all();
+        $roles = $this->model::with('permissions:id,name,module,action,display_name')->get();
 
         return $roles;
     }

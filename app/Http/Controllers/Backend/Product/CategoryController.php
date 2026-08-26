@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Backend\Product;
 
-use App\Http\Resources\Backend\Product\CategoryCollection;
 use Illuminate\Http\Request;
 use App\Http\Controllers\BaseController;
+use App\Services\Product\CategoryService;
 use App\Http\Requests\Backend\Product\CategoryRequest;
 use App\Http\Resources\Backend\Product\CategoryResource;
-use App\Services\Product\CategoryService;
+use App\Http\Resources\Backend\Product\CategoryCollection;
+use App\Http\Requests\Backend\Product\CategoryReorderRequest;
 
 class CategoryController extends BaseController
 {
@@ -73,6 +74,15 @@ class CategoryController extends BaseController
         $category = new CategoryResource($category);
 
         return $this->sendResponse($category, "Category Update Successfully");
+    }
+
+    public function reorder(CategoryReorderRequest $request)
+    {
+        $this->authorizePermission($request->user(),'category_update','You have no permission for update this');
+
+        $result = $this->service->reorder($request);
+
+        return $this->sendResponse($result,'Category order updated successfully');
     }
 
     public function restore(Request $request, $id)

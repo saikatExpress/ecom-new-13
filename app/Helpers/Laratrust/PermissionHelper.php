@@ -28,9 +28,24 @@ class PermissionHelper
                     $permissions[$permissionName] = [
                         'name'         => $permissionName,
                         'module'       => $module,
+                        'resource'     => $resource,
                         'action'       => $actionName,
-                        'display_name' => ucwords(str_replace(['.', '-', '_'],' ',$permissionName)),
-                        'description'  => ucfirst($actionName). ' permission for '. ucwords(str_replace('_',' ',$resource)),
+                        'display_name' => ucwords(
+                            str_replace(
+                                ['.', '-', '_'],
+                                ' ',
+                                $permissionName
+                            )
+                        ),
+                        'description' => ucfirst($actionName)
+                            . ' permission for '
+                            . ucwords(
+                                str_replace(
+                                    '_',
+                                    ' ',
+                                    $resource
+                                )
+                            ),
                     ];
                 }
             }
@@ -54,7 +69,9 @@ class PermissionHelper
 
             foreach ($resources as $resource => $actions) {
 
-                $actions = array_filter(array_map('trim', explode(',', $actions)));
+                $actions = array_filter(
+                    array_map('trim', explode(',', $actions))
+                );
 
                 foreach ($actions as $action) {
 
