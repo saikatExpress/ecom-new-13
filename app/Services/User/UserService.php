@@ -2,12 +2,13 @@
 
 namespace App\Services\User;
 
-use App\Exceptions\CustomException;
-use App\Helpers\File\FileUploadHelper;
 use App\Models\User;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
+use App\Exceptions\CustomException;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use App\Helpers\File\FileUploadHelper;
 
 class UserService
 {
@@ -168,6 +169,9 @@ class UserService
                 throw new CustomException('User not found');
             }
 
+            $user->deleted_by = Auth::id();
+            $user->save();
+
             $user->delete();
 
             return true;
@@ -183,6 +187,9 @@ class UserService
             if (!$user) {
                 throw new CustomException('Deleted user not found');
             }
+
+            $user->deleted_by = NULL;
+            $user->save();
 
             $user->restore();
 
@@ -205,6 +212,9 @@ class UserService
             }
 
             $user->roles()->detach();
+
+            $user->deleted_by = Auth::id();
+            $user->save();
 
             $user->forceDelete();
 
