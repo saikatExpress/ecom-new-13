@@ -4,10 +4,10 @@ namespace App\Http\Controllers\Backend\Product;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\BaseController;
-use App\Http\Requests\Backend\Product\AttributeRequest;
-use App\Http\Resources\Backend\Product\AttributeCollection;
-use App\Http\Resources\Backend\Product\AttributeResource;
 use App\Services\Product\AttributeService;
+use App\Http\Requests\Backend\Product\AttributeRequest;
+use App\Http\Resources\Backend\Product\AttributeResource;
+use App\Http\Resources\Backend\Product\AttributeCollection;
 
 class AttributeController extends BaseController
 {
@@ -33,6 +33,13 @@ class AttributeController extends BaseController
         $attributes = new AttributeCollection($attributes);
 
         return $this->sendResponse($attributes, "Atrribute Trash List");
+    }
+
+    public function list()
+    {
+        $attributes = $this->service->list();
+
+        return $this->sendResponse($attributes, "Attribute List");
     }
 
     public function store(AttributeRequest $request)

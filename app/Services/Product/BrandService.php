@@ -61,7 +61,8 @@ class BrandService
             return DB::transaction(function () use ($request) {
                 $brand = new $this->model();
 
-                $brand->name = Str::title($request->name);
+                $brand->name   = Str::title($request->name);
+                $brand->status = $request->status;
 
                 if ($request->hasFile('image') && $request->file('image')->isValid()) {
                     $brand->img_path = FileUploadHelper::upload($request->file('image'),'brands');

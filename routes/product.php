@@ -56,6 +56,7 @@ Route::middleware('auth:sanctum')->group(function(){
         Route::controller(AttributeController::class)->group(function(){
             Route::get('/',                         'index');
             Route::get('/trash',                    'trashList');
+            Route::get('/list',                     'list');
             Route::post('/',                        'store');
             Route::get('/{id}',                     'show');
             Route::put('/{id}',                     'update');

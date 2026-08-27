@@ -15,7 +15,7 @@ class AttributeValueService
     public function index($request)
     {
         $paginateSize = $request->input('paginate_size', 25);
-        $attributeId = $request->input('atrribute_id');
+        $attributeId = $request->input('attribute_id');
 
         $attributeValues = $this->model
         ->with(

@@ -2,12 +2,12 @@
 
 namespace App\Services\Product;
 
-use App\Exceptions\CustomException;
-use App\Helpers\File\FileUploadHelper;
-use App\Models\Product\SubCategory;
 use Exception;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use App\Exceptions\CustomException;
+use App\Models\Product\SubCategory;
+use Illuminate\Support\Facades\DB;
+use App\Helpers\File\FileUploadHelper;
 
 class SubCategoryService
 {
@@ -16,8 +16,8 @@ class SubCategoryService
     public function index($request)
     {
         $paginateSize = $request->input('paginate_size', 25);
-        $searchKey = $request->input('search_key');
-        $categoryIds = $request->input('category_ids', []);
+        $searchKey    = $request->input('search_key');
+        $categoryId   = $request->input('category_id');
 
         $subCategories = $this->model
         ->with(
@@ -28,8 +28,8 @@ class SubCategoryService
         ->when($searchKey, function($query, $searchKey){
             $query->where('name', 'like', "%{$searchKey}%");
         })
-        ->when($categoryIds, function($query,$categoryIds){
-            $query->whereIn('category_id', $categoryIds);
+        ->when($categoryId, function($query,$categoryId){
+            $query->where('category_id', $categoryId);
         })
         ->orderByDesc('created_at')
         ->paginate($paginateSize);
@@ -55,15 +55,19 @@ class SubCategoryService
     public function trashList($request)
     {
         $paginateSize = $request->input('paginate_size', 25);
+        $searchKey    = $request->input('search_key');
+        $categoryId   = $request->input('category_id');
 
-        $results = $this->model
+        $results = $this->model::onlyTrashed()
         ->with(
             'category:id,name',
             'deletedBy:id,username',
         )
-        ->onlyTrashed()
-        ->when($request->filled('search_key'), function ($query) use ($request) {
-            $query->where('name', 'like', "%{$request->search_key}%");
+        ->when($searchKey, function($query, $searchKey){
+            $query->where('name', 'like', "%{$searchKey}%");
+        })
+        ->when($categoryId, function($query,$categoryId){
+            $query->where('category_id', $categoryId);
         })
         ->latest()
         ->paginate($paginateSize);
@@ -79,7 +83,8 @@ class SubCategoryService
                 $subCategory = new $this->model();
 
                 $subCategory->category_id = $request->category_id;
-                $subCategory->name = Str::title($request->name);
+                $subCategory->name        = Str::title($request->name);
+                $subCategory->status      = $request->status;
 
                 if ($request->hasFile('image') && $request->file('image')->isValid()) {
                     $subCategory->img_path = FileUploadHelper::upload($request->file('image'),'subCategories');
@@ -87,7 +92,7 @@ class SubCategoryService
 
                 $subCategory->save();
 
-                return $subCategory->fresh();
+                return $subCategory;
             });
         } catch (\Throwable $e) {
             report($e);

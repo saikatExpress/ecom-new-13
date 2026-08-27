@@ -2,11 +2,11 @@
 
 namespace App\Services\Product;
 
-use App\Exceptions\CustomException;
-use App\Models\Product\Attribute;
 use Exception;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use App\Models\Product\Attribute;
+use Illuminate\Support\Facades\DB;
+use App\Exceptions\CustomException;
 
 class AttributeService
 {
@@ -46,6 +46,13 @@ class AttributeService
         ->paginate($paginateSize);
 
         return $results;
+    }
+
+    public function list()
+    {
+        $attributes = $this->model::select('id', 'name')->get();
+
+        return $attributes;
     }
 
     public function store($request)
