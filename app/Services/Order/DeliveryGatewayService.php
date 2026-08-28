@@ -23,7 +23,7 @@ class DeliveryGatewayService
     public function list()
     {
         $results = $this->model
-        ->select('id', 'name', 'slug', 'min_time', 'max_time','time_units','delivery_fee')
+        ->select('id', 'name')
         ->where('status', 'active')
         ->orderBy('position', 'ASC')
         ->get();
@@ -45,6 +45,8 @@ class DeliveryGatewayService
             $deliveryGateway->position     = $request->position;
             $deliveryGateway->status       = $request->status;
             $deliveryGateway->save();
+
+            return $deliveryGateway;
         });
     }
 
@@ -77,6 +79,8 @@ class DeliveryGatewayService
             $deliveryGateway->position     = $request->position;
             $deliveryGateway->status       = $request->status;
             $deliveryGateway->save();
+
+            return $deliveryGateway;
         });
     }
 

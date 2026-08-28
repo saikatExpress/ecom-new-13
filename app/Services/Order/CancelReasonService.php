@@ -11,9 +11,17 @@ class CancelReasonService
 {
     public function __construct(protected CancelReason $model){}
 
-    public function index()
+    public function index($request)
     {
-        return $this->model::latest()->get();
+        $searchKey = $request->input('search_key');
+
+        $cancelReason = $this->model
+        ->when($searchKey, function ($query, $searchKey) {
+            $query->where('name', 'like', "%{$searchKey}%");
+        })
+        ->get();
+
+        return $cancelReason;
     }
 
     public function list()

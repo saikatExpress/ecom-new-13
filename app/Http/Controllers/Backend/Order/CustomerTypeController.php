@@ -15,7 +15,7 @@ class CustomerTypeController extends BaseController
     {
         $this->authorizePermission($request->user(), 'customer_type_read', 'You have no permission for read this');
 
-        $results = $this->service->index();
+        $results = $this->service->index($request);
 
         return $this->sendResponse($results, "Customer Type List");
     }

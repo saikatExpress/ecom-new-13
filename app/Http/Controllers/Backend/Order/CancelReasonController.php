@@ -15,7 +15,7 @@ class CancelReasonController extends BaseController
     {
         $this->authorizePermission($request->user(), 'cancel_reason_read', 'You have no permission for read this');
 
-        $results = $this->service->index();
+        $results = $this->service->index($request);
 
         return $this->sendResponse($results, 'Cancel Reason List');
     }

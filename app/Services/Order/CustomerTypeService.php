@@ -11,16 +11,23 @@ class CustomerTypeService
 {
     public function __construct(protected CustomerType $model){}
 
-    public function index()
+    public function index($request)
     {
-        $results = $this->model::orderBy('order_range')->get();
+        $searchKey = $request->input('search_key');
+
+        $results = $this->model
+        ->when($searchKey, function ($query, $searchKey) {
+            $query->where('name', 'like', "%{$searchKey}%");
+        })
+        ->orderBy('order_range')
+        ->get();
 
         return $results;
     }
 
     public function list()
     {
-        $results = $this->model::where('status', 'active')->orderBy('order_range')->get();
+        $results = $this->model::select('id', 'name')->where('status', 'active')->orderBy('order_range')->get();
 
         return $results;
     }

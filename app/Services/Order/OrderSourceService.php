@@ -25,7 +25,7 @@ class OrderSourceService
 
     public function list()
     {
-        $results = $this->model::where('status', 'active')->get();
+        $results = $this->model::select('id', 'name')->where('status', 'active')->get();
 
         return $results;
     }
