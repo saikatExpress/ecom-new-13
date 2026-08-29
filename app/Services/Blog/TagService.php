@@ -10,9 +10,15 @@ class TagService
 {
     public function __construct(protected BlogTag $model){}
 
-    public function index()
+    public function index($request)
     {
-        $tags = $this->model::all();
+        $searchKey = $request->input('search_key');
+
+        $tags = $this->model
+        ->when($searchKey, function($query, $request) use ($searchKey){
+            $query->where('name', 'like', "%{$searchKey}%");
+        })
+        ->get();
 
         return $tags;
     }

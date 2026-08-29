@@ -15,7 +15,7 @@ class TagController extends BaseController
     {
         $this->authorizePermission($request->user(), 'tag_read', 'You have no permission for read this');
 
-        $tags = $this->service->index();
+        $tags = $this->service->index($request);
 
         return $this->sendResponse($tags, "Tag List");
     }

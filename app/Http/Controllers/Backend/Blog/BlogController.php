@@ -28,7 +28,7 @@ class BlogController extends BaseController
     {
         $this->authorizePermission($request->user(), 'blog_read', 'You have no permission for read this');
 
-        $blogs = $this->service->index($request);
+        $blogs = $this->service->trashList($request);
 
         $blogs = new BlogCollection($blogs);
 
@@ -83,7 +83,7 @@ class BlogController extends BaseController
 
         $blog = $this->service->restore($id);
 
-        $blog = new BlogResource($id);
+        $blog = new BlogResource($blog);
 
         return $this->sendResponse($blog, "Blog Restore Successfully");
     }

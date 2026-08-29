@@ -2,8 +2,8 @@
 
 namespace App\Http\Resources\Backend\Blog;
 
-use App\Helpers\File\FileUrlHelper;
 use Illuminate\Http\Request;
+use App\Helpers\File\FileUrlHelper;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class BlogResource extends JsonResource

@@ -82,7 +82,7 @@ class BlogService
             $blog->status           = $request->status;
 
             if ($request->hasFile('image') && $request->file('image')->isValid()) {
-                $blog->img_path = FileUploadHelper::upload($request->file('image'),'blogs');
+                $blog->img_path = FileUploadHelper::upload($request->file('image'), 'blogs');
             }
 
             $blog->save();
@@ -91,7 +91,7 @@ class BlogService
                 $blog->tags()->attach($request->tag_ids);
             }
 
-            return $blog->load(['category', 'tags']);
+            return $blog;
         });
     }
 
@@ -132,7 +132,7 @@ class BlogService
             $blog->status           = $request->status;
 
             if ($request->hasFile('image') && $request->file('image')->isValid()) {
-                $blog->img_path = FileUploadHelper::upload($request->file('image'),$blog->img_path, 'blogs');
+                $blog->img_path = FileUploadHelper::replace($request->file('image'),$blog->img_path, 'blogs');
             }
 
             $blog->save();
@@ -154,8 +154,6 @@ class BlogService
                 throw new CustomException("Blog not found");
             }
 
-            $blog->tags->detach();
-
             $blog->delete();
 
             return true;
@@ -174,7 +172,7 @@ class BlogService
 
             $blog->restore();
 
-            return $blog->fresh();
+            return $blog;
         });
     }
 
