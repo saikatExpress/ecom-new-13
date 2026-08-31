@@ -102,8 +102,6 @@ class SliderService
             throw new CustomException("Slider not found");
         }
 
-        FileUploadHelper::delete($slider->img_path);
-
         $slider->delete();
 
         return true;

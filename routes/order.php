@@ -57,7 +57,7 @@ Route::middleware('auth:sanctum')->group(function(){
             Route::put('/{id}',                     'update');
             Route::delete('/{id}',                  'destroy');
             Route::patch('/{id}/restore',           'restore');
-            Route::delete('/permanent-delete/{id}', 'restore');
+            Route::delete('/permanent-delete/{id}', 'permanentDelete');
         });
     });
 

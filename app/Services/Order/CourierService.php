@@ -54,7 +54,6 @@ class CourierService
             $courier = new $this->model();
 
             $courier->name       = Str::title($request->name);
-            $courier->is_default = $request->is_default;
             $courier->status     = $request->status;
 
             if($request->hasFile('image') && $request->file('image')->isValid()){
@@ -88,7 +87,6 @@ class CourierService
             }
 
             $courier->name       = Str::title($request->name);
-            $courier->is_default = $request->is_default;
             $courier->status     = $request->status;
 
             if($request->hasFile('image') && $request->file('image')->isValid()){
@@ -129,7 +127,7 @@ class CourierService
 
     public function permanentDelete($id)
     {
-        $courier = $this->model::find($id);
+        $courier = $this->model::onlyTrashed()->find($id);
 
         if(!$courier){
             throw new CustomException("Courier not found");

@@ -85,7 +85,7 @@ class SectionService
                 $section->products()->attach($productIds);
             }
 
-            return $section->load('products');
+            return $section;
         });
     }
 

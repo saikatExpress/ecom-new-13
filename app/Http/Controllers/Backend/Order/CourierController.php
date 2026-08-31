@@ -57,7 +57,7 @@ class CourierController extends BaseController
     {
         $this->authorizePermission($request->user(), 'courier_read', 'You have no permission for show this');
 
-        $courier = $this->service->store($id);
+        $courier = $this->service->show($id);
 
         $courier = new CourierResource($courier);
 
