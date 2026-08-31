@@ -13,7 +13,7 @@ class CmsController extends BaseController
 
     public function show(Request $request, string $slug)
     {
-        $this->authorizePermission($request->user(), 'cms_read', 'You have no permission for view this page');
+        $this->authorizePermission($request->user(), 'page_read', 'You have no permission for view this page');
 
         $page = $this->service->show($slug);
 
@@ -22,7 +22,7 @@ class CmsController extends BaseController
 
     public function updatePage(CmsRequest $request, string $slug)
     {
-        $this->authorizePermission($request->user(), 'cms_update', 'You have no permission for update this page');
+        $this->authorizePermission($request->user(), 'page_update', 'You have no permission for update this page');
 
         $page = $this->service->updatePage($request, $slug);
 

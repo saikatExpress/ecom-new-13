@@ -13,7 +13,7 @@ class FaqController extends BaseController
 
     public function index(Request $request)
     {
-        $this->authorizePermission($request->user(), 'cms_read', 'You have no permission for read this');
+        $this->authorizePermission($request->user(), 'page_read', 'You have no permission for read this');
 
         $faqs = $this->service->index();
 
@@ -22,7 +22,7 @@ class FaqController extends BaseController
 
     public function store(FaqRequest $request)
     {
-        $this->authorizePermission($request->user(), 'cms_create', 'You do not have permission for create this');
+        $this->authorizePermission($request->user(), 'page_create', 'You do not have permission for create this');
 
         $faq = $this->service->store($request);
 
@@ -31,7 +31,7 @@ class FaqController extends BaseController
 
     public function show(Request $request, $id)
     {
-        $this->authorizePermission($request->user(), 'cms_read', 'You do not have permission for show this');
+        $this->authorizePermission($request->user(), 'page_read', 'You do not have permission for show this');
 
         $faq = $this->service->show($id);
 
@@ -40,7 +40,7 @@ class FaqController extends BaseController
 
     public function update(FaqRequest $request, $id)
     {
-        $this->authorizePermission($request->user(), 'cms_update', 'You do not have permission for update this');
+        $this->authorizePermission($request->user(), 'page_update', 'You do not have permission for update this');
 
         $faq = $this->service->update($request, $id);
 
@@ -49,7 +49,7 @@ class FaqController extends BaseController
 
     public function destroy(Request $request, $id)
     {
-        $this->authorizePermission($request->user(), 'cms_delete', 'You do not have permission for delete this');
+        $this->authorizePermission($request->user(), 'page_delete', 'You do not have permission for delete this');
 
         $this->service->destroy($id);
 
