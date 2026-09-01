@@ -36,7 +36,7 @@ class SectionService
 
     public function list()
     {
-        $sections = $this->model::where('status', 'active')->get();
+        $sections = $this->model::select('id', 'name')->where('status', 'active')->get();
 
         return $sections;
     }
@@ -47,9 +47,13 @@ class SectionService
 
         $sections = $this->model::onlyTrashed()
         ->with([
-            'createdBy:id,username',
-            'updatedBy:id,username',
+            'deletedBy:id,username',
             'products',
+            "products.category:id,name",
+            "products.subCategory:id,name",
+            "products.galleries",
+            "products.brand:id,name",
+            'products.variants.attributeValues.attribute',
         ])
         ->paginate($paginateSize);
 
@@ -111,7 +115,16 @@ class SectionService
 
     public function show($id)
     {
-        $section = $this->model->with('products')->find($id);
+        $section = $this->model
+        ->with([
+            'products',
+            "products.category:id,name",
+            "products.subCategory:id,name",
+            "products.galleries",
+            "products.brand:id,name",
+            'products.variants.attributeValues.attribute',
+        ])
+        ->find($id);
 
         if(!$section){
             throw new CustomException("Section not found");
