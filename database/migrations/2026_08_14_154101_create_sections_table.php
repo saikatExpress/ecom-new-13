@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('link')->nullable();
             $table->boolean('is_slider')->default(1);
             $table->string('img_path')->nullable();
+            $table->unsignedInteger('position')->default(0);
             $table->string('status')->default(StatusEnum::ACTIVE);
             $table->userstamps();
             $table->softDeletes();

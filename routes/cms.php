@@ -44,6 +44,7 @@ Route::middleware('auth:sanctum')->group(function(){
             Route::get('/list',                     'list');
             Route::get('/trash',                    'trashList');
             Route::post('/',                        'store');
+            Route::post('/reorder',                 'reorder');
             Route::get('/{id}',                     'show');
             Route::put('/{id}',                     'update');
             Route::delete('/{id}',                  'destroy');

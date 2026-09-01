@@ -2,12 +2,12 @@
 
 namespace App\Services\CMS;
 
-use App\Exceptions\CustomException;
-use App\Helpers\File\FileUploadHelper;
 use App\Models\CMS\Section;
+use Illuminate\Support\Str;
 use App\Models\Product\Product;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
+use App\Exceptions\CustomException;
+use App\Helpers\File\FileUploadHelper;
 
 class SectionService
 {
@@ -22,7 +22,13 @@ class SectionService
             'createdBy:id,username',
             'updatedBy:id,username',
             'products',
+            "products.category:id,name",
+            "products.subCategory:id,name",
+            "products.galleries",
+            "products.brand:id,name",
+            'products.variants.attributeValues.attribute',
         ])
+        ->orderBy('position', 'asc')
         ->paginate($paginateSize);
 
         return $sections;
@@ -58,6 +64,7 @@ class SectionService
             $section->name      = Str::title($request->name);
             $section->link      = $request->link;
             $section->is_slider = $request->is_slider ?? 0;
+            $section->position  = $request->position;
             $section->status    = $request->status;
 
             if($request->hasFile('image') && $request->file('image')->isValid()){
@@ -89,11 +96,22 @@ class SectionService
         });
     }
 
+    public function reorder($request)
+    {
+        return DB::transaction(function () use ($request) {
+
+            foreach ($request->section_ids as $index => $sectionId) {
+
+                $this->model::where('id', $sectionId)->update(['position' => $index + 1]);
+            }
+
+            return true;
+        });
+    }
+
     public function show($id)
     {
-        $section = $this->model
-        ->with('products')
-        ->find($id);
+        $section = $this->model->with('products')->find($id);
 
         if(!$section){
             throw new CustomException("Section not found");
@@ -115,6 +133,7 @@ class SectionService
             $section->name      = Str::title($request->name);
             $section->link      = $request->link;
             $section->is_slider = $request->is_slider ?? 0;
+            $section->position  = $request->position;
             $section->status    = $request->status;
 
             if ($request->hasFile('image') && $request->file('image')->isValid()) {

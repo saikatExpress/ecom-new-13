@@ -11,6 +11,9 @@ use Database\Seeders\Product\CategorySeeder;
 use Database\Seeders\Order\OrderSourceSeeder;
 use Database\Seeders\Product\AttributeSeeder;
 use Database\Seeders\Blog\BlogCategorySeeder;
+use Database\Seeders\CMS\FaqSeeder;
+use Database\Seeders\CMS\PageSeeder;
+use Database\Seeders\CMS\SectionSeeder;
 use Database\Seeders\Order\CancelReasonSeeder;
 use Database\Seeders\Order\CourierSeeder;
 use Database\Seeders\Order\CustomerTypeSeeder;
@@ -42,6 +45,12 @@ class DatabaseSeeder extends Seeder
             AttributeValueSeeder::class,
             ProductSeeder::class,
             // Product Seeders
+
+            // CMS Seeder
+            SectionSeeder::class,
+            PageSeeder::class,
+            FaqSeeder::class,
+            // CMS Seeder
 
             // Order Seeders
             OrderSourceSeeder::class,

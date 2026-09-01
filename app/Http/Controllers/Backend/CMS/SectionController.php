@@ -6,6 +6,7 @@ use App\Http\Resources\Backend\CMS\SectionCollection;
 use Illuminate\Http\Request;
 use App\Services\CMS\SectionService;
 use App\Http\Controllers\BaseController;
+use App\Http\Requests\Backend\CMS\SectionReorderRequest;
 use App\Http\Requests\Backend\CMS\SectionRequest;
 use App\Http\Resources\Backend\CMS\SectionResource;
 
@@ -51,6 +52,15 @@ class SectionController extends BaseController
         $section = new SectionResource($section);
 
         return $this->sendResponse($section, "Section Create Successfully");
+    }
+
+    public function reorder(SectionReorderRequest $request)
+    {
+        $this->authorizePermission($request->user(), 'section_update', 'You have no permission for reorder this');
+
+        $result = $this->service->reorder($request);
+
+        return $this->sendResponse($result, "Section Reorder Successfully");
     }
 
     public function show(Request $request, $id)
