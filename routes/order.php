@@ -9,6 +9,7 @@ use App\Http\Controllers\Backend\Order\CourierSettingController;
 use App\Http\Controllers\Backend\Order\PaymentGatewayController;
 use App\Http\Controllers\Backend\Order\DeliveryGatewayController;
 use App\Http\Controllers\Backend\Order\OrderGuardSettingController;
+use App\Http\Controllers\Backend\Order\StatusController;
 
 Route::middleware('auth:sanctum')->group(function(){
     Route::prefix('admin/order-source')->group(function(){
@@ -49,6 +50,20 @@ Route::middleware('auth:sanctum')->group(function(){
 
     Route::prefix('admin/courier')->group(function(){
         Route::controller(CourierController::class)->group(function(){
+            Route::get('/',                         'index');
+            Route::get('/trash',                    'trashList');
+            Route::get('/list',                     'list');
+            Route::post('/',                        'store');
+            Route::get('/{id}',                     'show');
+            Route::put('/{id}',                     'update');
+            Route::delete('/{id}',                  'destroy');
+            Route::patch('/{id}/restore',           'restore');
+            Route::delete('/permanent-delete/{id}', 'permanentDelete');
+        });
+    });
+
+    Route::prefix('admin/status')->group(function(){
+        Route::controller(StatusController::class)->group(function(){
             Route::get('/',                         'index');
             Route::get('/trash',                    'trashList');
             Route::get('/list',                     'list');

@@ -8,4 +8,6 @@ use App\Models\BaseModel;
 class Status extends BaseModel
 {
     use HasSlug;
+
+    protected $guarded = ['id'];
 }
