@@ -11,9 +11,17 @@ class StatusService
 {
     public function __construct(protected Status $model){}
 
-    public function index()
+    public function index($request)
     {
-        $statuses = $this->model::orderBy('position', 'asc')->get();
+        $paginateSize = $request->input('paginate_size', 25);
+
+        $statuses = $this->model
+        ->with([
+            'createdBy:id,username',
+            'updatedBy:id,username',
+        ])
+        ->orderBy('position', 'asc')
+        ->paginate($paginateSize);
 
         return $statuses;
     }
@@ -25,9 +33,16 @@ class StatusService
         return $statuses;
     }
 
-    public function trashList()
+    public function trashList($request)
     {
-        $statuses = $this->model::onlyTrashed()->orderBy('position', 'asc')->get();
+        $paginateSize = $request->input('paginate_size', 25);
+
+        $statuses = $this->model::onlyTrashed()
+        ->with([
+            'deletedBy:id,username'
+        ])
+        ->orderBy('position', 'asc')
+        ->paginate($paginateSize);
 
         return $statuses;
     }
@@ -59,6 +74,19 @@ class StatusService
             }
 
             return $status;
+        });
+    }
+
+    public function reorder($request)
+    {
+        return DB::transaction(function () use ($request) {
+
+            foreach ($request->status_ids as $index => $statusId) {
+
+                $this->model::where('id', $statusId)->update(['position' => $index + 1]);
+            }
+
+            return true;
         });
     }
 
