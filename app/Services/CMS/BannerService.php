@@ -130,7 +130,7 @@ class BannerService
 
         $banner->restore();
 
-        return true;
+        return $banner;
     }
 
     public function permanentDelete($id)

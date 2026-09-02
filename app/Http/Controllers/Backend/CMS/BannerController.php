@@ -32,7 +32,7 @@ class BannerController extends BaseController
 
         $banners = new BannerCollection($banners);
 
-        return $this->sendResponse($banners, "All Banners");
+        return $this->sendResponse($banners, "Banners Trash List");
     }
 
     public function store(BannerRequest $request)
