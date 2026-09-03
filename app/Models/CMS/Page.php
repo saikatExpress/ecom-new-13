@@ -2,10 +2,10 @@
 
 namespace App\Models\CMS;
 
-use App\Models\BaseModel;
 use App\Traits\HasSlug;
+use Illuminate\Database\Eloquent\Model;
 
-class Page extends BaseModel
+class Page extends Model
 {
     use HasSlug;
 

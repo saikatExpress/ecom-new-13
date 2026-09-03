@@ -1,15 +1,15 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Backend\Order\StatusController;
+use App\Http\Controllers\Backend\Order\CourierController;
 use App\Http\Controllers\Backend\Order\OrderSourceController;
 use App\Http\Controllers\Backend\Order\CustomerTypeController;
 use App\Http\Controllers\Backend\Order\CancelReasonController;
-use App\Http\Controllers\Backend\Order\CourierController;
 use App\Http\Controllers\Backend\Order\CourierSettingController;
 use App\Http\Controllers\Backend\Order\PaymentGatewayController;
 use App\Http\Controllers\Backend\Order\DeliveryGatewayController;
 use App\Http\Controllers\Backend\Order\OrderGuardSettingController;
-use App\Http\Controllers\Backend\Order\StatusController;
 
 Route::middleware('auth:sanctum')->group(function(){
     Route::prefix('admin/order-source')->group(function(){

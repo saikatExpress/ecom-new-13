@@ -18,8 +18,6 @@ return new class extends Migration
             $table->text('meta_description')->nullable();
             $table->text('meta_keywords')->nullable();
             $table->string('status')->default(StatusEnum::ACTIVE);
-            $table->userstamps();
-            $table->softDeletes();
             $table->timestamps();
         });
     }
