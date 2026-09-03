@@ -5,6 +5,7 @@ namespace App\Services\Auth;
 use App\Models\User;
 use App\Enums\StatusEnum;
 use App\Enums\OtpPurposeEnum;
+use Illuminate\Support\Facades\DB;
 use App\Exceptions\CustomException;
 use Illuminate\Support\Facades\Hash;
 use App\Helpers\Setting\SettingHelper;
@@ -118,6 +119,22 @@ class AuthService
         return $user;
     }
 
+    public function update($request, $id)
+    {
+        return DB::transaction(function () use ($request, $id) {
+            $user = $this->model::find($id);
+
+            if(!$user){
+                throw new CustomException("User not found");
+            }
+
+            $user->password = Hash::make($request->password);
+            $user->save();
+
+            return $user;
+        });
+    }
+
     public function verifyOtp($request): User
     {
         $user = $this->model->with('roles.permissions')->where('phone_number', $request->phone_number)->firstOrFail();
@@ -126,20 +143,12 @@ class AuthService
 
         $key = strtolower($request->phone_number) . '|' . $request->ip();
 
-        return $this->completeLogin(
-            $user,
-            $request,
-            $key
-        );
+        return $this->completeLogin($user,$request,$key);
     }
 
     public function me(): User
     {
-        return auth()
-            ->user()
-            ->load([
-                'roles.permissions'
-            ]);
+        return auth()->user()->load(['roles.permissions']);
     }
 
     public function resendOtp($request): void
@@ -151,22 +160,14 @@ class AuthService
 
     public function forgotPassword($request): void
     {
-        $user = $this->model
-            ->where('phone_number', $request->phone_number)
-            ->firstOrFail();
+        $user = $this->model->where('phone_number', $request->phone_number)->firstOrFail();
 
         if ($user->trashed()) {
-            throw new CustomException(
-                'Your account has been deleted.',
-                403
-            );
+            throw new CustomException('Your account has been deleted.',403);
         }
 
         if ($user->status !== StatusEnum::ACTIVE->value) {
-            throw new CustomException(
-                'Your account has been disabled.',
-                403
-            );
+            throw new CustomException('Your account has been disabled.',403);
         }
 
         $this->otpService->send(user: $user,purpose: OtpPurposeEnum::FORGOT_PASSWORD,request: $request);
@@ -174,25 +175,18 @@ class AuthService
 
     public function resetPassword($request): void
     {
-        $user = $this->model
-            ->where('phone_number', $request->phone_number)
-            ->first();
+        $user = $this->model->where('phone_number', $request->phone_number)->first();
 
         if (! $user) {
             throw new CustomException('User not found.', 404);
         }
 
-        $this->otpService->verify(
-            user: $user,
-            purpose: OtpPurposeEnum::FORGOT_PASSWORD,
-            otp: $request->otp
-        );
+        $this->otpService->verify(user: $user, purpose: OtpPurposeEnum::FORGOT_PASSWORD, otp: $request->otp);
 
         $user->update([
             'password' => Hash::make($request->password),
         ]);
 
-        // সব device থেকে logout
         $user->tokens()->delete();
     }
 
@@ -217,10 +211,7 @@ class AuthService
             'last_logout_at' => now(),
         ]);
 
-        $this->loginHistoryService->logoutAllDevices(
-            $user,
-            $request
-        );
+        $this->loginHistoryService->logoutAllDevices($user,$request);
 
         $user->tokens()->delete();
     }

@@ -10,6 +10,7 @@ use App\Http\Resources\Backend\Auth\AuthResource;
 use App\Http\Requests\Backend\Auth\ResendOtpRequest;
 use App\Http\Requests\Backend\Auth\VerifyOtpRequest;
 use App\Http\Requests\Backend\Auth\ResetPasswordRequest;
+use App\Http\Requests\Backend\Auth\UpdatePasswordRequest;
 use App\Http\Requests\Backend\Auth\ForgotPasswordRequest;
 
 class AuthController extends BaseController
@@ -35,6 +36,15 @@ class AuthController extends BaseController
         $me = new AuthResource($me);
 
         return $this->sendResponse($me, 'Login User Data');
+    }
+
+    public function update(UpdatePasswordRequest $request, $id)
+    {
+        $this->authorizePermission($request->user(), 'user_update', 'You have no permission for update password');
+
+        $user = $this->authService->update($request, $id);
+
+        return $this->sendResponse($user, "User Password update successfully");
     }
 
     public function logout(Request $request)
