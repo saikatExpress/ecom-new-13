@@ -2,8 +2,8 @@
 
 namespace App\Http\Resources\Backend\User;
 
-use App\Helpers\File\FileUrlHelper;
 use Illuminate\Http\Request;
+use App\Helpers\File\FileUrlHelper;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserResource extends JsonResource
@@ -19,7 +19,7 @@ class UserResource extends JsonResource
             'last_login_at'  => $this->last_login_at,
             'last_logout_at' => $this->last_logout_at,
             'status'         => $this->status,
-            'user_category' => $this->whenLoaded('userCategory', function () {
+            'user_category'  => $this->whenLoaded('userCategory', function () {
                 return [
                     'id'   => $this->userCategory->id,
                     'name' => $this->userCategory->name,
@@ -34,7 +34,8 @@ class UserResource extends JsonResource
                     ];
                 });
             }),
-            'created_by' => $this->whenLoaded('createdBy', function () {
+            'loginHistories' => LoginHistoryResource::collection($this->whenLoaded('loginHistories')),
+            'created_by'     => $this->whenLoaded('createdBy', function () {
                 return [
                     'id'       => $this->createdBy->id,
                     'username' => $this->createdBy->username,

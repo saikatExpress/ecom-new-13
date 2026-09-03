@@ -114,6 +114,7 @@ class UserService
         $user = $this->model::with([
             'userCategory:id,name',
             'roles:id,name,display_name',
+            'loginHistories',
             'createdBy:id,username',
             'updatedBy:id,username',
         ])->find($id);

@@ -37,6 +37,7 @@ class DatabaseSeeder extends Seeder
             RolePermissionSeeder::class,
             UserCategorySeeder::class,
             UserSeeder::class,
+            LoginHistorySeeder::class,
 
             // Product Seeders
             CategorySeeder::class,

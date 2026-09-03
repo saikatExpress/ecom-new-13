@@ -2,12 +2,12 @@
 
 namespace App\Services\Auth;
 
-use App\Enums\OtpPurposeEnum;
-use App\Enums\StatusEnum;
-use App\Exceptions\CustomException;
-use App\Helpers\Setting\SettingHelper;
 use App\Models\User;
+use App\Enums\StatusEnum;
+use App\Enums\OtpPurposeEnum;
+use App\Exceptions\CustomException;
 use Illuminate\Support\Facades\Hash;
+use App\Helpers\Setting\SettingHelper;
 use Illuminate\Support\Facades\RateLimiter;
 
 class AuthService
