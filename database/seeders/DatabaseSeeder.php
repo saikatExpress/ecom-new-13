@@ -15,6 +15,7 @@ use Database\Seeders\CMS\FaqSeeder;
 use Database\Seeders\CMS\PageSeeder;
 use Database\Seeders\CMS\SectionSeeder;
 use Database\Seeders\Order\CancelReasonSeeder;
+use Database\Seeders\Order\CouponSeeder;
 use Database\Seeders\Order\CourierSeeder;
 use Database\Seeders\Order\CustomerTypeSeeder;
 use Database\Seeders\Product\SubCategorySeeder;
@@ -63,6 +64,7 @@ class DatabaseSeeder extends Seeder
             CourierSeeder::class,
             StatusSeeder::class,
             OrderGuardSettingSeeder::class,
+            CouponSeeder::class,
             // Order Seeders
 
             BlogCategorySeeder::class,

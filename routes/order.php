@@ -6,6 +6,7 @@ use App\Http\Controllers\Backend\Order\CourierController;
 use App\Http\Controllers\Backend\Order\OrderSourceController;
 use App\Http\Controllers\Backend\Order\CustomerTypeController;
 use App\Http\Controllers\Backend\Order\CancelReasonController;
+use App\Http\Controllers\Backend\Order\CouponController;
 use App\Http\Controllers\Backend\Order\CourierSettingController;
 use App\Http\Controllers\Backend\Order\PaymentGatewayController;
 use App\Http\Controllers\Backend\Order\DeliveryGatewayController;
@@ -64,6 +65,21 @@ Route::middleware('auth:sanctum')->group(function(){
 
     Route::prefix('admin/status')->group(function(){
         Route::controller(StatusController::class)->group(function(){
+            Route::get('/',                         'index');
+            Route::get('/trash',                    'trashList');
+            Route::get('/list',                     'list');
+            Route::post('/',                        'store');
+            Route::post('/reorder',                 'reorder');
+            Route::get('/{id}',                     'show');
+            Route::put('/{id}',                     'update');
+            Route::delete('/{id}',                  'destroy');
+            Route::patch('/{id}/restore',           'restore');
+            Route::delete('/permanent-delete/{id}', 'permanentDelete');
+        });
+    });
+
+    Route::prefix('admin/coupon')->group(function(){
+        Route::controller(CouponController::class)->group(function(){
             Route::get('/',                         'index');
             Route::get('/trash',                    'trashList');
             Route::get('/list',                     'list');
