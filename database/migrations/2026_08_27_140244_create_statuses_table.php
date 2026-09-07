@@ -15,7 +15,7 @@ return new class extends Migration
             $table->string('slug');
             $table->string('bg_color');
             $table->string('text_color');
-            $table->string('icon')->default('ti-plus');
+            $table->string('icon')->nullable();
             $table->unsignedInteger('position')->default(0);
             $table->string('status')->default(StatusEnum::ACTIVE);
             $table->userstamps();

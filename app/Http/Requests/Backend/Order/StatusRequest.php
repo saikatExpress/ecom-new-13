@@ -19,7 +19,7 @@ class StatusRequest extends FormRequest
             'name'       => ['required', 'min:2', 'max:150', "unique:statuses,name,$id"],
             'bg_color'   => ['required'],
             'text_color' => ['required'],
-            'status'     => ['required', 'in:active, inactive']
+            'status'     => ['required', 'in:active,inactive']
         ];
     }
 }
