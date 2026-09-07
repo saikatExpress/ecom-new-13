@@ -27,7 +27,7 @@ class CouponService
         ->with([
             'createdBy:id,username',
             'updatedBy:id,username',
-            'products:id,name',
+            'products:id,name,sell_price',
             'categories:id,name',
         ])
 
@@ -134,7 +134,7 @@ class CouponService
     {
         $coupon = $this->model
         ->with([
-            'products:id,name,img_path',
+            'products:id,name,img_path,sell_price',
             'categories:id,name',
         ])
         ->find($id);

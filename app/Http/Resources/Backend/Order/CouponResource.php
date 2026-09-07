@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Backend\Order;
 
 use Illuminate\Http\Request;
+use App\Helpers\File\FileUrlHelper;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class CouponResource extends JsonResource
@@ -26,8 +27,10 @@ class CouponResource extends JsonResource
             'products'            => $this->whenLoaded('products', function () {
                 return $this->products->map(function ($product) {
                     return [
-                        'id'   => $product->id,
-                        'name' => $product->name,
+                        'id'         => $product->id,
+                        'name'       => $product->name,
+                        'image'      => FileUrlHelper::url($product->img_path),
+                        'sell_price' => $product->sell_price,
                     ];
                 });
             }),
