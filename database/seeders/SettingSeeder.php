@@ -13,10 +13,9 @@ class SettingSeeder extends Seeder
 
             /*
             |--------------------------------------------------------------------------
-            | General
+            | General Settings
             |--------------------------------------------------------------------------
             */
-
             [
                 'group_name'  => 'general',
                 'setting_key' => 'site_name',
@@ -28,66 +27,48 @@ class SettingSeeder extends Seeder
                 'group_name'  => 'general',
                 'setting_key' => 'site_tagline',
                 'label'       => 'Site Tagline',
-                'value'       => '',
+                'value'       => 'Best Online Shopping Experience',
                 'type'        => 'string'
             ],
             [
                 'group_name'  => 'general',
-                'setting_key' => 'site_description',
-                'label'       => 'Site Description',
-                'value'       => '',
-                'type'        => 'textarea'
-            ],
-
-            [
-                'group_name'  => 'general',
-                'setting_key' => 'logo',
-                'label'       => 'Logo',
-                'value'       => '',
+                'setting_key' => 'site_logo',
+                'label'       => 'Site Logo',
+                'value'       => 'assets/images/logo.png', // Default path
                 'type'        => 'image'
             ],
             [
                 'group_name'  => 'general',
-                'setting_key' => 'favicon',
-                'label'       => 'Favicon',
-                'value'       => '',
+                'setting_key' => 'site_favicon',
+                'label'       => 'Site Favicon',
+                'value'       => 'assets/images/favicon.ico',
                 'type'        => 'image'
             ],
-
             [
                 'group_name'  => 'general',
                 'setting_key' => 'support_email',
                 'label'       => 'Support Email',
-                'value'       => '',
+                'value'       => 'support@myecommerce.com',
                 'type'        => 'email'
             ],
             [
                 'group_name'  => 'general',
                 'setting_key' => 'support_phone',
                 'label'       => 'Support Phone',
-                'value'       => '',
+                'value'       => '+8801700000000',
                 'type'        => 'string'
             ],
             [
                 'group_name'  => 'general',
-                'setting_key' => 'whatsapp_number',
-                'label'       => 'Whatsapp',
-                'value'       => '',
-                'type'        => 'string'
-            ],
-
-            [
-                'group_name'  => 'general',
-                'setting_key' => 'address',
-                'label'       => 'Address',
-                'value'       => '',
+                'setting_key' => 'store_address',
+                'label'       => 'Store Address',
+                'value'       => 'Dhaka, Bangladesh',
                 'type'        => 'textarea'
             ],
-
             [
                 'group_name'  => 'general',
-                'setting_key' => 'currency',
-                'label'       => 'Currency',
+                'setting_key' => 'currency_code',
+                'label'       => 'Currency Code',
                 'value'       => 'BDT',
                 'type'        => 'string'
             ],
@@ -98,383 +79,249 @@ class SettingSeeder extends Seeder
                 'value'       => '৳',
                 'type'        => 'string'
             ],
-            [
-                'group_name'  => 'general',
-                'setting_key' => 'currency_position',
-                'label'       => 'Currency Position',
-                'value'       => 'left',
-                'type'        => 'select'
-            ],
-
-            [
-                'group_name'  => 'general',
-                'setting_key' => 'timezone',
-                'label'       => 'Timezone',
-                'value'       => 'Asia/Dhaka',
-                'type'        => 'string'
-            ],
-            [
-                'group_name'  => 'general',
-                'setting_key' => 'maintenance_mode',
-                'label'       => 'Maintenance Mode',
-                'value'       => false,
-                'type'        => 'boolean'
-            ],
 
             /*
             |--------------------------------------------------------------------------
-            | Auth
+            | Theme & UI Settings (Frontend Customization)
             |--------------------------------------------------------------------------
             */
-
-            [
-                'group_name'  => 'auth',
-                'setting_key' => 'login_otp_enabled',
-                'label'       => 'Login OTP',
-                'value'       => true,
-                'type'        => 'boolean'
-            ],
-            [
-                'group_name'  => 'auth',
-                'setting_key' => 'register_otp_enabled',
-                'label'       => 'Register OTP',
-                'value'       => true,
-                'type'        => 'boolean'
-            ],
-            [
-                'group_name'  => 'auth',
-                'setting_key' => 'forgot_password_otp_enabled',
-                'label'       => 'Forgot Password OTP',
-                'value'       => true,
-                'type'        => 'boolean'
-            ],
-
-            [
-                'group_name'  => 'auth',
-                'setting_key' => 'require_phone_verification',
-                'label'       => 'Phone Verification',
-                'value'       => true,
-                'type'        => 'boolean'
-            ],
-            [
-                'group_name'  => 'auth',
-                'setting_key' => 'require_email_verification',
-                'label'       => 'Email Verification',
-                'value'       => false,
-                'type'        => 'boolean'
-            ],
-
-            [
-                'group_name'  => 'auth',
-                'setting_key' => 'otp_length',
-                'label'       => 'OTP Length',
-                'value'       => 6,
-                'type'        => 'number'
-            ],
-            [
-                'group_name'  => 'auth',
-                'setting_key' => 'otp_expire_minutes',
-                'label'       => 'OTP Expire',
-                'value'       => 5,
-                'type'        => 'number'
-            ],
-
-            /*
-            |--------------------------------------------------------------------------
-            | Order
-            |--------------------------------------------------------------------------
-            */
-
-            [
-                'group_name'  => 'order',
-                'setting_key' => 'order_prefix',
-                'label'       => 'Order Prefix',
-                'value'       => 'ORD',
-                'type'        => 'string'
-            ],
-            [
-                'group_name'  => 'order',
-                'setting_key' => 'invoice_prefix',
-                'label'       => 'Invoice Prefix',
-                'value'       => 'INV',
-                'type'        => 'string'
-            ],
-            [
-                'group_name'  => 'order',
-                'setting_key' => 'invoice_start',
-                'label'       => 'Invoice Start',
-                'value'       => 1000,
-                'type'        => 'number'
-            ],
-
-            [
-                'group_name'  => 'order',
-                'setting_key' => 'guest_checkout',
-                'label'       => 'Guest Checkout',
-                'value'       => true,
-                'type'        => 'boolean'
-            ],
-            [
-                'group_name'  => 'order',
-                'setting_key' => 'minimum_order_amount',
-                'label'       => 'Minimum Order',
-                'value'       => 0,
-                'type'        => 'number'
-            ],
-            [
-                'group_name'  => 'order',
-                'setting_key' => 'return_days',
-                'label'       => 'Return Days',
-                'value'       => 7,
-                'type'        => 'number'
-            ],
-
-            /*
-            |--------------------------------------------------------------------------
-            | Shipping
-            |--------------------------------------------------------------------------
-            */
-
-            [
-                'group_name'  => 'shipping',
-                'setting_key' => 'free_shipping_enabled',
-                'label'       => 'Free Shipping',
-                'value'       => false,
-                'type'        => 'boolean'
-            ],
-            [
-                'group_name'  => 'shipping',
-                'setting_key' => 'free_shipping_minimum_amount',
-                'label'       => 'Free Shipping Minimum',
-                'value'       => 1000,
-                'type'        => 'number'
-            ],
-            [
-                'group_name'  => 'shipping',
-                'setting_key' => 'default_delivery_charge',
-                'label'       => 'Delivery Charge',
-                'value'       => 80,
-                'type'        => 'number'
-            ],
-
-            /*
-            |--------------------------------------------------------------------------
-            | Product
-            |--------------------------------------------------------------------------
-            */
-
-            [
-                'group_name'  => 'product',
-                'setting_key' => 'show_stock',
-                'label'       => 'Show Stock',
-                'value'       => true,
-                'type'        => 'boolean'
-            ],
-            [
-                'group_name'  => 'product',
-                'setting_key' => 'show_sku',
-                'label'       => 'Show SKU',
-                'value'       => true,
-                'type'        => 'boolean'
-            ],
-            [
-                'group_name'  => 'product',
-                'setting_key' => 'show_reviews',
-                'label'       => 'Show Reviews',
-                'value'       => true,
-                'type'        => 'boolean'
-            ],
-            [
-                'group_name'  => 'product',
-                'setting_key' => 'default_stock',
-                'label'       => 'Default Stock',
-                'value'       => 0,
-                'type'        => 'number'
-            ],
-
-            /*
-            |--------------------------------------------------------------------------
-            | Review
-            |--------------------------------------------------------------------------
-            */
-
-            [
-                'group_name'  => 'review',
-                'setting_key' => 'review_enabled',
-                'label'       => 'Review Enabled',
-                'value'       => true,
-                'type'        => 'boolean'
-            ],
-            [
-                'group_name'  => 'review',
-                'setting_key' => 'review_after_purchase_only',
-                'label'       => 'Verified Purchase Review',
-                'value'       => true,
-                'type'        => 'boolean'
-            ],
-
-            /*
-            |--------------------------------------------------------------------------
-            | Coupon
-            |--------------------------------------------------------------------------
-            */
-
-            [
-                'group_name'  => 'coupon',
-                'setting_key' => 'coupon_enabled',
-                'label'       => 'Coupon Enabled',
-                'value'       => true,
-                'type'        => 'boolean'
-            ],
-
-            /*
-            |--------------------------------------------------------------------------
-            | Inventory
-            |--------------------------------------------------------------------------
-            */
-
-            [
-                'group_name'  => 'inventory',
-                'setting_key' => 'low_stock_limit',
-                'label'       => 'Low Stock Alert',
-                'value'       => 5,
-                'type'        => 'number'
-            ],
-            [
-                'group_name'  => 'inventory',
-                'setting_key' => 'negative_stock',
-                'label'       => 'Negative Stock',
-                'value'       => false,
-                'type'        => 'boolean'
-            ],
-
-            /*
-            |--------------------------------------------------------------------------
-            | Social
-            |--------------------------------------------------------------------------
-            */
-
-            [
-                'group_name'  => 'social',
-                'setting_key' => 'facebook',
-                'label'       => 'Facebook',
-                'value'       => '',
-                'type'        => 'url'
-            ],
-            [
-                'group_name'  => 'social',
-                'setting_key' => 'instagram',
-                'label'       => 'Instagram',
-                'value'       => '',
-                'type'        => 'url'
-            ],
-            [
-                'group_name'  => 'social',
-                'setting_key' => 'youtube',
-                'label'       => 'Youtube',
-                'value'       => '',
-                'type'        => 'url'
-            ],
-            [
-                'group_name'  => 'social',
-                'setting_key' => 'linkedin',
-                'label'       => 'Linkedin',
-                'value'       => '',
-                'type'        => 'url'
-            ],
-
-            /*
-            |--------------------------------------------------------------------------
-            | SEO
-            |--------------------------------------------------------------------------
-            */
-
-            [
-                'group_name'  => 'seo',
-                'setting_key' => 'meta_title',
-                'label'       => 'Meta Title',
-                'value'       => '',
-                'type'        => 'string'
-            ],
-            [
-                'group_name'  => 'seo',
-                'setting_key' => 'meta_description',
-                'label'       => 'Meta Description',
-                'value'       => '',
-                'type'        => 'textarea'
-            ],
-            [
-                'group_name'  => 'seo',
-                'setting_key' => 'meta_keywords',
-                'label'       => 'Meta Keywords',
-                'value'       => '',
-                'type'        => 'textarea'
-            ],
-
-            /*
-            |--------------------------------------------------------------------------
-            | Theme
-            |--------------------------------------------------------------------------
-            */
-
             [
                 'group_name'  => 'theme',
                 'setting_key' => 'primary_color',
                 'label'       => 'Primary Color',
-                'value'       => '#0d6efd',
+                'value'       => '#FF5722', // Brand Color
                 'type'        => 'color'
             ],
             [
                 'group_name'  => 'theme',
                 'setting_key' => 'secondary_color',
                 'label'       => 'Secondary Color',
-                'value'       => '#198754',
+                'value'       => '#212121', // Dark Gray
                 'type'        => 'color'
             ],
-
             [
                 'group_name'  => 'theme',
-                'setting_key' => 'cart_button_text',
-                'label'       => 'Cart Button Text',
-                'value'       => 'Add To Cart',
+                'setting_key' => 'background_color',
+                'label'       => 'Background Color',
+                'value'       => '#F8F9FA',
+                'type'        => 'color'
+            ],
+            [
+                'group_name'  => 'theme',
+                'setting_key' => 'text_color',
+                'label'       => 'Body Text Color',
+                'value'       => '#333333',
+                'type'        => 'color'
+            ],
+            [
+                'group_name'  => 'theme',
+                'setting_key' => 'heading_font',
+                'label'       => 'Heading Font Family',
+                'value'       => 'Poppins, sans-serif',
+                'type'        => 'string'
+            ],
+            [
+                'group_name'  => 'theme',
+                'setting_key' => 'body_font',
+                'label'       => 'Body Font Family',
+                'value'       => 'Roboto, sans-serif',
+                'type'        => 'string'
+            ],
+            [
+                'group_name'  => 'theme',
+                'setting_key' => 'add_to_cart_button_text',
+                'label'       => 'Add To Cart Text',
+                'value'       => 'Add to Cart',
                 'type'        => 'string'
             ],
             [
                 'group_name'  => 'theme',
                 'setting_key' => 'buy_now_button_text',
-                'label'       => 'Buy Now Button Text',
+                'label'       => 'Buy Now Text',
                 'value'       => 'Buy Now',
+                'type'        => 'string'
+            ],
+            [
+                'group_name'  => 'theme',
+                'setting_key' => 'header_layout',
+                'label'       => 'Header Layout Style',
+                'value'       => 'style_1', // Can be style_1, style_2 etc.
+                'type'        => 'select'
+            ],
+
+            /*
+            |--------------------------------------------------------------------------
+            | Product & Catalog Settings
+            |--------------------------------------------------------------------------
+            */
+            [
+                'group_name'  => 'product',
+                'setting_key' => 'products_per_page',
+                'label'       => 'Products Per Page',
+                'value'       => 12,
+                'type'        => 'number'
+            ],
+            [
+                'group_name'  => 'product',
+                'setting_key' => 'show_out_of_stock',
+                'label'       => 'Show Out Of Stock Products',
+                'value'       => true,
+                'type'        => 'boolean'
+            ],
+            [
+                'group_name'  => 'product',
+                'setting_key' => 'enable_product_reviews',
+                'label'       => 'Enable Product Reviews',
+                'value'       => true,
+                'type'        => 'boolean'
+            ],
+
+            /*
+            |--------------------------------------------------------------------------
+            | Order & Checkout Settings
+            |--------------------------------------------------------------------------
+            */
+            [
+                'group_name'  => 'order',
+                'setting_key' => 'enable_guest_checkout',
+                'label'       => 'Enable Guest Checkout',
+                'value'       => true,
+                'type'        => 'boolean'
+            ],
+            [
+                'group_name'  => 'order',
+                'setting_key' => 'minimum_order_amount',
+                'label'       => 'Minimum Order Amount',
+                'value'       => 500, // example 500 BDT
+                'type'        => 'number'
+            ],
+            [
+                'group_name'  => 'order',
+                'setting_key' => 'order_prefix',
+                'label'       => 'Order Number Prefix',
+                'value'       => 'ORD-',
                 'type'        => 'string'
             ],
 
             /*
             |--------------------------------------------------------------------------
-            | Contact
+            | Shipping Settings
             |--------------------------------------------------------------------------
             */
-
             [
-                'group_name'  => 'contact',
-                'setting_key' => 'google_map',
-                'label'       => 'Google Map',
-                'value'       => '',
-                'type'        => 'textarea'
+                'group_name'  => 'shipping',
+                'setting_key' => 'delivery_charge_inside_city',
+                'label'       => 'Delivery Charge (Inside City)',
+                'value'       => 60,
+                'type'        => 'number'
+            ],
+            [
+                'group_name'  => 'shipping',
+                'setting_key' => 'delivery_charge_outside_city',
+                'label'       => 'Delivery Charge (Outside City)',
+                'value'       => 120,
+                'type'        => 'number'
+            ],
+            [
+                'group_name'  => 'shipping',
+                'setting_key' => 'free_shipping_threshold',
+                'label'       => 'Free Shipping Amount',
+                'value'       => 5000, // Order above this gets free shipping
+                'type'        => 'number'
             ],
 
+            /*
+            |--------------------------------------------------------------------------
+            | Payment Gateway Toggles
+            |--------------------------------------------------------------------------
+            */
+            [
+                'group_name'  => 'payment',
+                'setting_key' => 'cod_enabled',
+                'label'       => 'Cash On Delivery Enabled',
+                'value'       => true,
+                'type'        => 'boolean'
+            ],
+            [
+                'group_name'  => 'payment',
+                'setting_key' => 'bkash_enabled',
+                'label'       => 'bKash Enabled',
+                'value'       => false,
+                'type'        => 'boolean'
+            ],
+            [
+                'group_name'  => 'payment',
+                'setting_key' => 'sslcommerz_enabled',
+                'label'       => 'SSLCommerz Enabled',
+                'value'       => false,
+                'type'        => 'boolean'
+            ],
+
+            /*
+            |--------------------------------------------------------------------------
+            | Social Media Links
+            |--------------------------------------------------------------------------
+            */
+            [
+                'group_name'  => 'social',
+                'setting_key' => 'facebook_url',
+                'label'       => 'Facebook URL',
+                'value'       => 'https://facebook.com/myecommerce',
+                'type'        => 'url'
+            ],
+            [
+                'group_name'  => 'social',
+                'setting_key' => 'youtube_url',
+                'label'       => 'YouTube URL',
+                'value'       => 'https://youtube.com/myecommerce',
+                'type'        => 'url'
+            ],
+
+            /*
+            |--------------------------------------------------------------------------
+            | SEO & Analytics
+            |--------------------------------------------------------------------------
+            */
+            [
+                'group_name'  => 'seo',
+                'setting_key' => 'meta_title',
+                'label'       => 'Default Meta Title',
+                'value'       => 'My Ecommerce - Best Online Shop',
+                'type'        => 'string'
+            ],
+            [
+                'group_name'  => 'seo',
+                'setting_key' => 'meta_description',
+                'label'       => 'Default Meta Description',
+                'value'       => 'Buy the best products at the cheapest prices from My Ecommerce.',
+                'type'        => 'textarea'
+            ],
+            [
+                'group_name'  => 'seo',
+                'setting_key' => 'google_analytics_id',
+                'label'       => 'Google Analytics Measurement ID',
+                'value'       => '',
+                'type'        => 'string'
+            ],
+            [
+                'group_name'  => 'seo',
+                'setting_key' => 'facebook_pixel_id',
+                'label'       => 'Facebook Pixel ID',
+                'value'       => '',
+                'type'        => 'string'
+            ]
         ];
 
         foreach ($settings as $setting) {
-
             Setting::updateOrCreate(
                 [
-                    'group_name' => $setting['group_name'],
+                    'group_name'  => $setting['group_name'],
                     'setting_key' => $setting['setting_key'],
                 ],
                 array_merge($setting, [
                     'autoload' => true,
                 ])
             );
-
         }
     }
 }

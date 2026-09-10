@@ -82,11 +82,9 @@ class ProductService
         $categoryIds    = $request->input('category_ids', []);
         $subCategoryIds = $request->input('sub_category_ids', []);
         $brandIds       = $request->input('brand_ids', []);
-        $minPrice       = $request->input('min_price');
-        $maxPrice       = $request->input('max_price');
         $status         = $request->input('status');
 
-        $products = $this->model->query()
+        $products = $this->model::onlyTrashed()
         ->with([
             'category:id,name',
             'subCategory:id,name',
@@ -96,7 +94,7 @@ class ProductService
             'deletedBy:id,username',
         ])
 
-        ->select('id', 'name', 'slug', 'category_id', 'sub_category_id', 'brand_id', 'sku', 'img_path', 'free_shipping', 'buy_price', 'mrp', 'sell_price', 'offer_price', 'discount_amount', 'offer_percentage', 'current_stock', 'total_sell_quantity', 'status')
+        ->select('id', 'name', 'slug', 'category_id', 'sub_category_id', 'brand_id', 'sku', 'img_path', 'free_shipping', 'buy_price', 'mrp', 'sell_price', 'offer_price', 'discount_amount', 'offer_percentage', 'current_stock', 'total_sell_quantity', 'status', 'deleted_by', 'deleted_at')
 
         ->when($searchKey, function ($query) {
             $query->where(function ($q, $searchKey) {
@@ -119,14 +117,6 @@ class ProductService
 
         ->when($status, function($query, $status){
             $query->where('status', $status);
-        })
-
-        ->when($minPrice !== null, function ($query) use ($minPrice) {
-            $query->where('sell_price', '>=', $minPrice);
-        })
-
-        ->when($maxPrice !== null, function ($query) use ($maxPrice) {
-            $query->where('sell_price', '<=', $maxPrice);
         })
 
         ->latest()
@@ -357,6 +347,7 @@ class ProductService
                 $product->buy_price       = $request->buy_price ?? 0;
                 $product->mrp             = $request->mrp ?? 0;
                 $product->sell_price      = $request->sell_price ?? 0;
+                $product->status          = $request->status;
 
                 $offer = $product->calculateOffer($product->mrp, $product->sell_price);
 

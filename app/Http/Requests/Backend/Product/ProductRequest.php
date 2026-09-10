@@ -20,7 +20,7 @@ class ProductRequest extends FormRequest
             'sub_category_id'               => ['nullable', 'exists:sub_categories,id'],
             'brand_id'                      => ['nullable', 'exists:brands,id'],
             'sku'                           => ['nullable', 'string', 'max:100', Rule::unique('products', 'sku')->ignore($this->route('id')),],
-            'image'                         => ['required', 'image', 'mimes:png,jpg,jpeg,webp'],
+            'image'                         => [$this->isMethod('post') ? 'required' : 'nullable','image','mimes:png,jpg,jpeg,webp'],
             'buy_price'                     => ['nullable', 'numeric', 'min:0'],
             'mrp'                           => ['required', 'numeric', 'min:0'],
             'sell_price'                    => ['required', 'numeric', 'min:0', 'lte:mrp'],

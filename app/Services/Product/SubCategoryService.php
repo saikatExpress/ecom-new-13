@@ -39,15 +39,22 @@ class SubCategoryService
 
     public function list($request)
     {
-        $categoryId = $request->input('category_id');
+        $categoryId  = $request->input('category_id');
+        $categoryIds = $request->input('category_ids', []);
 
         $subCategories = $this->model
-        ->select('id', 'name', 'slug')
-        ->when($categoryId, function($query, $categoryId){
-            $query->where('category_id', $categoryId);
-        })
-        ->where('status', 'active')
-        ->get();
+            ->select('id', 'name', 'slug')
+
+            ->when($categoryId, function ($query, $categoryId) {
+                $query->where('category_id', $categoryId);
+            })
+
+            ->when(!$categoryId && !empty($categoryIds), function ($query) use ($categoryIds) {
+                $query->whereIn('category_id', $categoryIds);
+            })
+
+            ->where('status', 'active')
+            ->get();
 
         return $subCategories;
     }

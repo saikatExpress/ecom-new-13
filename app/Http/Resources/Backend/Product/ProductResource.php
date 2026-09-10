@@ -21,6 +21,12 @@ class ProductResource extends JsonResource
             'mrp'                 => $this->mrp,
             'sell_price'          => $this->sell_price,
             'offer_price'         => $this->offer_price,
+            'variation_price' => ($this->relationLoaded('variants') && $this->variants->isNotEmpty())
+                ? [
+                    'variation_min_price' => $this->variants->min('sell_price'),
+                    'variation_max_price' => $this->variants->max('sell_price'),
+                ]
+                : null,
             'offer_percentage'    => $this->offer_percentage,
             'discount_amount'     => $this->discount_amount,
             'current_stock'       => $this->current_stock,
