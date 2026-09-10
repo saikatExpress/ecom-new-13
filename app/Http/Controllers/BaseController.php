@@ -8,19 +8,12 @@ class BaseController extends Controller
 {
     public function sendResponse($data = null, string $message = 'Success', int $status = 200)
     {
-        return response()->json([
-            'success' => true,
-            'message' => $message,
-            'data'    => $data,
-        ], $status);
+        return response()->json(['success' => true,'message' => $message,'data'    => $data], $status);
     }
 
     public function sendError(string $message = 'Something went wrong.',int $status = 400,array $errors = [])
     {
-        $response = [
-            'success' => false,
-            'message' => $message,
-        ];
+        $response = ['success' => false,'message' => $message];
 
         if (! empty($errors)) {
             $response['errors'] = $errors;
@@ -33,10 +26,7 @@ class BaseController extends Controller
     {
         if (! $user || ! $user->hasPermission($permission)) {
             throw new HttpResponseException(
-                response()->json([
-                    'success' => false,
-                    'message' => $message,
-                ], 403)
+                response()->json(['success' => false,'message' => $message], 403)
             );
         }
     }
