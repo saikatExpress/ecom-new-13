@@ -11,4 +11,7 @@ enum StatusEnum: string
     case BLOCKED    = 'blocked';
     case DELETED    = 'deleted';
     case UNVERIFIED = 'unverified';
+    case DRAFT      = 'draft';
+    case PAID       = 'paid';
+    case UNPAID     = 'unpaid';
 }

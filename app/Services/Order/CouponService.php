@@ -2,10 +2,11 @@
 
 namespace App\Services\Order;
 
+use App\Enums\StatusEnum;
+use App\Exceptions\CustomException;
 use App\Models\Order\Coupon;
 use App\Models\Product\Product;
 use Illuminate\Support\Facades\DB;
-use App\Exceptions\CustomException;
 
 class CouponService
 {
@@ -57,6 +58,24 @@ class CouponService
 
         ->orderBy('created_at', 'desc')
         ->paginate($paginateSize);
+
+        return $coupons;
+    }
+
+    public function list()
+    {
+        $now = now();
+
+        $coupons = $this->model
+        ->select('id', 'code')
+        ->where('status', StatusEnum::ACTIVE)
+        ->where(function ($query) use ($now) {
+            $query->whereNull('starts_at')->orWhere('starts_at', '<=', $now);
+        })
+        ->where(function ($query) use ($now) {
+            $query->whereNull('expires_at')->orWhere('expires_at', '>=', $now);
+        })
+        ->get();
 
         return $coupons;
     }

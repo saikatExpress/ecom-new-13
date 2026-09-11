@@ -20,6 +20,7 @@ return new class extends Migration
             $table->decimal('discount_amount', 10, 2)->default(0);
             $table->decimal('offer_price', 10, 2)->nullable();
             $table->decimal('offer_percentage', 10, 2)->nullable();
+            $table->integer('total_sell_quantity')->default(0);
             $table->integer('current_stock')->default(0);
             $table->text('short_description')->nullable();
             $table->longText('description')->nullable();

@@ -2,9 +2,9 @@
 
 namespace App\Http\Resources;
 
+use RuntimeException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
-use RuntimeException;
 
 class BaseCollection extends ResourceCollection
 {

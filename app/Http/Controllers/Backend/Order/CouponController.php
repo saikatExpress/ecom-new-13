@@ -24,6 +24,13 @@ class CouponController extends BaseController
         return $this->sendResponse($coupons, "All Coupons");
     }
 
+    public function list()
+    {
+        $coupons = $this->service->list();
+
+        return $this->sendResponse($coupons, "Active Coupon List");
+    }
+
     public function trashList(Request $request)
     {
         $this->authorizePermission($request->user(), 'coupon_read', 'You have no permission for read this');

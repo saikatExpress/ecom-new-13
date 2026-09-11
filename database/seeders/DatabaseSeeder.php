@@ -21,6 +21,7 @@ use Database\Seeders\Order\CustomerTypeSeeder;
 use Database\Seeders\Product\SubCategorySeeder;
 use Database\Seeders\Order\PaymentGatewaySeeder;
 use Database\Seeders\Order\DeliveryGatewaySeeder;
+use Database\Seeders\Order\DistrictSeeder;
 use Database\Seeders\Order\OrderGuardSettingSeeder;
 use Database\Seeders\Order\StatusSeeder;
 use Database\Seeders\Product\AttributeValueSeeder;
@@ -63,6 +64,7 @@ class DatabaseSeeder extends Seeder
             CancelReasonSeeder::class,
             CourierSeeder::class,
             StatusSeeder::class,
+            DistrictSeeder::class,
             OrderGuardSettingSeeder::class,
             CouponSeeder::class,
             // Order Seeders

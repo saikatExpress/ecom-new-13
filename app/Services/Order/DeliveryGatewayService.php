@@ -13,9 +13,7 @@ class DeliveryGatewayService
 
     public function index()
     {
-        $results = $this->model
-        ->orderBy('position', 'ASC')
-        ->get();
+        $results = $this->model->orderBy('position', 'ASC')->get();
 
         return $results;
     }
@@ -23,7 +21,7 @@ class DeliveryGatewayService
     public function list()
     {
         $results = $this->model
-        ->select('id', 'name')
+        ->select('id', 'name','delivery_fee')
         ->where('status', 'active')
         ->orderBy('position', 'ASC')
         ->get();

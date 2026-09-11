@@ -430,6 +430,7 @@ class ProductSeeder extends Seeder
                         'offer_price'         => $variantOfferPrice,
                         'offer_percentage'    => $variantDiscountPct > 0 ? $variantDiscountPct : null,
                         'current_stock'       => rand(10, 80),
+                        'total_sell_quantity' => rand(10, 80),
                         'short_description'   => "Option " . ($v + 1) . " for " . $name,
                         'description'         => "Variant specification " . ($v + 1) . " of " . $name . " designed for optimal convenience.",
                         'img_path'            => 'uploads/variants/variant-' . ((($productIndex + $v) % 20) + 1) . '.jpg',

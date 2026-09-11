@@ -11,20 +11,21 @@ class ProductVariantResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id'                => $this->id,
-            'sku'               => $this->sku,
-            'buy_price'         => $this->buy_price,
-            'mrp'               => $this->mrp,
-            'sell_price'        => $this->sell_price,
-            'offer_price'       => $this->offer_price,
-            'discount_type'     => $this->discount_type,
-            'discount_amount'   => $this->discount_amount,
-            'current_stock'     => $this->current_stock,
-            'image'             => FileUrlHelper::url($this->img_path),
-            'short_description' => $this->short_description,
-            'description'       => $this->description,
-            'is_default'        => $this->is_default,
-            'status'            => $this->status,
+            'id'                  => $this->id,
+            'sku'                 => $this->sku,
+            'buy_price'           => $this->buy_price,
+            'mrp'                 => $this->mrp,
+            'sell_price'          => $this->sell_price,
+            'offer_price'         => $this->offer_price,
+            'discount_type'       => $this->discount_type,
+            'discount_amount'     => $this->discount_amount,
+            'current_stock'       => $this->current_stock,
+            'total_sell_quantity' => $this->total_sell_quantity,
+            'image'               => FileUrlHelper::url($this->img_path),
+            'short_description'   => $this->short_description,
+            'description'         => $this->description,
+            'is_default'          => $this->is_default,
+            'status'              => $this->status,
 
             // Attribute Values mapping (e.g., Color: Red, Size: Large)
             'attribute_values' => $this->whenLoaded('attributeValues', function () {
