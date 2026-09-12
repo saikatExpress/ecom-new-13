@@ -35,6 +35,13 @@ class UserController extends BaseController
         return $this->sendResponse($users, "Trash List");
     }
 
+    public function list()
+    {
+        $users = $this->service->list();
+
+        return $this->sendResponse($users, "User List");
+    }
+
     public function store(UserRequest $request)
     {
         $this->authorizePermission($request->user(), 'user_create', 'You have no permission for create this');

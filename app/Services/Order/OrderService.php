@@ -5,6 +5,7 @@ namespace App\Services\Order;
 use App\Enums\StatusEnum;
 use App\Exceptions\CustomException;
 use App\Models\Order\Order;
+use App\Models\Order\OrderStatus;
 use App\Models\Order\Status;
 use App\Models\Product\Product;
 use App\Models\Product\ProductVariant;
@@ -14,107 +15,13 @@ class OrderService
 {
     public function __construct(protected Order $model){}
 
-    // public function index($request)
-    // {
-    //     $paginateSize = (int) $request->input('paginate_size', 25);
-    //     $paginateSize = min(max($paginateSize, 1), 100);
-    //     $searchKey = trim($request->input('search_key', ''));
-    //     $sortBy = $request->input('sort_by', 'id');
-    //     $sortDirection = strtolower($request->input('sort_direction', 'desc'));
-
-    //     $allowedSorts = [
-    //         'id',
-    //         'order_date',
-    //         'invoice_number',
-    //         'customer_name',
-    //         'phone_number',
-    //         'total_payable_amount',
-    //         'due',
-    //         'created_at',
-    //     ];
-
-    //     if (!in_array($sortBy, $allowedSorts, true)) {
-    //         $sortBy = 'id';
-    //     }
-
-    //     if (!in_array($sortDirection, ['asc', 'desc'], true)) {
-    //         $sortDirection = 'desc';
-    //     }
-
-    //     $orders = $this->model
-    //     ->query()
-    //     ->when($searchKey !== '', function ($query) use ($searchKey) {
-    //         $query->where(function ($query) use ($searchKey) {
-    //             $query
-    //                 ->where('invoice_number', 'like', "%{$searchKey}%")
-    //                 ->orWhere('customer_name', 'like', "%{$searchKey}%")
-    //                 ->orWhere('phone_number', 'like', "%{$searchKey}%");
-    //         });
-    //     })
-
-    //     ->when($request->filled('status_id'),fn ($query) => $query->where('status_id',$request->status_id))
-
-    //     ->when($request->filled('paid_status'),fn ($query) => $query->where('paid_status',$request->paid_status))
-
-    //     ->when($request->filled('customer_type_id'),fn ($query) => $query->where('customer_type_id',$request->customer_type_id))
-
-    //     ->when($request->filled('delivery_gateway_id'),fn ($query) => $query->where('delivery_gateway_id',$request->delivery_gateway_id))
-
-    //     ->when($request->filled('payment_gateway_id'),fn ($query) => $query->where('payment_gateway_id',$request->payment_gateway_id))
-
-    //     ->when($request->filled('district_id'),fn ($query) => $query->where('district_id',$request->district_id))
-
-    //     ->when($request->filled('courier_id'),fn ($query) => $query->where('courier_id',$request->courier_id))
-
-    //     ->when($request->filled('courier_status'),fn ($query) => $query->where('courier_status',$request->courier_status))
-
-    //     ->when($request->filled('assign_user_id'),fn ($query) => $query->where('assign_user_id',$request->assign_user_id))
-
-    //     ->when($request->filled('prepared_by'),fn ($query) => $query->where('prepared_by',$request->prepared_by))
-
-    //     ->when($request->filled('is_duplicate'),fn ($query) => $query->where('is_duplicate',filter_var($request->is_duplicate,FILTER_VALIDATE_BOOLEAN)))
-
-    //     ->when($request->filled('date_from'),fn ($query) => $query->whereDate('order_date','>=',$request->date_from))
-
-    //     ->when($request->filled('date_to'),fn ($query) => $query->whereDate('order_date','<=', $request->date_to))
-
-    //     ->when($request->filled('min_amount'),fn ($query) => $query->where('total_payable_amount','>=', $request->min_amount))
-
-    //     ->when($request->filled('max_amount'),fn ($query) => $query->where('total_payable_amount','<=', $request->max_amount))
-
-    //     ->with([
-    //         'details',
-    //         'currentStatus:id,name',
-    //         'customerType:id,name',
-    //         'deliveryGateway:id,name',
-    //         'paymentGateway:id,name',
-    //         'district:id,district_name',
-    //         'courier:id,name',
-    //         'assignUser:id,username',
-    //         'preparedBy:id,username',
-    //         'createdBy:id,username',
-    //         'updatedBy:id,username',
-    //     ])
-
-    //     ->orderBy($sortBy, $sortDirection)
-
-    //     ->paginate($paginateSize);
-
-    //     return $orders;
-    // }
-
-
     public function index($request)
     {
-        $paginateSize = (int) $request->input('paginate_size', 25);
-        $paginateSize = min(max($paginateSize, 1), 100);
-
-        $searchKey = trim($request->input('search_key', ''));
-
-        $sortBy = $request->input('sort_by', 'id');
-        $sortDirection = strtolower(
-            $request->input('sort_direction', 'desc')
-        );
+        $paginateSize  = (int) $request->input('paginate_size', 25);
+        $paginateSize  = min(max($paginateSize, 1), 100);
+        $searchKey     = trim($request->input('search_key', ''));
+        $sortBy        = $request->input('sort_by', 'id');
+        $sortDirection = strtolower($request->input('sort_direction', 'desc'));
 
         $allowedSorts = [
             'id',
@@ -138,126 +45,44 @@ class OrderService
         $query = $this->model->query();
 
         $query
-            ->when($searchKey !== '', function ($query) use ($searchKey) {
-                $query->where(function ($query) use ($searchKey) {
-                    $query
-                        ->where('invoice_number', 'like', "%{$searchKey}%")
-                        ->orWhere('customer_name', 'like', "%{$searchKey}%")
-                        ->orWhere('phone_number', 'like', "%{$searchKey}%");
-                });
-            })
+        ->when($searchKey !== '', function ($query) use ($searchKey) {
+            $query->where(function ($query) use ($searchKey) {
+                $query
+                ->where('invoice_number', 'like', "%{$searchKey}%")
+                ->orWhere('customer_name', 'like', "%{$searchKey}%")
+                ->orWhere('phone_number', 'like', "%{$searchKey}%");
+            });
+        })
 
-            ->when(
-                $request->filled('status_id'),
-                fn ($query) =>
-                    $query->where('status_id', $request->status_id)
-            )
+        ->when($request->filled('status_id'),fn ($query) => $query->where('status_id', $request->status_id))
 
-            ->when(
-                $request->filled('paid_status'),
-                fn ($query) =>
-                    $query->where('paid_status', $request->paid_status)
-            )
+        ->when($request->filled('paid_status'), fn ($query) => $query->where('paid_status', $request->paid_status))
 
-            ->when(
-                $request->filled('customer_type_id'),
-                fn ($query) =>
-                    $query->where('customer_type_id', $request->customer_type_id)
-            )
+        ->when($request->filled('customer_type_id'), fn ($query) => $query->where('customer_type_id', $request->customer_type_id))
 
-            ->when(
-                $request->filled('delivery_gateway_id'),
-                fn ($query) =>
-                    $query->where('delivery_gateway_id', $request->delivery_gateway_id)
-            )
+        ->when($request->filled('delivery_gateway_id'),fn ($query) => $query->where('delivery_gateway_id', $request->delivery_gateway_id))
 
-            ->when(
-                $request->filled('payment_gateway_id'),
-                fn ($query) =>
-                    $query->where('payment_gateway_id', $request->payment_gateway_id)
-            )
+        ->when($request->filled('payment_gateway_id'), fn ($query) => $query->where('payment_gateway_id', $request->payment_gateway_id))
 
-            ->when(
-                $request->filled('district_id'),
-                fn ($query) =>
-                    $query->where('district_id', $request->district_id)
-            )
+        ->when($request->filled('district_id'), fn ($query) => $query->where('district_id', $request->district_id))
 
-            ->when(
-                $request->filled('courier_id'),
-                fn ($query) =>
-                    $query->where('courier_id', $request->courier_id)
-            )
+        ->when($request->filled('courier_id'), fn ($query) => $query->where('courier_id', $request->courier_id))
 
-            ->when(
-                $request->filled('courier_status'),
-                fn ($query) =>
-                    $query->where('courier_status', $request->courier_status)
-            )
+        ->when($request->filled('courier_status'), fn ($query) => $query->where('courier_status', $request->courier_status))
 
-            ->when(
-                $request->filled('assign_user_id'),
-                fn ($query) =>
-                    $query->where('assign_user_id', $request->assign_user_id)
-            )
+        ->when($request->filled('assign_user_id'), fn ($query) => $query->where('assign_user_id', $request->assign_user_id))
 
-            ->when(
-                $request->filled('prepared_by'),
-                fn ($query) =>
-                    $query->where('prepared_by', $request->prepared_by)
-            )
+        ->when($request->filled('prepared_by'), fn ($query) => $query->where('prepared_by', $request->prepared_by))
 
-            ->when(
-                $request->filled('is_duplicate'),
-                fn ($query) =>
-                    $query->where(
-                        'is_duplicate',
-                        filter_var(
-                            $request->is_duplicate,
-                            FILTER_VALIDATE_BOOLEAN
-                        )
-                    )
-            )
+        ->when($request->filled('is_duplicate'), fn ($query) => $query->where('is_duplicate', filter_var($request->is_duplicate,FILTER_VALIDATE_BOOLEAN)))
 
-            ->when(
-                $request->filled('date_from'),
-                fn ($query) =>
-                    $query->whereDate(
-                        'order_date',
-                        '>=',
-                        $request->date_from
-                    )
-            )
+        ->when($request->filled('date_from'), fn ($query) => $query->whereDate('order_date','>=', $request->date_from))
 
-            ->when(
-                $request->filled('date_to'),
-                fn ($query) =>
-                    $query->whereDate(
-                        'order_date',
-                        '<=',
-                        $request->date_to
-                    )
-            )
+        ->when($request->filled('date_to'),fn ($query) => $query->whereDate('order_date','<=', $request->date_to))
 
-            ->when(
-                $request->filled('min_amount'),
-                fn ($query) =>
-                    $query->where(
-                        'total_payable_amount',
-                        '>=',
-                        $request->min_amount
-                    )
-            )
+        ->when($request->filled('min_amount'), fn ($query) => $query->where('total_payable_amount', '>=', $request->min_amount))
 
-            ->when(
-                $request->filled('max_amount'),
-                fn ($query) =>
-                    $query->where(
-                        'total_payable_amount',
-                        '<=',
-                        $request->max_amount
-                    )
-            );
+        ->when($request->filled('max_amount'),fn ($query) => $query->where('total_payable_amount', '<=', $request->max_amount));
 
         $orders = (clone $query)
         ->with([
@@ -278,11 +103,7 @@ class OrderService
 
 
         $statusSummary = (clone $query)
-        ->select([
-            'status_id',
-            DB::raw('COUNT(*) as total_orders'),
-            DB::raw('SUM(total_payable_amount) as total_payable_amount'),
-        ])
+        ->select(['status_id',DB::raw('COUNT(*) as total_orders'),DB::raw('SUM(total_payable_amount) as total_payable_amount')])
         ->groupBy('status_id')
         ->get()
         ->keyBy('status_id');
@@ -311,18 +132,13 @@ class OrderService
             'statuses' => $statuses,
         ];
     }
-
     public function trashList($request)
     {
-        $paginateSize = (int) $request->input('paginate_size', 25);
-        $paginateSize = min(max($paginateSize, 1), 100);
-
-        $searchKey = trim($request->input('search_key', ''));
-
-        $sortBy = $request->input('sort_by', 'deleted_at');
-        $sortDirection = strtolower(
-            $request->input('sort_direction', 'desc')
-        );
+        $paginateSize  = (int) $request->input('paginate_size', 25);
+        $paginateSize  = min(max($paginateSize, 1), 100);
+        $searchKey     = trim($request->input('search_key', ''));
+        $sortBy        = $request->input('sort_by', 'deleted_at');
+        $sortDirection = strtolower($request->input('sort_direction', 'desc'));
 
         $allowedSorts = [
             'id',
@@ -381,7 +197,7 @@ class OrderService
             'customerType:id,name',
             'deliveryGateway:id,name',
             'paymentGateway:id,name',
-            'district:id,name',
+            'district:id,district_name',
             'courier:id,name',
             'assignUser:id,username',
             'preparedBy:id,username',
@@ -397,6 +213,13 @@ class OrderService
         return $orders;
     }
 
+    public function history($request)
+    {
+        $history = OrderStatus::with(['updatedBy:id,username', 'status:id,name'])->where('order_id', $request->order_id)->get();
+
+        return $history;
+    }
+
     public function store($request)
     {
         return DB::transaction(function() use ($request) {
@@ -408,8 +231,7 @@ class OrderService
 
             $order = new $this->model();
 
-            $order->status_id = $request->status_id;
-
+            $order->status_id           = $request->status_id;
             $order->customer_type_id    = $request->customer_type_id;
             $order->delivery_gateway_id = $request->delivery_gateway_id;
             $order->payment_gateway_id  = $request->payment_gateway_id;
@@ -430,7 +252,6 @@ class OrderService
             $order->special_discount    = $request->input('special_discount', 0);
             $order->coupon_discount     = $request->input('coupon_discount', 0);
             $order->delivery_charge     = $request->input('delivery_charge', 0);
-            $order->delivery_type       = $request->input('delivery_type', 48);
 
             $order->save();
 
@@ -550,7 +371,7 @@ class OrderService
 
             $order->statuses()->create(['status_id' => $order->status_id]);
 
-            return $order->load(['details','currentStatus','statuses.status']);
+            return $order;
         });
     }
 
@@ -669,9 +490,9 @@ class OrderService
                 'status'              => $data['status'] ?? $order->status,
             ]);
 
-            $totalBuyPrice = 0;
-            $totalMrp = 0;
-            $totalDiscount = 0;
+            $totalBuyPrice  = 0;
+            $totalMrp       = 0;
+            $totalDiscount  = 0;
             $totalSellPrice = 0;
 
             foreach ($data['items'] as $item) {
@@ -725,10 +546,10 @@ class OrderService
                         throw new CustomException("Insufficient stock for {$product->name}");
                     }
 
-                    $buyPrice = $product->buy_price ?? 0;
-                    $mrp = $product->mrp;
+                    $buyPrice  = $product->buy_price ?? 0;
+                    $mrp       = $product->mrp;
                     $sellPrice = (!is_null($product->offer_price) && $product->offer_price > 0) ? $product->offer_price : $product->sell_price;
-                    $discount = $product->discount_amount ?? 0;
+                    $discount  = $product->discount_amount ?? 0;
 
                     $variantOptions = null;
                     $variantName = null;
@@ -738,24 +559,23 @@ class OrderService
 
                 $product->increment('total_sell_quantity',$item['quantity']);
 
-
                 $quantity = $item['quantity'];
 
-                $lineBuyPrice = $buyPrice * $quantity;
-                $lineMrp = $mrp * $quantity;
-                $lineDiscount = $discount * $quantity;
+                $lineBuyPrice  = $buyPrice * $quantity;
+                $lineMrp       = $mrp * $quantity;
+                $lineDiscount  = $discount * $quantity;
                 $lineSellPrice = $sellPrice * $quantity;
-                $lineProfit = $lineSellPrice - $lineBuyPrice;
+                $lineProfit    = $lineSellPrice - $lineBuyPrice;
 
                 $order->details()->create([
                     'product_id'         => $product->id,
                     'product_variant_id' => $variant?->id,
-                    'product_name'      => $product->name,
-                    'product_sku'       => $product->sku,
-                    'product_img_path'  => $product->img_path,
-                    'variant_name'      => $variantName,
-                    'variant_sku'       => $variant?->sku,
-                    'variant_options'   => $variantOptions,
+                    'product_name'       => $product->name,
+                    'product_sku'        => $product->sku,
+                    'product_img_path'   => $product->img_path,
+                    'variant_name'       => $variantName,
+                    'variant_sku'        => $variant?->sku,
+                    'variant_options'    => $variantOptions,
                     'quantity'           => $quantity,
                     'buy_price'          => $buyPrice,
                     'mrp'                => $mrp,
@@ -764,9 +584,9 @@ class OrderService
                     'profit'             => $lineProfit,
                 ]);
 
-                $totalBuyPrice += $lineBuyPrice;
-                $totalMrp += $lineMrp;
-                $totalDiscount += $lineDiscount;
+                $totalBuyPrice  += $lineBuyPrice;
+                $totalMrp       += $lineMrp;
+                $totalDiscount  += $lineDiscount;
                 $totalSellPrice += $lineSellPrice;
             }
 
@@ -775,7 +595,6 @@ class OrderService
             $totalPayableAmount = $netOrderAmount - $order->special_discount - $order->coupon_discount + $order->delivery_charge;
 
             $due = max($totalPayableAmount - $order->advanced_payment,0);
-
 
             $order->buy_price            = $totalBuyPrice;
             $order->mrp                  = $totalMrp;
@@ -788,29 +607,10 @@ class OrderService
             $order->save();
 
             if ((int) $oldStatusId !== (int) $order->status_id) {
-                $order->statuses()->create(['status_id' => $order->status_id,]);
+                $order->statuses()->create(['status_id' => $order->status_id]);
             }
 
-            return $order->fresh([
-                'currentStatus',
-                'details',
-                'notes.createdBy',
-                'statuses.status',
-                'statuses.createdBy',
-                'customerType',
-                'deliveryGateway',
-                'paymentGateway',
-                'coupon',
-                'cancelReason',
-                'assignUser',
-                'preparedBy',
-                'lockedBy',
-                'district',
-                'courier',
-                'createdBy',
-                'updatedBy',
-                'deletedBy',
-            ]);
+            return $order;
         });
     }
 

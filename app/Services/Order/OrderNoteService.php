@@ -43,7 +43,6 @@ class OrderNoteService
             throw new CustomException("Note not found");
         }
 
-        $note->order_id = $request->order_id;
         $note->note     = $request->note;
         $note->save();
 

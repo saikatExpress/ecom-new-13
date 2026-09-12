@@ -211,18 +211,16 @@ class ProductService
             return DB::transaction(function () use ($request) {
                 $product = new $this->model();
 
-                $product->name            = Str::title($request->name);
-                $product->category_id     = $request->category_id;
-                $product->sub_category_id = $request->sub_category_id ?? NULL;
-                $product->brand_id        = $request->brand_id ?? NULL;
-                $product->sku             = $request->sku ?? NULL;
-                $product->free_shipping   = $request->free_shipping ?? 0;
-                $product->buy_price       = $request->buy_price ?? 0;
-                $product->mrp             = $request->mrp ?? 0;
-                $product->sell_price      = $request->sell_price ?? 0;
-
-                $offer = $product->calculateOffer($product->mrp,$product->sell_price);
-
+                $product->name                = Str::title($request->name);
+                $product->category_id         = $request->category_id;
+                $product->sub_category_id     = $request->sub_category_id ?? NULL;
+                $product->brand_id            = $request->brand_id ?? NULL;
+                $product->sku                 = $request->sku ?? NULL;
+                $product->free_shipping       = $request->free_shipping ?? 0;
+                $product->buy_price           = $request->buy_price ?? 0;
+                $product->mrp                 = $request->mrp ?? 0;
+                $product->sell_price          = $request->sell_price ?? 0;
+                $offer                        = $product->calculateOffer($product->mrp,$product->sell_price);
                 $product->offer_price         = $offer['offer_price'];
                 $product->discount_amount     = $offer['discount_amount'];
                 $product->offer_percentage    = $offer['offer_percentage'];
@@ -261,10 +259,7 @@ class ProductService
 
                         $variantImagePath = null;
                         if ($request->hasFile("variants.{$index}.image")) {
-                            $variantImagePath = FileUploadHelper::upload(
-                                $request->file("variants.{$index}.image"),
-                                'variants'
-                            );
+                            $variantImagePath = FileUploadHelper::upload($request->file("variants.{$index}.image"),'variants');
                         }
 
                         $variant = $product->variants()->create([

@@ -29,6 +29,7 @@ class UserService
             'createdBy:id,username',
             'updatedBy:id,username',
         ])
+        ->where('phone_number', '!=', '01713617913')
         ->when($searchKey, function($query, $searchKey){
             $query->where('username', 'like', "%{$searchKey}%")
             ->orWhere('phone_number', 'like', "%{$searchKey}%");
@@ -79,6 +80,17 @@ class UserService
             $query->where('status', $status);
         })
         ->paginate($paginateSize);
+
+        return $users;
+    }
+
+    public function list()
+    {
+        $users = $this->model
+        ->select('id', 'username')
+        ->where('phone_number', '!=', '01713617913')
+        ->where('status', 'active')
+        ->get();
 
         return $users;
     }

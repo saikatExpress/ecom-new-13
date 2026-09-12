@@ -14,7 +14,7 @@ class OrderNoteRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'order_id' => ['required', 'integer', 'exists:orders,id'],
+            'order_id' => [$this->isMethod('post') ? 'required' : 'nullable', 'integer', 'exists:orders,id'],
             'note'     => ['required','string','max:5000'],
         ];
     }

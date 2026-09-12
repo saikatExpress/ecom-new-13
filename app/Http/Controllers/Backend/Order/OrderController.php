@@ -30,9 +30,14 @@ class OrderController extends BaseController
 
         $orders = $this->service->trashList($request);
 
-        $orders = new OrderCollection($orders);
-
         return $this->sendResponse($orders, "Order List");
+    }
+
+    public function history(Request $request)
+    {
+        $history = $this->service->history($request);
+
+        return $this->sendResponse($history, "Order History");
     }
 
     public function store(OrderRequest $request)

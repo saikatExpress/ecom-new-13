@@ -157,6 +157,7 @@ Route::middleware('auth:sanctum')->group(function(){
         Route::controller(OrderController::class)->group(function(){
             Route::get('/',                         'index');
             Route::get('/trash',                    'trashList');
+            Route::get('/history',                  'history');
             Route::post('/',                        'store');
             Route::get('/{id}',                     'show');
             Route::put('/{id}',                     'update');
