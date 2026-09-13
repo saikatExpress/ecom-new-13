@@ -21,6 +21,7 @@ class CourierService
             'createdBy:id,username',
             'updatedBy:id,username',
         ])
+        ->withCount('orders')
         ->orderBy('created_at', 'desc')
         ->paginate($paginateSize);
 

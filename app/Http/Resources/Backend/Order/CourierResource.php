@@ -11,12 +11,13 @@ class CourierResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id'         => $this->id,
-            'name'       => $this->name,
-            'slug'       => $this->slug,
-            'is_default' => $this->is_default,
-            'status'     => $this->status,
-            'image'      => FileUrlHelper::url($this->img_path),
+            'id'           => $this->id,
+            'name'         => $this->name,
+            'slug'         => $this->slug,
+            'is_default'   => $this->is_default,
+            'orders_count' => $this->orders_count,
+            'status'       => $this->status,
+            'image'        => FileUrlHelper::url($this->img_path),
             'created_by' => $this->whenLoaded('createdBy', function(){
                 return [
                     'id'       => $this->createdBy->id,

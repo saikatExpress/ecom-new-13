@@ -127,8 +127,9 @@ Route::middleware('auth:sanctum')->group(function(){
 
     Route::prefix('admin/courier-setting')->group(function(){
         Route::controller(CourierSettingController::class)->group(function(){
-            Route::get('/{slug}', 'show');
-            Route::put('/{slug}', 'update');
+            Route::get('/{slug}',               'show');
+            Route::post('/{id}/default-update', 'defaultUpdate');
+            Route::put('/{slug}',               'update');
         });
     });
 

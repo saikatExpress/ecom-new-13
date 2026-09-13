@@ -11,6 +11,12 @@ class Courier extends BaseModel
 
     protected $guarded = ['id'];
 
+    // Relation
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'courier_id');
+    }
+
     protected $casts = [
         'is_default' => 'boolean'
     ];

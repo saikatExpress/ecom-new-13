@@ -27,4 +27,13 @@ class CourierSettingController extends BaseController
 
         return $this->sendResponse($data, "{$slug} updated successfully");
     }
+
+    public function defaultUpdate(Request $request, $id)
+    {
+        $this->authorizePermission($request->user(), 'courier_settings_update', 'You have no permission for update this');
+
+        $data = $this->service->defaultUpdate($request,$id);
+
+        return $this->sendResponse($data, "Courier set default successfully");
+    }
 }
