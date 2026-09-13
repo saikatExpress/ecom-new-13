@@ -82,6 +82,12 @@ Route::middleware('auth:sanctum')->group(function(){
             Route::get('/trash',                    'trashList');
             Route::get('/search',                   'search');
             Route::post('/',                        'store');
+            Route::post('/copy/{id}',               'copy');
+            Route::delete('/bulk-delete',           'bulkDelete');
+            Route::delete('/bulk-permanent-delete', 'bulkPermanentDelete');
+            Route::patch('/bulk-restore',           'bulkRestore');
+            Route::patch('/bulk-status-update',     'bulkStatusUpdate');
+            Route::patch('/quick-edit/{id}',        'quickEdit');
             Route::get('/{id}',                     'show');
             Route::put('/{id}',                     'update');
             Route::delete('/{id}',                  'destroy');

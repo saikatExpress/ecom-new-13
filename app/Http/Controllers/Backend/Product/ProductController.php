@@ -63,6 +63,16 @@ class ProductController extends BaseController
 
         return $this->sendResponse($product, "Single Product Show");
     }
+    public function copy(Request $request, $id)
+    {
+        $this->authorizePermission($request->user(), 'product_create', 'You have no permission for copy product');
+
+        $product = $this->service->copy($id);
+
+        $product = new ProductResource($product);
+
+        return $this->sendResponse($product, "Product Copied Successfully");
+    }
 
     public function update(ProductRequest $request, $id)
     {
@@ -75,6 +85,26 @@ class ProductController extends BaseController
         return $this->sendResponse($product, "Product Update Successfully");
     }
 
+    public function quickEdit(Request $request, $id)
+    {
+        $this->authorizePermission($request->user(),'product_update','You have no permission for quick edit product');
+
+        $product = $this->service->quickEdit($request,$id);
+
+        $product = new ProductResource($product);
+
+        return $this->sendResponse($product,'Product Updated Successfully');
+    }
+
+    public function bulkStatusUpdate(Request $request)
+    {
+        $this->authorizePermission($request->user(),'product_update', 'You have no permission for update product status');
+
+        $this->service->bulkStatusUpdate($request);
+
+        return $this->sendResponse([],'Products status updated successfully');
+    }
+
     public function destroy(Request $request, $id)
     {
         $this->authorizePermission($request->user(), 'product_delete', 'You have no permission for delete product');
@@ -82,6 +112,24 @@ class ProductController extends BaseController
         $this->service->destroy($id);
 
         return $this->sendResponse("Product delete Successfully");
+    }
+
+    public function bulkDelete(Request $request)
+    {
+        $this->authorizePermission($request->user(), 'product_delete', 'You have no permission for delete product');
+
+        $this->service->bulkDelete($request);
+
+        return $this->sendResponse("Products deleted Successfully");
+    }
+
+    public function bulkPermanentDelete(Request $request)
+    {
+        $this->authorizePermission($request->user(),'product_delete','You have no permission for permanently delete product');
+
+        $this->service->bulkPermanentDelete($request);
+
+        return $this->sendResponse([], 'Products deleted permanently successfully');
     }
 
     public function restore(Request $request, $id)
@@ -93,6 +141,15 @@ class ProductController extends BaseController
         $product = new ProductResource($product);
 
         return $this->sendResponse($product, "Product Restore Successfully");
+    }
+
+    public function bulkRestore(Request $request)
+    {
+        $this->authorizePermission($request->user(),'product_update','You have no permission for restore product');
+
+        $this->service->bulkRestore($request);
+
+        return $this->sendResponse([],'Products restored successfully');
     }
 
     public function permanentDelete(Request $request, $id)

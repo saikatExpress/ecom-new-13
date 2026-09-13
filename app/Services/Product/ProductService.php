@@ -2,13 +2,15 @@
 
 namespace App\Services\Product;
 
-use Exception;
-use Illuminate\Support\Str;
-use App\Models\Product\Product;
-use Illuminate\Support\Facades\DB;
+use App\Enums\StatusEnum;
 use App\Exceptions\CustomException;
-use App\Helpers\File\FileUrlHelper;
 use App\Helpers\File\FileUploadHelper;
+use App\Helpers\File\FileUrlHelper;
+use App\Models\Product\Product;
+use App\Models\Product\ProductVariant;
+use Exception;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class ProductService
 {
@@ -322,6 +324,87 @@ class ProductService
         }
     }
 
+    public function copy($id)
+    {
+        try {
+            return DB::transaction(function () use ($id) {
+                $product = $this->model->with(['galleries','variants.attributeValues','sections'])->find($id);
+
+                if (!$product) {
+                    throw new CustomException('Product Not Found');
+                }
+
+                $newProduct = $product->replicate();
+
+                $newProduct->name = $product->name . ' Copy';
+
+                if (!is_null($product->sku)) {
+                    do {
+                        $newSku = $product->sku . '-COPY-' . Str::upper(Str::random(6));
+                    } while (
+                        $this->model->withTrashed()->where('sku', $newSku)->exists()
+                    );
+
+                    $newProduct->sku = $newSku;
+                }
+
+                $baseSlug = Str::slug($newProduct->name);
+                $slug     = $baseSlug;
+                $counter  = 1;
+
+                while ($this->model->withTrashed()->where('slug', $slug)->exists())
+                {
+                    $slug = $baseSlug . '-' . $counter++;
+                }
+
+                $newProduct->slug = $slug;
+
+                $newProduct->save();
+
+                foreach ($product->galleries as $gallery) {
+                    $newGallery = $gallery->replicate();
+                    $newGallery->product_id = $newProduct->id;
+                    $newGallery->save();
+                }
+
+                foreach ($product->variants as $variant) {
+                    $newVariant = $variant->replicate();
+
+                    $newVariant->product_id = $newProduct->id;
+
+                    if (!is_null($variant->sku)) {
+                        do {
+                            $newVariantSku = $variant->sku . '-COPY-' . Str::upper(Str::random(6));
+                        } while (
+                            ProductVariant::withTrashed()->where('sku', $newVariantSku)->exists()
+                        );
+
+                        $newVariant->sku = $newVariantSku;
+                    }
+
+                    $newVariant->save();
+
+                    $attributeValueIds = $variant->attributeValues->pluck('id')->toArray();
+
+                    if (!empty($attributeValueIds)) {
+                        $pivotData = [];
+
+                        foreach ($attributeValueIds as $attributeValueId) {
+                            $pivotData[$attributeValueId] = ['created_at' => now(),'updated_at' => now()];
+                        }
+
+                        $newVariant->attributeValues()->attach($pivotData);
+                    }
+                }
+
+                return $newProduct->load(['category','subCategory','brand','galleries','variants.attributeValues.attribute']);
+            });
+        } catch (Exception $e) {
+            report($e);
+            throw $e;
+        }
+    }
+
     public function update($request,$id)
     {
         try {
@@ -459,6 +542,129 @@ class ProductService
         }
     }
 
+    public function quickEdit($request, $id)
+    {
+        return DB::transaction(function () use ($request, $id) {
+
+            $product = $this->model->find($id);
+
+            if (!$product) {
+                throw new CustomException('Product Not Found');
+            }
+
+            $allowedFields = [
+                'name',
+                'sku',
+                'mrp',
+                'sell_price',
+                'current_stock',
+                'status',
+            ];
+
+            $data = $request->only($allowedFields);
+
+            if (array_key_exists('name', $data)) {
+                $product->name = $data['name'];
+            }
+
+            if (array_key_exists('sku', $data)) {
+                $sku = $data['sku'];
+                if ($sku !== $product->sku && $this->model->where('sku', $sku)->where('id', '!=', $product->id)->exists()) {
+                    throw new CustomException(
+                        'The SKU has already been taken.'
+                    );
+                }
+                $product->sku = $sku;
+            }
+
+            if (array_key_exists('mrp', $data) || array_key_exists('sell_price', $data)) {
+
+                $mrp = array_key_exists('mrp', $data) ? $data['mrp'] : $product->mrp;
+                $sellPrice = array_key_exists('sell_price', $data) ? $data['sell_price'] : $product->sell_price;
+
+                $product->mrp = $mrp;
+                $product->sell_price = $sellPrice;
+
+                $offer = $product->calculateOffer($mrp,$sellPrice);
+
+                $product->offer_price = $offer['offer_price'];
+                $product->discount_amount = $offer['discount_amount'];
+                $product->offer_percentage = $offer['offer_percentage'];
+            }
+
+            if (array_key_exists('current_stock', $data)) {
+                $product->current_stock = $data['current_stock'];
+            }
+
+            if (array_key_exists('status', $data)) {
+                $allowedStatuses = [
+                    StatusEnum::ACTIVE->value,
+                    StatusEnum::INACTIVE->value,
+                    StatusEnum::DRAFT->value,
+                ];
+
+                if (!in_array($data['status'], $allowedStatuses, true)) {
+                    throw new CustomException('Invalid product status.');
+                }
+
+                $product->status = $data['status'];
+            }
+
+            $product->save();
+
+            return $product->load([
+                'category',
+                'subCategory',
+                'brand',
+                'galleries',
+                'variants.attributeValues.attribute',
+                'sections',
+            ]);
+        });
+    }
+
+    public function bulkStatusUpdate($request)
+    {
+        return DB::transaction(function () use ($request) {
+
+            $ids    = $request->input('ids', []);
+            $status = $request->input('status');
+
+            if (!is_array($ids) || empty($ids)) {
+                throw new CustomException('Please provide at least one product ID.');
+            }
+
+            $ids = collect($ids)->filter(fn ($id) => is_numeric($id))->map(fn ($id) => (int) $id)->unique()->values()->toArray();
+
+            if (empty($ids)) {
+                throw new CustomException('Invalid product IDs.');
+            }
+
+            $allowedStatuses = [
+                StatusEnum::ACTIVE->value,
+                StatusEnum::INACTIVE->value,
+                StatusEnum::DRAFT->value,
+            ];
+
+            if (!in_array($status, $allowedStatuses, true)) {
+                throw new CustomException('Invalid product status.');
+            }
+
+            $products = $this->model->whereIn('id', $ids)->get();
+
+            if ($products->isEmpty()) {
+                throw new CustomException('No products found.');
+            }
+
+            foreach ($products as $product) {
+                $product->status = $status;
+                $product->save();
+            }
+
+            return true;
+        });
+    }
+
     public function destroy($id)
     {
         return DB::transaction(function () use ($id) {
@@ -481,6 +687,35 @@ class ProductService
         });
     }
 
+    public function bulkDelete($request)
+    {
+        return DB::transaction(function () use ($request) {
+
+            $ids = $request->input('ids', []);
+
+            if (!is_array($ids) || empty($ids)) {
+                throw new CustomException('Please provide at least one product ID.');
+            }
+
+            $ids = collect($ids)->filter(fn ($id) => is_numeric($id))->map(fn ($id) => (int) $id)->unique()->values()->toArray();
+
+            if (empty($ids)) {
+                throw new CustomException('Invalid product IDs.');
+            }
+
+            $products = $this->model->whereIn('id', $ids)->get();
+
+            if ($products->isEmpty()) {
+                throw new CustomException('No products found.');
+            }
+
+            foreach ($products as $product) {
+                $product->delete();
+            }
+
+            return true;
+        });
+    }
     public function restore($id)
     {
         return DB::transaction(function () use ($id) {
@@ -500,6 +735,36 @@ class ProductService
             }
 
             return $product->fresh()->load('category:id,name','subCategory:id,name','brand:id,name','galleries','variants.attributeValues.attribute');
+        });
+    }
+
+    public function bulkRestore($request)
+    {
+        return DB::transaction(function () use ($request) {
+
+            $ids = $request->input('ids', []);
+
+            if (!is_array($ids) || empty($ids)) {
+                throw new CustomException('Please provide at least one product ID.');
+            }
+
+            $ids = collect($ids)->filter(fn ($id) => is_numeric($id))->map(fn ($id) => (int) $id)->unique()->values()->toArray();
+
+            if (empty($ids)) {
+                throw new CustomException('Invalid product IDs.');
+            }
+
+            $products = $this->model->onlyTrashed()->whereIn('id', $ids)->get();
+
+            if ($products->isEmpty()) {
+                throw new CustomException('No trashed products found.');
+            }
+
+            foreach ($products as $product) {
+                $product->restore();
+            }
+
+            return true;
         });
     }
 
@@ -536,6 +801,36 @@ class ProductService
             }
 
             $product->forceDelete();
+
+            return true;
+        });
+    }
+
+    public function bulkPermanentDelete($request)
+    {
+        return DB::transaction(function () use ($request) {
+
+            $ids = $request->input('ids', []);
+
+            if (!is_array($ids) || empty($ids)) {
+                throw new CustomException('Please provide at least one product ID.');
+            }
+
+            $ids = collect($ids)->filter(fn ($id) => is_numeric($id))->map(fn ($id) => (int) $id)->unique()->values()->toArray();
+
+            if (empty($ids)) {
+                throw new CustomException('Invalid product IDs.');
+            }
+
+            $products = $this->model->onlyTrashed()->whereIn('id', $ids)->get();
+
+            if ($products->isEmpty()) {
+                throw new CustomException('No trashed products found.');
+            }
+
+            foreach ($products as $product) {
+                $product->forceDelete();
+            }
 
             return true;
         });

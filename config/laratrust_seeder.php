@@ -19,7 +19,7 @@ return [
         ],
 
         'product' => [
-            'product'         => 'c,r,u,d',
+            'product'         => 'c,r,u,d,export',
             'category'        => 'c,r,u,d',
             'sub_category'    => 'c,r,u,d',
             'brand'           => 'c,r,u,d',
@@ -39,6 +39,7 @@ return [
             'coupon'               => 'c,r,u,d',
             'order_guard_settings' => 'r,u',
             'courier_settings'     => 'r,u',
+            'fraud_check'          => 'r',
             'order'                => 'c,r,u,d,assign,invoice,change-status,cancel,return',
         ],
 
@@ -79,7 +80,7 @@ return [
             ],
 
             'product' => [
-                'product'         => 'c,r,u,d',
+                'product'         => 'c,r,u,d,export',
                 'category'        => 'c,r,u,d',
                 'sub_category'    => 'c,r,u,d',
                 'brand'           => 'c,r,u,d',
@@ -99,6 +100,7 @@ return [
                 'coupon'               => 'c,r,u,d',
                 'order_guard_settings' => 'r,u',
                 'courier_settings'     => 'r,u',
+                'fraud_check'          => 'r',
                 'order'                => 'c,r,u,d,assign,invoice,change-status,cancel,return',
             ],
 
