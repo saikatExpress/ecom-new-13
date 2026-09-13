@@ -11,6 +11,7 @@ use App\Http\Controllers\Backend\Order\CourierSettingController;
 use App\Http\Controllers\Backend\Order\PaymentGatewayController;
 use App\Http\Controllers\Backend\Order\DeliveryGatewayController;
 use App\Http\Controllers\Backend\Order\DistrictController;
+use App\Http\Controllers\Backend\Order\FraudCheckerController;
 use App\Http\Controllers\Backend\Order\OrderController;
 use App\Http\Controllers\Backend\Order\OrderGuardSettingController;
 use App\Http\Controllers\Backend\Order\OrderNoteController;
@@ -164,6 +165,12 @@ Route::middleware('auth:sanctum')->group(function(){
             Route::delete('/{id}',                  'destroy');
             Route::patch('/{id}/restore',           'restore');
             Route::delete('/permanent-delete/{id}', 'permanentDelete');
+        });
+    });
+
+    Route::prefix('admin/fraud-cheker')->group(function(){
+        Route::controller(FraudCheckerController::class)->group(function(){
+            Route::post('/', 'fraudCheck');
         });
     });
 });

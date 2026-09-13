@@ -34,5 +34,8 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
-
+    'bd_courier' => [
+        'url' => env('BD_COURIER_API_URL'),
+        'key' => env('BD_COURIER_API_KEY'),
+    ],
 ];
