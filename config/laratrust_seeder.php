@@ -61,6 +61,10 @@ return [
             'report' => 'r,export',
         ],
 
+        'ai' => [
+            'ai' => 'c,r,u,d',
+        ],
+
         'setting' => [
             'setting' => 'c,r,u,d',
         ],
@@ -121,6 +125,10 @@ return [
 
             'report' => [
                 'report' => 'r,export',
+            ],
+
+            'ai' => [
+                'ai' => 'c,r,u,d',
             ],
 
             'setting' => [

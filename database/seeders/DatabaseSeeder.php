@@ -2,15 +2,10 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use Database\Seeders\Blog\BlogTagSeeder;
-use Database\Seeders\Blog\BlogPostSeeder;
-use Database\Seeders\Product\BrandSeeder;
-use Database\Seeders\Product\ProductSeeder;
-use Database\Seeders\Product\CategorySeeder;
-use Database\Seeders\Order\OrderSourceSeeder;
-use Database\Seeders\Product\AttributeSeeder;
+use Database\Seeders\AI\AiProviderSeeder;
 use Database\Seeders\Blog\BlogCategorySeeder;
+use Database\Seeders\Blog\BlogPostSeeder;
+use Database\Seeders\Blog\BlogTagSeeder;
 use Database\Seeders\CMS\FaqSeeder;
 use Database\Seeders\CMS\PageSeeder;
 use Database\Seeders\CMS\SectionSeeder;
@@ -18,14 +13,20 @@ use Database\Seeders\Order\CancelReasonSeeder;
 use Database\Seeders\Order\CouponSeeder;
 use Database\Seeders\Order\CourierSeeder;
 use Database\Seeders\Order\CustomerTypeSeeder;
-use Database\Seeders\Product\SubCategorySeeder;
-use Database\Seeders\Order\PaymentGatewaySeeder;
 use Database\Seeders\Order\DeliveryGatewaySeeder;
 use Database\Seeders\Order\DistrictSeeder;
 use Database\Seeders\Order\OrderGuardSettingSeeder;
+use Database\Seeders\Order\OrderSourceSeeder;
+use Database\Seeders\Order\PaymentGatewaySeeder;
 use Database\Seeders\Order\StatusSeeder;
+use Database\Seeders\Product\AttributeSeeder;
 use Database\Seeders\Product\AttributeValueSeeder;
+use Database\Seeders\Product\BrandSeeder;
+use Database\Seeders\Product\CategorySeeder;
+use Database\Seeders\Product\ProductSeeder;
+use Database\Seeders\Product\SubCategorySeeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -68,6 +69,10 @@ class DatabaseSeeder extends Seeder
             OrderGuardSettingSeeder::class,
             CouponSeeder::class,
             // Order Seeders
+
+            // AI Seeder
+            AiProviderSeeder::class,
+            // AI Seeder
 
             BlogCategorySeeder::class,
             BlogTagSeeder::class,

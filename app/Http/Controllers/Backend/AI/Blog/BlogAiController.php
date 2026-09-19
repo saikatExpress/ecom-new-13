@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Backend\AI;
+namespace App\Http\Controllers\Backend\AI\Blog;
 
 use Throwable;
 use Illuminate\Http\JsonResponse;
