@@ -14,7 +14,7 @@ class AiProviderService
 
     public function index($request)
     {
-        $paginateSize = $request->input('paginate_size');
+        $paginateSize = $request->input('paginate_size', 25);
         $searchKey = $request->input('search_key');
 
         $results = $this->model

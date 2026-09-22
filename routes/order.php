@@ -15,6 +15,7 @@ use App\Http\Controllers\Backend\Order\FraudCheckerController;
 use App\Http\Controllers\Backend\Order\OrderController;
 use App\Http\Controllers\Backend\Order\OrderGuardSettingController;
 use App\Http\Controllers\Backend\Order\OrderNoteController;
+use App\Http\Controllers\Backend\Order\PathaoController;
 
 Route::middleware('auth:sanctum')->group(function(){
     Route::prefix('admin/order-source')->group(function(){
@@ -133,6 +134,12 @@ Route::middleware('auth:sanctum')->group(function(){
         });
     });
 
+    Route::prefix('admin/pathao/stores')->group(function(){
+        Route::controller(PathaoController::class)->group(function(){
+            Route::get('/', 'index');
+        });
+    });
+
     Route::prefix('admin/delivery-gateway')->group(function(){
         Route::controller(DeliveryGatewayController::class)->group(function(){
             Route::get('/',        'index');
@@ -161,10 +168,12 @@ Route::middleware('auth:sanctum')->group(function(){
             Route::get('/trash',                    'trashList');
             Route::get('/history',                  'history');
             Route::post('/',                        'store');
+            Route::patch('/status-update',          'statusUpdate');
             Route::get('/{id}',                     'show');
             Route::put('/{id}',                     'update');
             Route::delete('/{id}',                  'destroy');
             Route::patch('/{id}/restore',           'restore');
+            Route::get('/search-by/phone-number',   'searchByPhoneNumber');
             Route::delete('/permanent-delete/{id}', 'permanentDelete');
         });
     });

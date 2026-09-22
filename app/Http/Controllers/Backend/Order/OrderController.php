@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Backend\Order;
 
+use Illuminate\Http\Request;
+use App\Services\Order\OrderService;
 use App\Http\Controllers\BaseController;
 use App\Http\Requests\Backend\Order\OrderRequest;
-use App\Http\Resources\Backend\Order\OrderCollection;
 use App\Http\Resources\Backend\Order\OrderResource;
-use App\Services\Order\OrderService;
-use Illuminate\Http\Request;
+use App\Http\Resources\Backend\Order\OrderCollection;
 
 class OrderController extends BaseController
 {
@@ -51,6 +51,17 @@ class OrderController extends BaseController
         return $this->sendResponse($order, "Order Created Successfully");
     }
 
+    public function statusUpdate(Request $request)
+    {
+        $this->authorizePermission($request->user(),'order_update','You have no permission for update order status');
+
+        $data = $this->service->statusUpdate($request);
+
+        return $data;
+
+        return $this->sendResponse($data,'Order status updated successfully');
+    }
+
     public function show(Request $request, $id)
     {
         $this->authorizePermission($request->user(), 'order_read', 'You have no permission for show this');
@@ -71,6 +82,15 @@ class OrderController extends BaseController
         $order = new OrderResource($order);
 
         return $this->sendResponse($order, "Order Updated Successfully");
+    }
+
+    public function searchByPhoneNumber(Request $request)
+    {
+        $this->authorizePermission($request->user(), 'order_read', 'You have no permission for read this');
+
+        $orders = $this->service->searchByPhoneNumber($request);
+
+        return $this->sendResponse($orders, "Order by Customer", 200);
     }
 
     public function destroy(Request $request, $id)

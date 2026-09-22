@@ -2,14 +2,18 @@
 
 namespace App\Services\Order;
 
+use App\Enums\OrderStatusEnum;
 use App\Enums\StatusEnum;
 use App\Exceptions\CustomException;
+use App\Helpers\Order\PathaoHelper;
+use App\Helpers\Order\SteadfastHelper;
 use App\Models\Order\Order;
 use App\Models\Order\OrderStatus;
 use App\Models\Order\Status;
 use App\Models\Product\Product;
 use App\Models\Product\ProductVariant;
 use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class OrderService
 {
@@ -226,7 +230,7 @@ class OrderService
             $existingOrder = $this->model->where('idempotency_key', $request->idempotency_key)->first();
 
             if ($existingOrder) {
-                return $existingOrder->load(['details','status','statuses.status']);
+                throw new CustomException("Order Already Created");
             }
 
             $order = new $this->model();
@@ -237,6 +241,8 @@ class OrderService
             $order->payment_gateway_id  = $request->payment_gateway_id;
             $order->coupon_id           = $request->coupon_id;
             $order->courier_id          = $request->courier_id;
+            $order->pickup_store_id     = $request->pickup_store_id;
+            $order->item_weight         = $request->item_weight;
             $order->district_id         = $request->district_id;
             $order->idempotency_key     = $request->idempotency_key;
             $order->invoice_number      = $this->generateInvoiceNumber();
@@ -374,6 +380,187 @@ class OrderService
             return $order;
         });
     }
+    public function statusUpdate($request)
+    {
+        $ids = collect($request->input('ids', []))->map(fn ($id) => (int) $id)->filter(fn ($id) => $id > 0)->unique()->values()->toArray();
+
+        $statusId = (int) $request->input('status_id');
+
+        if (empty($ids)) {
+            throw new CustomException('Please provide at least one order ID.');
+        }
+
+        if (!$statusId) {
+            throw new CustomException('Please provide a valid status ID.');
+        }
+
+        $status = Status::query()->select('id', 'name')->find($statusId);
+
+        if (!$status) {
+            throw new CustomException('Invalid order status.');
+        }
+
+        $orders = $this->model->whereIn('id', $ids)->orderBy('id')->get();
+
+        if ($orders->isEmpty()) {
+            throw new CustomException('No orders found.');
+        }
+
+        $updated = [];
+        $skipped = [];
+        $failed  = [];
+
+        foreach ($orders as $order) {
+
+            try {
+                $result = $this->updateSingleOrderStatus($order->id, $statusId);
+
+                return $result;
+
+                if ($result['action'] === 'updated') {
+                    $updated[] = $result;
+                } else {
+                    $skipped[] = $result;
+                }
+
+            } catch (Throwable $e) {
+                report($e);
+
+                $failed[] = [
+                    'order_id' => $order->id,
+                    'message' => $e->getMessage(),
+                ];
+            }
+        }
+
+        $foundIds = $orders->pluck('id')->map(fn ($id) => (int) $id)->toArray();
+
+        $missingIds = array_values(array_diff($ids, $foundIds));
+
+        foreach ($missingIds as $missingId) {
+            $failed[] = [
+                'order_id' => $missingId,
+                'message' => 'Order Not Found.',
+            ];
+        }
+
+        return [
+            'updated'       => $updated,
+            'skipped'       => $skipped,
+            'failed'        => $failed,
+            'updated_count' => count($updated),
+            'skipped_count' => count($skipped),
+            'failed_count'  => count($failed),
+        ];
+    }
+
+    protected function updateSingleOrderStatus($orderId, int $statusId)
+    {
+        return DB::transaction(function () use ($orderId, $statusId) {
+
+            $order = $this->model->lockForUpdate()->find($orderId);
+
+            if (!$order) {
+                throw new CustomException('Order Not Found.');
+            }
+
+            if ((int) $order->status_id === OrderStatusEnum::CANCELED) {
+
+                return [
+                    'action'   => 'skipped',
+                    'order_id' => $order->id,
+                    'message'  => 'Order is already in canceled status and cannot be updated.',
+                ];
+            }
+
+            if ((int) $order->status_id === $statusId) {
+
+                return [
+                    'action'   => 'skipped',
+                    'order_id' => $order->id,
+                    'message'  => 'Order is already in this status.',
+                ];
+            }
+
+            $additionalData = $this->handleStatusAction($order, $statusId);
+
+            return $additionalData;
+
+            $order->status_id = $statusId;
+
+            return $order;
+
+            if (!empty($additionalData)) {
+                $order->fill($additionalData);
+            }
+
+            $order->save();
+
+            $order->statuses()->create(['status_id' => $statusId]);
+
+            return [
+                'action'    => 'updated',
+                'order_id'  => $order->id,
+                'status_id' => $statusId,
+            ];
+        });
+    }
+
+    protected function handleStatusAction(Order $order, int $statusId): array
+    {
+        $handlers = [
+
+            OrderStatusEnum::IN_COURIER => 'handleInCourier',
+
+            // Future:
+            OrderStatusEnum::DELIVERED => 'handleDelivered',
+
+            OrderStatusEnum::RETURNED => 'handleReturned',
+        ];
+
+
+        $handler = $handlers[$statusId] ?? null;
+
+        if (!$handler) {
+            return [];
+        }
+
+        return $this->{$handler}($order);
+    }
+
+    protected function handleInCourier(Order $order): array
+    {
+
+        if (!$order->courier_id) {
+            throw new CustomException("Courier is not selected for order #{$order->id}.");
+        }
+
+        if ($order->consignment_id) {
+            throw new CustomException("Order #{$order->id} is already entered into courier.");
+        }
+
+        if($order->courier_id == 1){
+            $pathao = new PathaoHelper();
+            $result = $pathao->createOrder($order->id);
+        }
+
+        if($order->courier_id == 2){
+            $steadfast = new SteadfastHelper();
+
+            $result = $steadfast->createOrder($order->id);
+        }
+
+        if (!($result['success'] ?? false)) {
+            throw new CustomException($result['message'] ?? "Failed to create courier entry for order #{$order->id}.");
+        }
+
+        return [
+            'courier_status'    => $result['courier_status'] ?? 'pending',
+            'consignment_id'    => $result['consignment_id'] ?? null,
+            'tracking_code'     => $result['tracking_code'] ?? null,
+            'callback_response' => $result['response'] ?? $result,
+        ];
+    }
 
     protected function generateInvoiceNumber(): string
     {
@@ -424,6 +611,10 @@ class OrderService
 
             $order = $this->model::query()->lockForUpdate()->find($id);
 
+            if ($request->filled('idempotency_key') && $order->idempotency_key === $request->idempotency_key) {
+                throw new CustomException('This order has already been updated.');
+            }
+
             if (!$order) {
                 throw new CustomException('Order Not Found');
             }
@@ -470,6 +661,7 @@ class OrderService
                 'locked_by_id'        => $data['locked_by_id'] ?? null,
                 'district_id'         => $data['district_id'] ?? null,
                 'courier_id'          => $data['courier_id'] ?? null,
+                'pickup_store_id'     => $data['pickup_store_id'] ?? null,
                 'customer_name'       => $data['customer_name'],
                 'phone_number'        => $data['phone_number'],
                 'shipping_address'    => $data['shipping_address'],
@@ -612,6 +804,31 @@ class OrderService
 
             return $order;
         });
+    }
+
+    public function searchByPhoneNumber($request)
+    {
+        $phoneNumber = $request->input("phone_number", null);
+
+        $orders = $this->model
+            ->select(
+                "id",
+                "courier_id",
+                "district_id",
+                "customer_type_id",
+                "delivery_charge",
+                "phone_number",
+                "customer_name",
+                "shipping_address",
+                "pickup_store_id",
+                "delivery_type",
+                "item_weight"
+            )
+            ->where("phone_number", $phoneNumber)
+            ->latest()
+            ->first();
+
+        return $orders;
     }
 
     public function destroy($id)

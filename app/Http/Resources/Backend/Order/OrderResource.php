@@ -26,7 +26,7 @@ class OrderResource extends JsonResource
             'phone_number'         => $this->phone_number,
             'shipping_address'     => $this->shipping_address,
             'utm_source'           => $this->utm_source,
-            'utm_source'           => $this->utm_source,
+            'pickup_store_id'      => $this->pickup_store_id,
             'invoice_number'       => $this->invoice_number,
             'ip_address'           => $this->ip_address,
             'order_date'           => $this->order_date,
@@ -49,6 +49,7 @@ class OrderResource extends JsonResource
             'tracking_code'        => $this->tracking_code,
             'callback_response'    => $this->callback_response,
             'paid_status'          => $this->paid_status,
+            'item_weight'          => $this->item_weight,
             'note'                 => $this->note,
             'status'               => $this->status,
 

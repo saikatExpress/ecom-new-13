@@ -34,8 +34,15 @@ class SettingSeeder extends Seeder
                 'group_name'  => 'general',
                 'setting_key' => 'site_logo',
                 'label'       => 'Site Logo',
-                'value'       => 'assets/images/logo.png', // Default path
+                'value'       => 'assets/images/logo.png',
                 'type'        => 'image'
+            ],
+            [
+                'group_name'  => 'general',
+                'setting_key' => 'invoice_prefix',
+                'label'       => 'Invoice Prefix',
+                'value'       => 'INV',
+                'type'        => 'string'
             ],
             [
                 'group_name'  => 'general',

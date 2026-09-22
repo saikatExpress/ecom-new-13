@@ -20,6 +20,8 @@ class OrderRequest extends FormRequest
             'payment_gateway_id'         => ['nullable','integer','exists:payment_gateways,id'],
             'coupon_id'                  => ['nullable','integer','exists:coupons,id'],
             'courier_id'                 => ['nullable','integer','exists:couriers,id'],
+            'pickup_store_id'            => ['nullable','integer'],
+            'item_weight'                => ['nullable'],
             'customer_name'              => ['required','string','max:255'],
             'phone_number'               => ['required','string','max:30'],
             'shipping_address'           => ['required','string','max:5000'],

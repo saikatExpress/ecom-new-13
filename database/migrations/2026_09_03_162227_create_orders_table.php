@@ -60,6 +60,7 @@ return new class extends Migration
 
             // Courier Section
             $table->foreignId('courier_id')->nullable()->nullOnDelete()->constrained('couriers');
+            $table->unsignedBigInteger('pickup_store_id')->nullable();
             $table->integer('delivery_type')->default(48)->comment('48 for normal 12 for on need for pathao');
             $table->string('courier_status')->nullable();
             $table->string('consignment_id')->nullable()->comment('Come from courier');
