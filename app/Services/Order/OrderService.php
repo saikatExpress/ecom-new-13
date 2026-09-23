@@ -5,6 +5,7 @@ namespace App\Services\Order;
 use App\Enums\OrderStatusEnum;
 use App\Enums\StatusEnum;
 use App\Exceptions\CustomException;
+use App\Helpers\Order\InvoiceHelper;
 use App\Helpers\Order\PathaoHelper;
 use App\Helpers\Order\SteadfastHelper;
 use App\Models\Order\Order;
@@ -247,7 +248,7 @@ class OrderService
             $order->item_weight         = $request->item_weight;
             $order->district_id         = $request->district_id;
             $order->idempotency_key     = $request->idempotency_key;
-            $order->invoice_number      = $this->generateInvoiceNumber();
+            $order->invoice_number      = InvoiceHelper::generate();
             $order->ip_address          = $request->ip();
             $order->utm_source          = $request->utm_source;
             $order->note                = $request->note;
@@ -562,17 +563,6 @@ class OrderService
             'tracking_code'     => $result['tracking_code'] ?? null,
             'callback_response' => $result['response'] ?? $result,
         ];
-    }
-
-    protected function generateInvoiceNumber(): string
-    {
-        do {
-            $invoiceNumber = 'INV-' . now()->format('YmdHis') . '-' . random_int(1000, 9999);
-        } while (
-            $this->model->where('invoice_number', $invoiceNumber)->exists()
-        );
-
-        return $invoiceNumber;
     }
 
     public function show($id)

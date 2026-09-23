@@ -46,6 +46,13 @@ class SettingSeeder extends Seeder
             ],
             [
                 'group_name'  => 'general',
+                'setting_key' => 'invoice_sequence',
+                'label'       => 'Invoice Sequence',
+                'value'       => 0,
+                'type'        => 'number'
+            ],
+            [
+                'group_name'  => 'general',
                 'setting_key' => 'site_favicon',
                 'label'       => 'Site Favicon',
                 'value'       => 'assets/images/favicon.ico',
