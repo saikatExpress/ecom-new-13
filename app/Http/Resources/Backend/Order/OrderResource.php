@@ -13,6 +13,7 @@ class OrderResource extends JsonResource
             'id'                   => $this->id,
             'status_id'            => $this->status_id,
             'customer_type_id'     => $this->customer_type_id,
+            'order_source_id'      => $this->order_source_id,
             'delivery_gateway_id'  => $this->delivery_gateway_id,
             'payment_gateway_id'   => $this->payment_gateway_id,
             'coupon_id'            => $this->coupon_id,
@@ -64,6 +65,13 @@ class OrderResource extends JsonResource
                 return [
                     'id'   => $this->customerType->id,
                     'name' => $this->customerType->name,
+                ];
+            }),
+            'order_source' => $this->whenLoaded('orderSource', function () {
+                return [
+                    'id'         => $this->orderSource->id,
+                    'name'       => $this->orderSource->name,
+                    'color_code' => $this->orderSource->color_code,
                 ];
             }),
             'delivery_gateway' => $this->whenLoaded('deliveryGateway', function () {

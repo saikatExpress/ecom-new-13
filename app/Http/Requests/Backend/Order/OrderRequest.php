@@ -16,6 +16,7 @@ class OrderRequest extends FormRequest
         return [
             'status_id'                  => ['required','integer','exists:statuses,id'],
             'customer_type_id'           => ['nullable','integer','exists:customer_types,id'],
+            'order_source_id'            => ['nullable','integer','exists:order_sources,id'],
             'delivery_gateway_id'        => ['nullable','integer','exists:delivery_gateways,id'],
             'payment_gateway_id'         => ['nullable','integer','exists:payment_gateways,id'],
             'coupon_id'                  => ['nullable','integer','exists:coupons,id'],

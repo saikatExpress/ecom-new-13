@@ -15,6 +15,7 @@ return new class extends Migration
             // Foreign ID Section
             $table->foreignId('status_id')->constrained('statuses')->onDelete('cascade');
             $table->foreignId('customer_type_id')->nullable()->nullOnDelete()->constrained('customer_types');
+            $table->foreignId('order_source_id')->nullable()->nullOnDelete()->constrained('order_sources');
             $table->foreignId('delivery_gateway_id')->nullable()->nullOnDelete()->constrained('delivery_gateways');
             $table->foreignId('payment_gateway_id')->nullable()->nullOnDelete()->constrained('payment_gateways');
             $table->foreignId('coupon_id')->nullable()->nullOnDelete()->constrained('coupons');

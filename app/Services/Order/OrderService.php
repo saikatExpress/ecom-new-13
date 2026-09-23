@@ -93,6 +93,7 @@ class OrderService
             'details',
             'currentStatus:id,name',
             'customerType:id,name',
+            'orderSource:id,name,color_code',
             'deliveryGateway:id,name',
             'paymentGateway:id,name',
             'district:id,district_name',
@@ -237,6 +238,7 @@ class OrderService
 
             $order->status_id           = $request->status_id;
             $order->customer_type_id    = $request->customer_type_id;
+            $order->order_source_id     = $request->order_source_id;
             $order->delivery_gateway_id = $request->delivery_gateway_id;
             $order->payment_gateway_id  = $request->payment_gateway_id;
             $order->coupon_id           = $request->coupon_id;
@@ -652,6 +654,7 @@ class OrderService
             $order->fill([
                 'status_id'           => $data['status_id'],
                 'customer_type_id'    => $data['customer_type_id'] ?? null,
+                'order_source_id'     => $data['order_source_id'] ?? null,
                 'delivery_gateway_id' => $data['delivery_gateway_id'] ?? null,
                 'payment_gateway_id'  => $data['payment_gateway_id'] ?? null,
                 'coupon_id'           => $data['coupon_id'] ?? null,

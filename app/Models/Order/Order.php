@@ -22,6 +22,11 @@ class Order extends BaseModel
         return $this->belongsTo(CustomerType::class, 'customer_type_id');
     }
 
+    public function orderSource(): BelongsTo
+    {
+        return $this->belongsTo(OrderSource::class, 'order_source_id');
+    }
+
     public function deliveryGateway(): BelongsTo
     {
         return $this->belongsTo(DeliveryGateway::class, 'delivery_gateway_id');

@@ -12,18 +12,18 @@ class CustomerTypeSeeder extends Seeder
     {
         $types = [
             [
-                'name'        => 'New Customer',
-                'slug'        => 'new-customer',
+                'name'        => 'New',
+                'slug'        => 'new',
                 'order_range' => 0,
             ],
             [
-                'name'        => 'Regular Customer',
-                'slug'        => 'regular-customer',
+                'name'        => 'Regular',
+                'slug'        => 'regular',
                 'order_range' => 2,
             ],
             [
-                'name'        => 'VIP Customer',
-                'slug'        => 'vip-customer',
+                'name'        => 'VIP',
+                'slug'        => 'vip',
                 'order_range' => 4,
             ],
         ];
