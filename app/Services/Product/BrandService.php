@@ -16,7 +16,8 @@ class BrandService
     public function index($request)
     {
         $paginateSize = $request->input('paginate_size', 25);
-        $searchKey = $request->input('search_key');
+        $searchKey    = $request->input('search_key');
+        $status       = $request->input('status');
 
         $brands = $this->model
         ->with(
@@ -25,6 +26,9 @@ class BrandService
         )
         ->when($searchKey, function ($query, $searchKey) {
             $query->where('name', 'like', "%{$searchKey}%");
+        })
+        ->when($status, function($query, $status){
+            $query->where('status', $status);
         })
         ->orderByDesc('created_at')
         ->paginate($paginateSize);
