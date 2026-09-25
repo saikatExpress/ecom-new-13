@@ -15,6 +15,7 @@ class SectionService
 
     public function index($request)
     {
+        $status       = $request->input('status');
         $paginateSize = $request->input('paginate_size', 25);
 
         $sections = $this->model
@@ -28,6 +29,9 @@ class SectionService
             "products.brand:id,name",
             'products.variants.attributeValues.attribute',
         ])
+        ->when($status, function($query, $status){
+            $query->where('status', $status);
+        })
         ->orderBy('position', 'asc')
         ->paginate($paginateSize);
 

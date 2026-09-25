@@ -11,11 +11,7 @@ class SettingSeeder extends Seeder
     {
         $settings = [
 
-            /*
-            |--------------------------------------------------------------------------
-            | General Settings
-            |--------------------------------------------------------------------------
-            */
+            // General Settings
             [
                 'group_name'  => 'general',
                 'setting_key' => 'site_name',
@@ -32,13 +28,6 @@ class SettingSeeder extends Seeder
             ],
             [
                 'group_name'  => 'general',
-                'setting_key' => 'site_logo',
-                'label'       => 'Site Logo',
-                'value'       => 'assets/images/logo.png',
-                'type'        => 'image'
-            ],
-            [
-                'group_name'  => 'general',
                 'setting_key' => 'invoice_prefix',
                 'label'       => 'Invoice Prefix',
                 'value'       => 'INV',
@@ -50,13 +39,6 @@ class SettingSeeder extends Seeder
                 'label'       => 'Invoice Sequence',
                 'value'       => 0,
                 'type'        => 'number'
-            ],
-            [
-                'group_name'  => 'general',
-                'setting_key' => 'site_favicon',
-                'label'       => 'Site Favicon',
-                'value'       => 'assets/images/favicon.ico',
-                'type'        => 'image'
             ],
             [
                 'group_name'  => 'general',
@@ -94,11 +76,37 @@ class SettingSeeder extends Seeder
                 'type'        => 'string'
             ],
 
-            /*
-            |--------------------------------------------------------------------------
-            | Theme & UI Settings (Frontend Customization)
-            |--------------------------------------------------------------------------
-            */
+            // Logo Setting
+            [
+                'group_name'  => 'logo',
+                'setting_key' => 'site_favicon',
+                'label'       => 'Site Favicon',
+                'value'       => 'assets/images/favicon.ico',
+                'type'        => 'image'
+            ],
+            [
+                'group_name'  => 'logo',
+                'setting_key' => 'header_logo',
+                'label'       => 'Header Logo',
+                'value'       => 'assets/images/favicon.ico',
+                'type'        => 'image'
+            ],
+            [
+                'group_name'  => 'logo',
+                'setting_key' => 'footer_logo',
+                'label'       => 'Footer Logo',
+                'value'       => 'assets/images/favicon.ico',
+                'type'        => 'image'
+            ],
+            [
+                'group_name'  => 'logo',
+                'setting_key' => 'social_logo',
+                'label'       => 'Social Logo',
+                'value'       => 'assets/images/favicon.ico',
+                'type'        => 'image'
+            ],
+
+            // Theme & UI Settings (Frontend Customization)
             [
                 'group_name'  => 'theme',
                 'setting_key' => 'primary_color',
@@ -163,23 +171,47 @@ class SettingSeeder extends Seeder
                 'type'        => 'select'
             ],
 
-            /*
-            |--------------------------------------------------------------------------
-            | Product & Catalog Settings
-            |--------------------------------------------------------------------------
-            */
+            // Product & Catalog Settings
             [
                 'group_name'  => 'product',
-                'setting_key' => 'products_per_page',
-                'label'       => 'Products Per Page',
-                'value'       => 12,
-                'type'        => 'number'
+                'setting_key' => 'refund_policy',
+                'label'       => 'Refund Policy',
+                'value'       => "",
+                'type'        => 'textarea'
             ],
             [
                 'group_name'  => 'product',
-                'setting_key' => 'show_out_of_stock',
-                'label'       => 'Show Out Of Stock Products',
-                'value'       => true,
+                'setting_key' => 'why_choose_us',
+                'label'       => 'Why Choose Us',
+                'value'       => "",
+                'type'        => 'textarea'
+            ],
+            [
+                'group_name'  => 'product',
+                'setting_key' => 'is_subcategory_show',
+                'label'       => 'Is Sub Category Show',
+                'value'       => 1,
+                'type'        => 'boolean'
+            ],
+            [
+                'group_name'  => 'product',
+                'setting_key' => 'is_subsubcategory_show',
+                'label'       => 'Is Sub Sub Category Show',
+                'value'       => 1,
+                'type'        => 'boolean'
+            ],
+            [
+                'group_name'  => 'product',
+                'setting_key' => 'is_stock_maintain',
+                'label'       => 'Is Stock Maintain',
+                'value'       => 1,
+                'type'        => 'boolean'
+            ],
+            [
+                'group_name'  => 'product',
+                'setting_key' => 'is_negative_stock_allow',
+                'label'       => 'Is Negative Stock Allow',
+                'value'       => 1,
                 'type'        => 'boolean'
             ],
             [
@@ -190,38 +222,7 @@ class SettingSeeder extends Seeder
                 'type'        => 'boolean'
             ],
 
-            /*
-            |--------------------------------------------------------------------------
-            | Order & Checkout Settings
-            |--------------------------------------------------------------------------
-            */
-            [
-                'group_name'  => 'order',
-                'setting_key' => 'enable_guest_checkout',
-                'label'       => 'Enable Guest Checkout',
-                'value'       => true,
-                'type'        => 'boolean'
-            ],
-            [
-                'group_name'  => 'order',
-                'setting_key' => 'minimum_order_amount',
-                'label'       => 'Minimum Order Amount',
-                'value'       => 500, // example 500 BDT
-                'type'        => 'number'
-            ],
-            [
-                'group_name'  => 'order',
-                'setting_key' => 'order_prefix',
-                'label'       => 'Order Number Prefix',
-                'value'       => 'ORD-',
-                'type'        => 'string'
-            ],
-
-            /*
-            |--------------------------------------------------------------------------
-            | Shipping Settings
-            |--------------------------------------------------------------------------
-            */
+            // Shipping Settings
             [
                 'group_name'  => 'shipping',
                 'setting_key' => 'delivery_charge_inside_city',
@@ -244,11 +245,7 @@ class SettingSeeder extends Seeder
                 'type'        => 'number'
             ],
 
-            /*
-            |--------------------------------------------------------------------------
-            | Payment Gateway Toggles
-            |--------------------------------------------------------------------------
-            */
+            // Payment Gateway Toggles
             [
                 'group_name'  => 'payment',
                 'setting_key' => 'cod_enabled',
@@ -271,11 +268,7 @@ class SettingSeeder extends Seeder
                 'type'        => 'boolean'
             ],
 
-            /*
-            |--------------------------------------------------------------------------
-            | Social Media Links
-            |--------------------------------------------------------------------------
-            */
+            // Social Media Links
             [
                 'group_name'  => 'social',
                 'setting_key' => 'facebook_url',
@@ -291,11 +284,7 @@ class SettingSeeder extends Seeder
                 'type'        => 'url'
             ],
 
-            /*
-            |--------------------------------------------------------------------------
-            | SEO & Analytics
-            |--------------------------------------------------------------------------
-            */
+            // SEO & Analytics
             [
                 'group_name'  => 'seo',
                 'setting_key' => 'meta_title',
@@ -323,7 +312,7 @@ class SettingSeeder extends Seeder
                 'label'       => 'Facebook Pixel ID',
                 'value'       => '',
                 'type'        => 'string'
-            ]
+            ],
         ];
 
         foreach ($settings as $setting) {

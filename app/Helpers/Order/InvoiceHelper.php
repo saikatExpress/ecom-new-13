@@ -9,7 +9,7 @@ class InvoiceHelper
 {
     public static function generate(): string
     {
-        $prefixSetting = Setting::query()->where('key', 'invoice_prefix')->lockForUpdate()->first();
+        $prefixSetting = Setting::query()->where('setting_key', 'invoice_prefix')->lockForUpdate()->first();
 
         if (!$prefixSetting) {
             throw new CustomException('Invoice prefix setting not found.');
@@ -21,7 +21,7 @@ class InvoiceHelper
             throw new CustomException('Invoice prefix cannot be empty.');
         }
 
-        $sequenceSetting = Setting::query()->where('key', 'invoice_sequence')->lockForUpdate()->first();
+        $sequenceSetting = Setting::query()->where('setting_key', 'invoice_sequence')->lockForUpdate()->first();
 
         if (!$sequenceSetting) {
             throw new CustomException('Invoice sequence setting not found.');

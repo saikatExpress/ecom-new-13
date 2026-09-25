@@ -16,17 +16,22 @@ class CategoryService
     public function index($request)
     {
         $paginateSize = $request->input('paginate_size', 25);
-        $searchKey = $request->input('search_key');
+        $searchKey    = $request->input('search_key');
+        $status       = $request->input('status');
 
         $categories = $this->model
         ->with(
             'createdBy:id,username',
             'updatedBy:id,username',
         )
+        ->withCount('products')
         ->when($searchKey, function($query, $searchKey){
             $query->where('name', 'like', "%{$searchKey}%");
         })
-        ->orderByDesc('created_at')
+        ->when($status, function($query, $status){
+            $query->where('status', $status);
+        })
+        ->orderBy('position', 'asc')
         ->paginate($paginateSize);
 
         return $categories;

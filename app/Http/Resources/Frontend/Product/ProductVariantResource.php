@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources\Backend\Product;
+namespace App\Http\Resources\Frontend\Product;
 
 use Illuminate\Http\Request;
 use App\Helpers\File\FileUrlHelper;

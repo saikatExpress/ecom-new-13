@@ -6,8 +6,10 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->group(function(){
     Route::prefix('admin/setting')->group(function() {
         Route::controller(SettingController::class)->group(function(){
-            Route::get('/', 'index');
-            Route::post('/', 'store');
+            Route::get('/',     'index');
+            Route::post('/',    'store');
+            Route::get('/{id}', 'show');
+            Route::put('/{id}', 'update');
         });
     });
 });

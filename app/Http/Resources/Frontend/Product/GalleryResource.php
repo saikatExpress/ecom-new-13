@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources\Backend\Product;
+namespace App\Http\Resources\Frontend\Product;
 
 use Illuminate\Http\Request;
 use App\Helpers\File\FileUrlHelper;
@@ -12,7 +12,7 @@ class GalleryResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
+            'id'    => $this->id,
             'image' => FileUrlHelper::url($this->img_path),
         ];
     }

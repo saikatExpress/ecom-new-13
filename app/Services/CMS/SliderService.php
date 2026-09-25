@@ -2,11 +2,11 @@
 
 namespace App\Services\CMS;
 
+use App\Models\CMS\Slider;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 use App\Exceptions\CustomException;
 use App\Helpers\File\FileUploadHelper;
-use App\Models\CMS\Slider;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 
 class SliderService
 {
@@ -14,6 +14,7 @@ class SliderService
 
     public function index($request)
     {
+        $status       = $request->input('status');
         $paginateSize = $request->input('paginate_size', 25);
 
         $sliders = $this->model
@@ -21,6 +22,9 @@ class SliderService
             'createdBy:id,username',
             'updatedBy:id,username',
         ])
+        ->when($status, function($query, $status){
+            $query->where('status', $status);
+        })
         ->paginate($paginateSize);
 
         return $sliders;

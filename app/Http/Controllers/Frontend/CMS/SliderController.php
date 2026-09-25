@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Frontend\CMS;
 
-use App\Http\Resources\Frontend\CMS\SliderCollection;
-use App\Http\Resources\Frontend\CMS\SliderResource;
 use Illuminate\Http\Request;
 use App\Services\CMS\SliderService;
 use App\Http\Controllers\BaseController;
+use App\Http\Resources\Frontend\CMS\SliderResource;
+use App\Http\Resources\Frontend\CMS\SliderCollection;
 
 class SliderController extends BaseController
 {
