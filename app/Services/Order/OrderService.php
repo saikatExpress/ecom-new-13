@@ -363,7 +363,7 @@ class OrderService
 
             $netOrderAmount = $totalSellPrice;
 
-            $totalPayableAmount = $netOrderAmount - $order->special_discount - $order->coupon_discount + $order->delivery_charge;
+            $totalPayableAmount = $netOrderAmount - $order->special_discount - $order->coupon_discount + $order->delivery_charge + $order->additional_cost;
 
             $due = max($totalPayableAmount - $order->advanced_payment,0);
 
@@ -777,7 +777,7 @@ class OrderService
 
             $netOrderAmount = $totalSellPrice;
 
-            $totalPayableAmount = $netOrderAmount - $order->special_discount - $order->coupon_discount + $order->delivery_charge;
+            $totalPayableAmount = $netOrderAmount - $order->special_discount - $order->coupon_discount + $order->delivery_charge + $order->additional_cost;
 
             $due = max($totalPayableAmount - $order->advanced_payment,0);
 
@@ -797,6 +797,69 @@ class OrderService
 
             return $order;
         });
+    }
+
+    public function paymentStatusUpdate($request)
+    {
+        try {
+            return DB::transaction(function () use ($request) {
+
+                $orderIds   = $request->input('order_ids', []);
+                $paidStatus = $request->input('paid_status');
+
+                if (empty($orderIds)) {
+                    throw new CustomException('Order IDs are required.');
+                }
+
+                if (!in_array($paidStatus, ['paid', 'unpaid'], true)) {
+                    throw new CustomException('Invalid payment status.');
+                }
+
+                $orders = $this->model::query()->whereIn('id', $orderIds)->get();
+
+                if ($orders->count() !== count(array_unique($orderIds))) {
+                    throw new CustomException('Some orders were not found.');
+                }
+
+                $updated = $this->model::query()->whereIn('id', $orderIds)->update(['paid_status' => $paidStatus]);
+
+                return [
+                    'updated_count' => $updated,
+                    'order_ids'     => $orderIds,
+                    'paid_status'   => $paidStatus,
+                ];
+            });
+
+        } catch (CustomException $e) {
+            throw $e;
+        }
+    }
+
+    public function assignOrders($request)
+    {
+        try {
+            return DB::transaction(function () use ($request) {
+
+                $orderIds = $request->order_ids;
+                $userId   = $request->user_id;
+
+                $orders = $this->model::query()->whereIn('id', $orderIds)->lockForUpdate()->get();
+
+                if ($orders->count() !== count(array_unique($orderIds))) {
+                    throw new CustomException('Some orders were not found.');
+                }
+
+                $updated = $this->model::query()->whereIn('id', $orderIds)->update(['assign_user_id' => $userId]);
+
+                return [
+                    'updated_count'  => $updated,
+                    'assign_user_id' => $userId,
+                    'order_ids'      => $orderIds,
+                ];
+            });
+        } catch (CustomException $e) {
+            throw $e;
+        }
     }
 
     public function searchByPhoneNumber($request)
@@ -838,6 +901,32 @@ class OrderService
 
             return true;
         });
+    }
+
+    public function bulkDelete($request)
+    {
+        try {
+            return DB::transaction(function () use ($request) {
+
+                $orderIds = $request->order_ids;
+
+                $orders = $this->model::query()->whereIn('id', $orderIds)->lockForUpdate()->get();
+
+                if ($orders->count() !== count(array_unique($orderIds))) {
+                    throw new CustomException('Some orders were not found.');
+                }
+
+                $deleted = $this->model::query()->whereIn('id', $orderIds)->delete();
+
+                return [
+                    'deleted_count' => $deleted,
+                    'order_ids'     => $orderIds,
+                ];
+            });
+
+        } catch (CustomException $e) {
+            throw $e;
+        }
     }
 
     public function restore($id)

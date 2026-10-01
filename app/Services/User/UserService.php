@@ -84,12 +84,17 @@ class UserService
         return $users;
     }
 
-    public function list()
+    public function list($request)
     {
+        $userCategoryId = $request->input('user_category_id');
+
         $users = $this->model
         ->select('id', 'username')
         ->where('phone_number', '!=', '01713617913')
         ->where('status', 'active')
+        ->when($userCategoryId, function($query, $userCategoryId){
+            $query->where('user_category_id', $userCategoryId);
+        })
         ->get();
 
         return $users;

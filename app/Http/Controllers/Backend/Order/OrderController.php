@@ -62,6 +62,15 @@ class OrderController extends BaseController
         return $this->sendResponse($data,'Order status updated successfully');
     }
 
+    public function paymentStatusUpdate(Request $request)
+    {
+        $this->authorizePermission($request->user(),'order_update','You have no permission for update order status');
+
+        $data = $this->service->paymentStatusUpdate($request);
+
+        return $this->sendResponse($data,'Order Payment Status Updated Successfully');
+    }
+
     public function show(Request $request, $id)
     {
         $this->authorizePermission($request->user(), 'order_read', 'You have no permission for show this');
@@ -84,6 +93,15 @@ class OrderController extends BaseController
         return $this->sendResponse($order, "Order Updated Successfully");
     }
 
+    public function assignOrders(Request $request)
+    {
+        $this->authorizePermission($request->user(),'order_update','You have no permission for assign order');
+
+        $data = $this->service->assignOrders($request);
+
+        return $this->sendResponse($data,'Orders Assigned Successfully');
+    }
+
     public function searchByPhoneNumber(Request $request)
     {
         $this->authorizePermission($request->user(), 'order_read', 'You have no permission for read this');
@@ -100,6 +118,15 @@ class OrderController extends BaseController
         $this->service->destroy($id);
 
         return $this->sendResponse([], "Order Deleted Successfully");
+    }
+
+    public function bulkDelete(Request $request)
+    {
+        $this->authorizePermission($request->user(),'order_delete','You have no permission for delete orders');
+
+        $data = $this->service->bulkDelete($request);
+
+        return $this->sendResponse($data,'Orders Deleted Successfully');
     }
 
     public function restore(Request $request, $id)

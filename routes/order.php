@@ -169,6 +169,9 @@ Route::middleware('auth:sanctum')->group(function(){
             Route::get('/history',                  'history');
             Route::post('/',                        'store');
             Route::patch('/status-update',          'statusUpdate');
+            Route::patch('/payment-status-update',  'paymentStatusUpdate');
+            Route::patch('/assign',                 'assignOrders');
+            Route::delete('/bulk-delete',           'bulkDelete');
             Route::get('/{id}',                     'show');
             Route::put('/{id}',                     'update');
             Route::delete('/{id}',                  'destroy');

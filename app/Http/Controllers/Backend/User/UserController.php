@@ -35,9 +35,9 @@ class UserController extends BaseController
         return $this->sendResponse($users, "Trash List");
     }
 
-    public function list()
+    public function list(Request $request)
     {
-        $users = $this->service->list();
+        $users = $this->service->list($request);
 
         return $this->sendResponse($users, "User List");
     }
