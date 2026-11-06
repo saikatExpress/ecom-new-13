@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Frontend\Blog\BlogController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Frontend\CMS\SectionController;
 use App\Http\Controllers\Frontend\CMS\SliderController;
@@ -37,5 +38,13 @@ Route::prefix('order')->group(function(){
     Route::controller(CustomerOrderController::class)->group(function(){
         Route::post('/',    'store');
         Route::get('/{id}', 'get');
+    });
+});
+
+// Blog
+Route::prefix('blog')->group(function(){
+    Route::controller(BlogController::class)->group(function(){
+        Route::get('/', 'index');
+        Route::get('/{id}', 'show');
     });
 });
