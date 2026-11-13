@@ -112,6 +112,23 @@ class BlogService
         return $blog;
     }
 
+    public function frontShow($slug)
+    {
+        $blog = $this->model
+        ->with([
+            'category:id,name',
+            'tags',
+            'createdBy:id,username'
+        ])
+        ->where('slug',$slug)->first();
+
+        if(!$blog){
+            throw new CustomException("Blog not found");
+        }
+
+        return $blog;
+    }
+
     public function update($request, $id)
     {
         return DB::transaction(function () use ($request, $id) {

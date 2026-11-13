@@ -21,9 +21,9 @@ class BlogController extends BaseController
         return $this->sendResponse($blogs, "Blog List");
     }
 
-    public function show($id)
+    public function show($slug)
     {
-        $blog = $this->service->show($id);
+        $blog = $this->service->frontShow($slug);
 
         $blog = new BlogResource($blog);
 

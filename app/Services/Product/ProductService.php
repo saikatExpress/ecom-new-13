@@ -2,15 +2,15 @@
 
 namespace App\Services\Product;
 
-use App\Enums\StatusEnum;
-use App\Exceptions\CustomException;
-use App\Helpers\File\FileUploadHelper;
-use App\Helpers\File\FileUrlHelper;
-use App\Models\Product\Product;
-use App\Models\Product\ProductVariant;
 use Exception;
-use Illuminate\Support\Facades\DB;
+use App\Enums\StatusEnum;
 use Illuminate\Support\Str;
+use App\Models\Product\Product;
+use Illuminate\Support\Facades\DB;
+use App\Exceptions\CustomException;
+use App\Helpers\File\FileUrlHelper;
+use App\Helpers\File\FileUploadHelper;
+use App\Models\Product\ProductVariant;
 
 class ProductService
 {
@@ -77,6 +77,7 @@ class ProductService
 
         return $products;
     }
+
     public function trashList($request)
     {
         $paginateSize   = $request->input('paginate_size', 25);
@@ -432,6 +433,7 @@ class ProductService
                 $product->offer_price         = $offer['offer_price'];
                 $product->discount_amount     = $offer['discount_amount'];
                 $product->offer_percentage    = $offer['offer_percentage'];
+                $product->video_url           = $request->video_url ?? NULL;
                 $product->current_stock       = $request->current_stock ?? NULL;
                 $product->total_sell_quantity = $request->total_sell_quantity ?? NULL;
                 $product->short_description   = $request->short_description ?? NULL;

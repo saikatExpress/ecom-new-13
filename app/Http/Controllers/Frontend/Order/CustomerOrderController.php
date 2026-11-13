@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Frontend\Order;
 use Illuminate\Http\Request;
 use App\Http\Controllers\BaseController;
 use App\Services\Order\CustomerOrderService;
-use App\Http\Requests\Backend\Order\OrderRequest;
+use App\Http\Requests\Frontend\Order\OrderRequest;
 use App\Http\Resources\Frontend\Order\OrderResource;
 
 class CustomerOrderController extends BaseController
