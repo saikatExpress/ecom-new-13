@@ -24,6 +24,7 @@ class BrandService
             'createdBy:id,username',
             'updatedBy:id,username',
         )
+        ->withCount('products')
         ->when($searchKey, function ($query, $searchKey) {
             $query->where('name', 'like', "%{$searchKey}%");
         })

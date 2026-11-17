@@ -13,7 +13,7 @@ class CategoryController extends BaseController
 
     public function index(Request $request)
     {
-        $request->merge(['status' => 'active']);
+        $request->merge(['status' => 'active', 'paginate_size' => 50]);
 
         $categories = $this->service->index($request);
 

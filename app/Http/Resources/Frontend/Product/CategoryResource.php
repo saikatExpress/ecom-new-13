@@ -11,11 +11,22 @@ class CategoryResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id'       => $this->id,
-            'name'     => $this->name,
-            'slug'     => $this->slug,
-            'image'    => FileUrlHelper::url($this->img_path),
-            'products'   => $this->products_count,
+            'id'            => $this->id,
+            'name'          => $this->name,
+            'slug'          => $this->slug,
+            'image'         => FileUrlHelper::url($this->img_path),
+            'products'      => $this->products_count,
+
+            'sub_categories' => $this->whenLoaded('subCategories', function () {
+                return $this->subCategories->map(function ($subCategory) {
+                    return [
+                        'id'       => $subCategory->id,
+                        'name'     => $subCategory->name,
+                        'slug'     => $subCategory->slug,
+                        'products' => $subCategory->products_count,
+                    ];
+                });
+            }),
         ];
     }
 }

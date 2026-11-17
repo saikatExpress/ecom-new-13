@@ -13,7 +13,7 @@ class BrandController extends BaseController
 
     public function index(Request $request)
     {
-        $request->merge(['status' => 'active']);
+        $request->merge(['status' => 'active', 'paginate_size' => 50]);
 
         $brands = $this->service->index($request);
 

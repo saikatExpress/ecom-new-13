@@ -20,10 +20,13 @@ class CategoryService
         $status       = $request->input('status');
 
         $categories = $this->model
-        ->with(
+        ->with([
             'createdBy:id,username',
             'updatedBy:id,username',
-        )
+            'subCategories' => function ($query) {
+                $query->withCount('products');
+            },
+        ])
         ->withCount('products')
         ->when($searchKey, function($query, $searchKey){
             $query->where('name', 'like', "%{$searchKey}%");
