@@ -1,17 +1,19 @@
 <?php
 
-use App\Http\Controllers\Frontend\Blog\BlogCategoryController;
-use App\Http\Controllers\Frontend\Blog\BlogController;
-use App\Http\Controllers\Frontend\Blog\TagController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Frontend\CMS\SectionController;
+use App\Http\Controllers\Frontend\CMS\CmsController;
+use App\Http\Controllers\Frontend\CMS\FaqController;
+use App\Http\Controllers\Frontend\Blog\TagController;
+use App\Http\Controllers\Frontend\Blog\BlogController;
 use App\Http\Controllers\Frontend\CMS\SliderController;
-use App\Http\Controllers\Frontend\Order\CustomerOrderController;
-use App\Http\Controllers\Frontend\Order\DeliveryGatewayController;
-use App\Http\Controllers\Frontend\Order\PaymentGatewayController;
+use App\Http\Controllers\Frontend\CMS\SectionController;
 use App\Http\Controllers\Frontend\Product\BrandController;
-use App\Http\Controllers\Frontend\Product\CategoryController;
 use App\Http\Controllers\Frontend\Product\ProductController;
+use App\Http\Controllers\Frontend\Product\CategoryController;
+use App\Http\Controllers\Frontend\Blog\BlogCategoryController;
+use App\Http\Controllers\Frontend\Order\CustomerOrderController;
+use App\Http\Controllers\Frontend\Order\PaymentGatewayController;
+use App\Http\Controllers\Frontend\Order\DeliveryGatewayController;
 
 Route::prefix('slider')->group(function(){
     Route::controller(SliderController::class)->group(function(){
@@ -83,5 +85,18 @@ Route::prefix('blog-category')->group(function(){
 Route::prefix('tag')->group(function(){
     Route::controller(TagController::class)->group(function(){
         Route::get('/', 'index');
+    });
+});
+
+// CMS
+Route::prefix('pages')->group(function(){
+    Route::controller(CmsController::class)->group(function(){
+        Route::get('/{slug}', 'show');
+    });
+});
+
+Route::prefix('faq')->group(function(){
+    Route::controller(FaqController::class)->group(function(){
+        Route::get('/',        'index');
     });
 });
