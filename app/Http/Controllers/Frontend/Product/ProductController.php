@@ -29,4 +29,11 @@ class ProductController extends BaseController
 
         return $this->sendResponse($product, "Product Show");
     }
+
+    public function search(Request $request)
+    {
+        $products = $this->service->search($request);
+
+        return $this->sendResponse($products, "Product List");
+    }
 }

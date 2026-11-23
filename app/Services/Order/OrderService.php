@@ -383,6 +383,7 @@ class OrderService
             return $order;
         });
     }
+
     public function statusUpdate($request)
     {
         $ids = collect($request->input('ids', []))->map(fn ($id) => (int) $id)->filter(fn ($id) => $id > 0)->unique()->values()->toArray();
