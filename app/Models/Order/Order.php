@@ -86,4 +86,14 @@ class Order extends BaseModel
     {
         return $this->hasMany(OrderStatus::class);
     }
+
+    public function guardDetails()
+    {
+        return $this->hasOne(OrderGuardOrderDetail::class);
+    }
+
+    public function guardLogs()
+    {
+        return $this->hasMany(OrderGuardLog::class);
+    }
 }

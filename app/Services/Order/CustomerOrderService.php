@@ -2,21 +2,23 @@
 
 namespace App\Services\Order;
 
-use App\Enums\StatusEnum;
-use App\Models\Order\Order;
-use Illuminate\Support\Str;
-use App\Models\Order\Courier;
 use App\Enums\OrderStatusEnum;
-use App\Models\Product\Product;
-use App\Helpers\Order\InvoiceHelper;
-use App\Models\Order\CustomerType;
-use Illuminate\Support\Facades\DB;
-use App\Models\Order\DeliveryGateway;
+use App\Enums\StatusEnum;
 use App\Exceptions\CustomException;
+use App\Helpers\Order\InvoiceHelper;
+use App\Helpers\Setting\SettingHelper;
+use App\Models\Order\Courier;
+use App\Models\Order\CustomerType;
+use App\Models\Order\DeliveryGateway;
+use App\Models\Order\Order;
+use App\Models\Product\Product;
+use App\Services\Order\OrderGuardService;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class CustomerOrderService
 {
-    public function __construct(protected Order $model){}
+    public function __construct(protected Order $model,protected OrderGuardService $orderGuardService){}
 
     public function store($request)
     {
@@ -34,12 +36,31 @@ class CustomerOrderService
             throw new CustomException("Oder Already Created");
         }
 
-        return DB::transaction(function() use ($request) {
+        $guardContext = $this->orderGuardService->check($request);
+
+        return DB::transaction(function() use ($request, $guardContext) {
             $order = new $this->model();
+
+            $duplicateOrderDuration = 0;
 
             $previousOrderCount = $this->model::where('phone_number', $request->phone_number)->count();
             $customerType       = CustomerType::where('order_range', '<=', $previousOrderCount)->orderByDesc('order_range')->first();
             $deliveryGateway    = DeliveryGateway::findOrFail($request->delivery_gateway_id);
+
+            $settingValue = SettingHelper::setting('duplicate_order_duration');
+
+            if (is_numeric($settingValue)) {
+                $duplicateOrderDuration = max(0, (int) $settingValue);
+            }
+
+            $isDuplicate = false;
+
+            if ($duplicateOrderDuration > 0) {
+
+                $cutoffTime = now()->subMinutes($duplicateOrderDuration);
+
+                $isDuplicate = $this->model->where('phone_number', $request->phone_number)->where('order_date', '>=', $cutoffTime)->exists();
+            }
 
             $order->status_id           = OrderStatusEnum::NEW_ORDER;
             $order->customer_type_id    = $customerType?->id;
@@ -59,9 +80,12 @@ class CustomerOrderService
             $order->utm_source          = $request->utm_source ?? NULL;
             $order->coupon_id           = $request->coupon_id ?? NULL;
             $order->status              = StatusEnum::ACTIVE->value;
+            $order->is_duplicate        = $isDuplicate;
             $order->order_date          = now();
 
             $order->save();
+
+            $order->guardDetails()->create($guardContext);
 
             $totalBuyPrice  = 0;
             $totalMrp       = 0;
@@ -178,6 +202,8 @@ class CustomerOrderService
             ]);
 
             $order->statuses()->create(['status_id' => $order->status_id]);
+
+            $this->orderGuardService->recordAllowed($guardContext,$order->id);
 
             return $order;
         });

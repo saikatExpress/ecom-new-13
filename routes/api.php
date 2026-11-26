@@ -10,6 +10,7 @@ use App\Http\Controllers\Frontend\CMS\SliderController;
 use App\Http\Controllers\Frontend\Order\CouponController;
 use App\Http\Controllers\Frontend\Order\CustomerOrderController;
 use App\Http\Controllers\Frontend\Order\DeliveryGatewayController;
+use App\Http\Controllers\Frontend\Order\OrderGuardSettingController;
 use App\Http\Controllers\Frontend\Order\PaymentGatewayController;
 use App\Http\Controllers\Frontend\Product\BrandController;
 use App\Http\Controllers\Frontend\Product\CategoryController;
@@ -60,6 +61,12 @@ Route::prefix('payment-gateway')->group(function(){
 Route::prefix('delivery-gateway')->group(function(){
     Route::controller(DeliveryGatewayController::class)->group(function(){
         Route::get('/',   'index');
+    });
+});
+
+Route::prefix('order/guard')->group(function(){
+    Route::controller(OrderGuardSettingController::class)->group(function(){
+        Route::get('/', 'show');
     });
 });
 

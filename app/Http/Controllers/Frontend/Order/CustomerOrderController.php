@@ -16,6 +16,8 @@ class CustomerOrderController extends BaseController
     {
         $order = $this->service->store($request);
 
+        return $order;
+
         $order = new OrderResource($order);
 
         return $this->sendResponse($order, "Order Created Successfully");

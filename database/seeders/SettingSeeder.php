@@ -75,6 +75,13 @@ class SettingSeeder extends Seeder
                 'value'       => '৳',
                 'type'        => 'string'
             ],
+            [
+                'group_name'  => 'general',
+                'setting_key' => 'duplicate_order_duration',
+                'label'       => 'Duplicate Order Duration',
+                'value'       => 30,
+                'type'        => 'number'
+            ],
 
             // Logo Setting
             [

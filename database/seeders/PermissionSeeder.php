@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Helpers\Laratrust\PermissionHelper;
 use App\Models\Permission;
 use Illuminate\Database\Seeder;
+use App\Helpers\Laratrust\PermissionHelper;
 
 class PermissionSeeder extends Seeder
 {

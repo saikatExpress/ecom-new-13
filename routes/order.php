@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Backend\Order\BlockUserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\Order\StatusController;
 use App\Http\Controllers\Backend\Order\CourierController;
@@ -123,6 +124,12 @@ Route::middleware('auth:sanctum')->group(function(){
         Route::controller(OrderGuardSettingController::class)->group(function(){
             Route::get('/', 'show');
             Route::put('/', 'update');
+        });
+    });
+
+    Route::prefix('admin/block-user')->group(function(){
+        Route::controller(BlockUserController::class)->group(function(){
+            Route::get('/', 'index');
         });
     });
 
