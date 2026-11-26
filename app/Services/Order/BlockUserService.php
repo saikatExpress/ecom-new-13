@@ -3,7 +3,10 @@
 namespace App\Services\Order;
 
 use App\Exceptions\CustomException;
+use App\Models\Order\Order;
 use App\Models\Order\OrderGuardBlock;
+use App\Models\Order\OrderGuardLog;
+use Illuminate\Support\Facades\DB;
 
 class BlockUserService
 {
@@ -57,5 +60,58 @@ class BlockUserService
         }
 
         throw new CustomException('Invalid Bangladesh mobile number.');
+    }
+
+    public function permanentlyBlockPhoneByOrder(int $orderId)
+    {
+        return DB::transaction(function () use ($orderId) {
+
+            $order = Order::with('guardDetails')->findOrFail($orderId);
+
+            $details = $order->guardDetails;
+
+            if (!$details || !$details->phone_hash) {
+                throw new CustomException(
+                    'Order customer information not found.Some ip missing'
+                );
+            }
+
+            $phoneHash = $details->phone_hash;
+
+            $existingBlock = OrderGuardBlock::where('type', 'phone')
+                ->where('value', $phoneHash)
+                ->first();
+
+            $alreadyBlocked = $existingBlock && $existingBlock->is_active && $existingBlock->block_type === 'permanent';
+
+            $block = OrderGuardBlock::updateOrCreate(
+                [
+                    'type' => 'phone',
+                    'value' => $phoneHash,
+                ],
+                [
+                    'phone_number' => $order->phone_number,
+                    'reason'       => 'fake_order',
+                    'block_type'   => 'permanent',
+                    'source'       => 'admin',
+                    'expires_at'   => null,
+                    'is_active'    => true,
+                ]
+            );
+
+            if (!$alreadyBlocked) {
+                OrderGuardLog::create([
+                    'order_id'        => $order->id,
+                    'phone_hash'      => $phoneHash,
+                    'user_token'      => $details->user_token,
+                    'ip_address'      => $details->ip_address,
+                    'action'          => 'blocked',
+                    'reason'          => 'manual_fake_order',
+                    'violation_count' => 0,
+                ]);
+            }
+
+            return $block;
+        });
     }
 }

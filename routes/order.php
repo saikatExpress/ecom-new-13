@@ -129,7 +129,8 @@ Route::middleware('auth:sanctum')->group(function(){
 
     Route::prefix('admin/block-user')->group(function(){
         Route::controller(BlockUserController::class)->group(function(){
-            Route::get('/', 'index');
+            Route::get('/',                                 'index');
+            Route::post('/{orderId}/permanent-block-phone', 'permanentlyBlockPhone');
         });
     });
 

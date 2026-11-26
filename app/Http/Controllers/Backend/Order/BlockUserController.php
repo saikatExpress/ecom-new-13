@@ -21,4 +21,15 @@ class BlockUserController extends BaseController
 
         return $this->sendResponse($blockUsers, "Block User List");
     }
+
+    public function permanentlyBlockPhone($orderId)
+    {
+        $block = $this->service->permanentlyBlockPhoneByOrder($orderId);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Customer permanently blocked successfully.',
+            'data' => $block,
+        ]);
+    }
 }
